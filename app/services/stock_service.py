@@ -11,7 +11,7 @@ def get_stock_price(symbol: str):
         "currency": info.get("currency"),
         "market_cap": info.get("marketCap")
     }
-def get_stock_history(symbol: str, period: str = "1mo"):
+def get_stock_history(symbol: str, period: str = "6mo"):
     stock = yf.Ticker(symbol)
 
     history = stock.history(period=period)

@@ -17,10 +17,10 @@ def stock(symbol: str):
 
 
 @router.get("/history/{symbol}")
-def history(symbol: str, period: str = "1mo"):
+def history(symbol: str, period: str = "6mo"):
     return get_stock_history(symbol, period)
 
 
 @router.get("/chart/{symbol}", response_class=HTMLResponse)
-def chart(symbol: str, period: str = "1mo"):
+def chart(symbol: str, period: str = "6mo"):
     return create_stock_chart(symbol, period)
