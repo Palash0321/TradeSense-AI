@@ -10,7 +10,7 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
     history = stock.history(period=period)
     history["MA20"] = history["Close"].rolling(window=20).mean()
     history["MA50"] = history["Close"].rolling(window=50).mean()
-    print(history[["Close", "MA20", "MA50"]].tail(15))
+    #print(history[["Close", "MA20", "MA50"]].tail(15))
     delta = history["Close"].diff()
 
     gain = delta.where(delta > 0, 0)
@@ -33,12 +33,15 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
 
     history["Signal"] = history["MACD"].ewm(span=9, adjust=False).mean()
 
+    history["Histogram"] = history["MACD"] - history["Signal"]
+
+
     fig = make_subplots(
-    rows=3,
+    rows=4,
     cols=1,
     shared_xaxes=True,
     vertical_spacing=0.03,
-    row_heights=[0.60, 0.20, 0.20],
+    row_heights=[0.50, 0.15, 0.15, 0.20],
 )
 
     fig.add_trace(
@@ -114,20 +117,56 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
     row=3,
     col=1,
 )
+    fig.add_trace(
+    go.Scatter(
+        x=history.index,
+        y=history["MACD"],
+        mode="lines",
+        name="MACD",
+        line=dict(color="dodgerblue", width=2),
+    ),
+    row=4,
+    col=1,
+)
+    fig.add_trace(
+    go.Scatter(
+        x=history.index,
+        y=history["Signal"],
+        mode="lines",
+        name="Signal",
+        line=dict(color="orange", width=2),
+    ),
+    row=4,
+    col=1,
+)
+    fig.add_trace(
+    go.Bar(
+        x=history.index,
+        y=history["Histogram"],
+        name="Histogram",
+        marker_color=[
+            "green" if value >= 0 else "red"
+            for value in history["Histogram"]
+        ],
+    ),
+    row=4,
+    col=1,
+)
 
     fig.update_layout(
         title=f"{symbol.upper()} Stock Price",
         xaxis_title="Date",
         yaxis_title="Price",
         template="plotly_dark",
-        height=1000,
+        height=1200,
+        width =1100,
         hovermode="x unified",
         legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=1.02,
-        xanchor="right",
-        x=1
+        y=1.12,
+        xanchor="center",
+        x=0.5
     )
 )
 
@@ -138,7 +177,7 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
 )
     fig.update_yaxes(
     range=[0, 100],
-    row=3,
+    row=3,  
     col=1,
 )   
     return fig.to_html(full_html=False)

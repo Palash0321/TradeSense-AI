@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>TradeSense AI</title>
+
+    <style>
+
+        body{
+
+    margin:0;
+
+    background:#0F172A;
+
+    color:white;
+
+    font-family:Arial, sans-serif;
+
+}
+
+.hero{
+
+    text-align:center;
+
+    padding:80px 20px;
+
+}
+
+.hero h1{
+
+    font-size:60px;
+
+    color:#38BDF8;
+
+    margin-bottom:10px;
+
+}
+
+.hero h2{
+
+    font-size:36px;
+
+    color:white;
+
+}
+
+.hero p{
+
+    font-size:22px;
+
+    color:#CBD5E1;
+
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>📈 TradeSense AI</h1>
+
+<hr>
+
+<h2>{{ result.symbol }}</h2>
+
+<p>💰 Price : {{ result.price }}</p>
+
+<p>📢 Recommendation : {{ result.recommendation }}</p>
+
+<p>🎯 Confidence : {{ result.confidence }}</p>
+
+<p>🛡 Risk : {{ result.risk }}</p>
+
+<h3>📋 Reasons</h3>
+
+<ul>
+
+{% for reason in result.reasons %}
+
+<li>{{ reason }}</li>
+
+{% endfor %}
+
+</ul>
+
+<h3>📈 Live Stock Chart</h3>
+
+<div style="width:100%; overflow-x:auto;">
+
+    {{ chart|safe }}
+
+</div>
+
+</div>
+
+</body>
+
+</html>
