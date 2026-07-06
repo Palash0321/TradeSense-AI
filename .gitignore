@@ -1,20 +1,47 @@
 # Virtual Environment
 .venv/
+venv/
+ENV/
+env/
 
 # Python cache
 __pycache__/
 *.py[cod]
 *.pyo
+*$py.class
 
 # Environment variables
 .env
+.envrc
 
-# VS Code
-.vscode/
+# Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
 
 # Jupyter
 .ipynb_checkpoints/
 
-# Operating System
+# VS Code
+.vscode/
+
+# OS Files
 .DS_Store
 Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Type Checkers
+.mypy_cache/
+.pytype/
+.ruff_cache/
+
+# PyCharm
+.idea/
+
+# Temporary Files
+tempCodeRunnerFile.py
