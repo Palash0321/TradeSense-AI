@@ -822,3 +822,87 @@ html{
     z-index:-1;
 
 }
+
+/* ================= NEWS ================= */
+
+.news-section{
+
+    margin-top:60px;
+
+}
+
+.news-section h2{
+
+    font-size:34px;
+
+    margin-bottom:30px;
+
+}
+
+.news-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:25px;
+
+}
+
+.news-card{
+
+    background:#111827;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:.3s;
+
+}
+
+.news-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#38BDF8;
+
+    box-shadow:0 15px 30px rgba(56,189,248,.15);
+
+}
+
+.news-card h3{
+
+    color:white;
+
+    font-size:20px;
+
+    margin-bottom:15px;
+
+    line-height:1.5;
+
+}
+
+.news-card small{
+
+    color:#94A3B8;
+
+}
+
+.news-card a{
+
+    color:#38BDF8;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.news-card a:hover{
+
+    text-decoration:underline;
+
+}

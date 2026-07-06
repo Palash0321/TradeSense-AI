@@ -76,3 +76,5 @@ uvicorn==0.50.0
 watchdog==6.0.0
 websockets==16.0
 yfinance==1.5.1
+feedparser 
+

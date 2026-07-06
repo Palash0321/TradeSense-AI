@@ -4,8 +4,7 @@ from fastapi.templating import Jinja2Templates
 from app.services.signal_service import generate_signal
 from app.services.chart_service import create_stock_chart
 from fastapi.staticfiles import StaticFiles
-from services.news_service import get_stock_news
-
+from app.services.news_service import get_stock_news
 app = FastAPI(
     title="TradeSense AI",
     description="AI-Powered Stock Market Analysis Platform",
@@ -30,15 +29,17 @@ def analyze(request: Request, market: str, symbol: str):
         symbol = symbol.upper()
 
     result = generate_signal(symbol)
+    news = get_stock_news(symbol)
     chart = create_stock_chart(symbol)
 
     return templates.TemplateResponse(
         request=request,
         name="result.html",
         context={
-        "request": request,
-        "result": result,
-        "chart": chart
+    "request": request,
+    "result": result,
+    "chart": chart,
+    "news": news
 }
     )
 

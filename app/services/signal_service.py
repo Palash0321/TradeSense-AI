@@ -6,6 +6,20 @@ def generate_signal(symbol: str, period: str = "6mo"):
     stock = yf.Ticker(symbol)
     history = stock.history(period=period)
 
+    if history.empty:
+        return {
+        "symbol": symbol.upper(),
+        "price": "N/A",
+        "signal": "HOLD",
+        "confidence": "0%",
+        "risk": "Unknown",
+        "reasons": ["No market data available."]
+    }
+
+    history = history.dropna(subset=["Close"])
+
+    latest = history.iloc[-1]
+
     # Moving Averages
     history["MA20"] = history["Close"].rolling(20).mean()
     history["MA50"] = history["Close"].rolling(50).mean()
@@ -29,6 +43,9 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     history["MACD"] = history["EMA12"] - history["EMA26"]
     history["Signal"] = history["MACD"].ewm(span=9, adjust=False).mean()
+
+    # Remove rows where Close is NaN
+    history = history.dropna(subset=["Close"])
 
     latest = history.iloc[-1]
 
@@ -96,11 +113,11 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     return {
     "symbol": symbol.upper(),
-    "price": round(float(latest["Close"]), 2),
+    "price": f"{latest['Close']:,.2f}",
     "score": score,
     "confidence": confidence,
     "risk": risk,
-    "recommendation": recommendation,
+    "signal": recommendation,
     "reasons": reasons,
     "RSI": round(float(latest["RSI"]), 2),
     "MACD": round(float(latest["MACD"]), 2),

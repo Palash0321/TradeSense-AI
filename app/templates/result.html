@@ -144,7 +144,37 @@
 </div>
 
 </div>
+<!-- ================= NEWS SECTION ================= -->
 
+<div class="news-section">
+
+    <h2>📰 Latest Market News</h2>
+
+    <div class="news-grid">
+
+        {% for item in news %}
+
+        <div class="news-card">
+
+            <h3>{{ item.title }}</h3>
+
+            <small>{{ item.published }}</small>
+
+            <br><br>
+
+            <a href="{{ item.link }}" target="_blank">
+                Read Full Article →
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</div>
 </body>
 
 </html>
