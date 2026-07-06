@@ -40,8 +40,8 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
     rows=4,
     cols=1,
     shared_xaxes=True,
-    vertical_spacing=0.03,
-    row_heights=[0.50, 0.15, 0.15, 0.20],
+    vertical_spacing=0.02,
+    row_heights=[0.58, 0.12, 0.15, 0.15],
 )
 
     fig.add_trace(
@@ -62,7 +62,7 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
         y=history["MA20"],
         mode="lines",
         name="20-Day MA",
-        line=dict(color="cyan", width=4),
+        line=dict(color="#22D3EE", width=3),
         connectgaps=True,
     ),
     row = 1,
@@ -75,7 +75,7 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
         y=history["MA50"],
         mode="lines",
         name="50-Day MA",
-        line=dict(color="yellow", width=2),
+        line=dict(color="#EAB308", width=2),
         connectgaps=True,
     ),
     row=1,
@@ -152,22 +152,57 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
     row=4,
     col=1,
 )
+    fig.update_xaxes(
+    showgrid=True,
+    gridcolor="#253247",
+    zeroline=False
+)
+
+    fig.update_yaxes(
+    showgrid=True,
+    gridcolor="#253247",
+    zeroline=False
+)
 
     fig.update_layout(
-        title=f"{symbol.upper()} Stock Price",
-        xaxis_title="Date",
-        yaxis_title="Price",
-        template="plotly_dark",
-        height=1200,
-        width =1100,
-        hovermode="x unified",
-        legend=dict(
+    title=None,
+
+    template="plotly_dark",
+
+    height=980,
+
+    autosize=True,
+
+    width=None,
+
+    uirevision=True,
+
+    hovermode="x unified",
+
+    margin=dict(
+        l=20,
+        r=20,
+        t=60,
+        b=20
+    ),
+
+    paper_bgcolor="#111827",
+    plot_bgcolor="#111827",
+
+    font=dict(
+        family="Inter",
+        size=14,
+        color="white"
+    ),
+
+    legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=1.12,
+        y=1.04,
         xanchor="center",
-        x=0.5
-    )
+        x=0.5,
+        font=dict(size=12)
+    ),
 )
 
     fig.update_yaxes(
@@ -180,4 +215,10 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
     row=3,  
     col=1,
 )   
-    return fig.to_html(full_html=False)
+    return fig.to_html(
+    full_html=False,
+    config={
+        "responsive": True,
+        "displaylogo": False,
+    }
+)

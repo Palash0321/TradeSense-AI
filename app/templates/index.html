@@ -7,222 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>TradeSense AI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0F172A;
-            color: white;
-        }
-
-        /* ================= NAVBAR ================= */
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 80px;
-            background: #111827;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #38BDF8;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 35px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: white;
-            font-size: 18px;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #38BDF8;
-        }
-
-        /* ================= HERO ================= */
-
-        .hero {
-            min-height: 90vh;
-
-            display: flex;
-            flex-direction: column;
-
-            justify-content: center;
-            align-items: center;
-
-            text-align: center;
-
-            padding: 20px;
-        }
-
-        .hero h1 {
-            font-size: 64px;
-            color: #38BDF8;
-            margin-bottom: 20px;
-        }
-
-        .hero h2 {
-            font-size: 38px;
-            margin-bottom: 15px;
-        }
-
-        .hero p {
-            font-size: 22px;
-            color: #CBD5E1;
-            max-width: 700px;
-            line-height: 1.6;
-            margin-bottom: 50px;
-        }
-
-        /* ================= FORM ================= */
-
-        form {
-            background: #1E293B;
-            padding: 35px;
-            width: 450px;
-            border-radius: 20px;
-            box-shadow: 0px 0px 30px rgba(56, 189, 248, .15);
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        select,
-        input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: #38BDF8;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        button:hover {
-            background: #0EA5E9;
-            transform: translateY(-3px);
-        }
-
-        /* ================= FEATURES ================= */
-
-        .features {
-            padding: 80px 50px;
-            text-align: center;
-        }
-
-        .features h2 {
-            font-size: 40px;
-            margin-bottom: 50px;
-            color: #38BDF8;
-        }
-
-        .feature-grid {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .feature-card {
-            background: #1E293B;
-            width: 250px;
-            padding: 30px;
-            border-radius: 20px;
-            transition: .3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0px 0px 20px rgba(56, 189, 248, .3);
-        }
-
-        .feature-card h3 {
-            margin: 20px 0;
-            color: #38BDF8;
-        }
-
-        .feature-card p {
-            color: #CBD5E1;
-            line-height: 1.6;
-        }
-
-        /* ================= FOOTER ================= */
-
-        footer {
-            background: #111827;
-            text-align: center;
-            padding: 30px;
-            margin-top: 60px;
-            color: #CBD5E1;
-        }
-
-        /* ================= MOBILE ================= */
-
-        @media(max-width:768px) {
-
-            .navbar {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
-            }
-
-            .hero h1 {
-                font-size: 42px;
-            }
-
-            .hero h2 {
-                font-size: 28px;
-            }
-
-            .hero p {
-                font-size: 18px;
-            }
-
-            form {
-                width: 95%;
-            }
-        }
-    </style>
+    
 
 </head>
 
@@ -258,15 +46,17 @@
 
     <section class="hero">
 
-        <h1>📈 TradeSense AI</h1>
+        <h1>TradeSense AI</h1>
 
-        <h2>Invest Smarter with AI</h2>
+        <h2>
+            AI-Powered Stock Analysis Platform
+        </h2>
 
         <p>
 
-            AI-powered stock analysis platform for Indian and US stock markets.
-
-            Get intelligent investment insights within seconds.
+            Analyze Indian and US stocks using advanced technical indicators,
+            interactive charts and intelligent AI-generated BUY, SELL & HOLD
+            recommendations — all in seconds.
 
         </p>
 
@@ -299,6 +89,31 @@
         </form>
 
     </section>
+
+<section class="stats">
+
+    <div class="stat-box">
+        <h2>1000+</h2>
+        <p>Stocks Supported</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>2</h2>
+        <p>Global Markets</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>AI</h2>
+        <p>Technical Analysis</p>
+    </div>
+
+    <div class="stat-box">
+        <h2>24×7</h2>
+        <p>Available Anytime</p>
+    </div>
+
+</section>
+
 
     <!-- FEATURES -->
 
@@ -364,10 +179,18 @@
 
     <footer>
 
-        © 2026 TradeSense AI • Built with ❤️ by Palash Mukherjee
+    <h3>TradeSense AI</h3>
 
-    </footer>
+    <p>
+        AI-powered investment analysis for smarter decisions.
+    </p>
 
+    <br>
+
+    © 2026 TradeSense AI • Developed by <b>Palash Mukherjee</b>
+
+</footer>
+<div class="background-glow"></div>
 </body>
 
 </html>

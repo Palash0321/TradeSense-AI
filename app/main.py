@@ -3,6 +3,8 @@ from app.api.stocks import router as stock_router
 from fastapi.templating import Jinja2Templates
 from app.services.signal_service import generate_signal
 from app.services.chart_service import create_stock_chart
+from fastapi.staticfiles import StaticFiles
+from services.news_service import get_stock_news
 
 app = FastAPI(
     title="TradeSense AI",
@@ -10,6 +12,7 @@ app = FastAPI(
     version="1.0.0"
 )
 templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(stock_router)
 @app.get("/")

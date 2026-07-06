@@ -1,98 +1,145 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
 
-    <title>TradeSense AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
+<title>TradeSense AI</title>
 
-        body{
+<link rel="stylesheet" href="/static/css/style.css">
 
-    margin:0;
-
-    background:#0F172A;
-
-    color:white;
-
-    font-family:Arial, sans-serif;
-
-}
-
-.hero{
-
-    text-align:center;
-
-    padding:80px 20px;
-
-}
-
-.hero h1{
-
-    font-size:60px;
-
-    color:#38BDF8;
-
-    margin-bottom:10px;
-
-}
-
-.hero h2{
-
-    font-size:36px;
-
-    color:white;
-
-}
-
-.hero p{
-
-    font-size:22px;
-
-    color:#CBD5E1;
-
-}
-
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="card">
+<nav class="navbar">
 
-<h1>📈 TradeSense AI</h1>
+<div class="logo">
+📈 TradeSense AI
+</div>
 
-<hr>
+<ul class="nav-links">
 
-<h2>{{ result.symbol }}</h2>
+<li><a href="/">Home</a></li>
 
-<p>💰 Price : {{ result.price }}</p>
-
-<p>📢 Recommendation : {{ result.recommendation }}</p>
-
-<p>🎯 Confidence : {{ result.confidence }}</p>
-
-<p>🛡 Risk : {{ result.risk }}</p>
-
-<h3>📋 Reasons</h3>
-
-<ul>
-
-{% for reason in result.reasons %}
-
-<li>{{ reason }}</li>
-
-{% endfor %}
+<li><a href="/">Analyze Another Stock</a></li>
 
 </ul>
 
-<h3>📈 Live Stock Chart</h3>
+</nav>
 
-<div style="width:100%; overflow-x:auto;">
 
-    {{ chart|safe }}
+<div class="dashboard">
+
+<div class="result-header">
+
+<h1>{{ result.symbol }}</h1>
+
+<p>AI Technical Analysis Report</p>
+
+</div>
+
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+<h4>💰 Current Price</h4>
+
+<h2>₹ {{ result.price }}</h2>
+
+<small>Live Market Price</small>
+
+</div>
+
+
+<div class="stat-card">
+
+<h4>📢 Recommendation</h4>
+
+<div class="recommendation">
+
+{% if result.signal=="BUY" %}
+
+<span class="buy">BUY</span>
+
+{% elif result.signal=="SELL" %}
+
+<span class="sell">SELL</span>
+
+{% else %}
+
+<span class="hold">HOLD</span>
+
+{% endif %}
+
+</div>
+<small>Technical Recommendation</small>
+</div>
+
+
+
+<div class="stat-card">
+
+<h4>🎯 Confidence</h4>
+
+<h2>{{ result.confidence }}</h2>
+
+<small>AI Prediction Score</small>
+
+</div>
+
+
+<div class="stat-card">
+
+<h4>🛡 Risk Level</h4>
+
+<h2>{{ result.risk }}</h2>
+
+<small>Volatility Index</small>
+
+</div>
+
+</div>
+
+
+<div class="analysis-section">
+
+    <div class="chart-card">
+
+        <h2>📈 Live Technical Chart</h2>
+
+        <div class="chart-wrapper">
+
+    <div class="plotly-container">
+
+        {{ chart|safe }}
+
+    </div>
+
+</div>
+
+    </div>
+
+    <div class="reason-card">
+
+        <h2>📋 AI Analysis</h2>
+
+        <ul>
+
+        {% for reason in result.reasons %}
+
+            <li>✅ {{ reason }}</li>
+
+        {% endfor %}
+
+        </ul>
+
+    </div>
 
 </div>
 
