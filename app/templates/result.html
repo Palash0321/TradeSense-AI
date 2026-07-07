@@ -43,6 +43,20 @@
 
 <p>{{ result.sector }} • {{ result.industry }}</p>
 
+<div class="market-status">
+
+{% if result.market_status == "OPEN" %}
+
+<span class="market-open">🟢 Market Open</span>
+
+{% else %}
+
+<span class="market-closed">🔴 Market Closed</span>
+
+{% endif %}
+
+</div>
+
 </div>
 
 
@@ -111,26 +125,51 @@
 
 <div class="stat-card">
 
-<h4>📢 Recommendation</h4>
+    <h4>📢 Recommendation</h4>
 
-<div class="recommendation">
+    <div class="recommendation">
 
-{% if result.signal=="BUY" %}
+        {% if result.signal=="BUY" %}
 
-<span class="buy">BUY</span>
+        <span class="buy">
+        📈 BUY
+        </span>
 
-{% elif result.signal=="SELL" %}
+        {% elif result.signal=="SELL" %}
 
-<span class="sell">SELL</span>
+        <span class="sell">
+        📉 SELL
+        </span>
 
-{% else %}
+        {% else %}
 
-<span class="hold">HOLD</span>
+        <span class="hold">
+        ⏸ HOLD
+        </span>
 
-{% endif %}
+        {% endif %}
 
-</div>
-<small>Technical Recommendation</small>
+    </div>
+
+    <div class="confidence-section">
+
+        <p>AI Confidence</p>
+
+        <div class="confidence-bar">
+
+            <div
+                class="confidence-fill"
+                style="width: {{ result.confidence }};">
+            </div>
+
+        </div>
+
+        <strong>{{ result.confidence }}</strong>
+
+    </div>
+
+    <small>Technical Recommendation</small>
+
 </div>
 
 

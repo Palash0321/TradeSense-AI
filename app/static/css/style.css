@@ -976,3 +976,102 @@ html{
     font-size:18px;
 
 }
+
+.market-status{
+
+    margin-top:12px;
+
+}
+
+.market-open{
+
+    background:#064e3b;
+
+    color:#22c55e;
+
+    padding:8px 16px;
+
+    border-radius:25px;
+
+    font-weight:700;
+
+    display:inline-block;
+
+}
+
+.market-closed{
+
+    background:#450a0a;
+
+    color:#ef4444;
+
+    padding:8px 16px;
+
+    border-radius:25px;
+
+    font-weight:700;
+
+    display:inline-block;
+
+}
+
+/* Recommendation Confidence */
+
+.confidence-section{
+
+    margin-top:25px;
+
+}
+
+.confidence-section p{
+
+    color:#94A3B8;
+
+    font-size:14px;
+
+    margin-bottom:10px;
+
+}
+
+.confidence-bar{
+
+    width:100%;
+
+    height:12px;
+
+    background:#1f2937;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+.confidence-fill{
+
+    height:100%;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        90deg,
+        #22c55e,
+        #06b6d4,
+        #3b82f6
+    );
+
+    transition:.8s;
+
+}
+
+.confidence-section strong{
+
+    display:block;
+
+    margin-top:10px;
+
+    font-size:18px;
+
+    color:white;
+
+}

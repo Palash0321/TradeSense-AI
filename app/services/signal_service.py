@@ -1,4 +1,5 @@
 import yfinance as yf
+from datetime import datetime
 
 def format_market_cap(value):
 
@@ -158,6 +159,27 @@ def generate_signal(symbol: str, period: str = "6mo"):
     else:
         risk = "Very High"
 
+    # -------- Market Status --------
+
+    now = datetime.now()
+
+    weekday = now.weekday()
+    hour = now.hour
+    minute = now.minute
+
+    market_status = "CLOSED"
+
+    # NSE Market Hours
+    if weekday < 5:
+
+        if (
+            (hour == 9 and minute >= 15)
+            or (9 < hour < 15)
+            or (hour == 15 and minute <= 30)
+        ):
+            market_status = "OPEN"
+
+
     return {
     "symbol": symbol.upper(),
     "price": format_price(float(latest["Close"])),
@@ -187,5 +209,5 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     "is_positive": price_change >= 0 if price_change is not None else True,
 
-    "market_status": "OPEN",
+    "market_status": market_status,
 }
