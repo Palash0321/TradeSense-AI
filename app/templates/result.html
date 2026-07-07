@@ -56,6 +56,32 @@
 
     <small>Live Market Price</small>
 
+    <div class="price-change">
+
+{% if result.is_positive %}
+
+<p class="positive">
+
+🟢 +₹ {{ result.price_change }}
+
+(+{{ result.price_change_percent }}%)
+
+</p>
+
+{% else %}
+
+<p class="negative">
+
+🔴 ₹ {{ result.price_change }}
+
+({{ result.price_change_percent }}%)
+
+</p>
+
+{% endif %}
+
+</div>
+
     <div class="market-data">
 
         <div>

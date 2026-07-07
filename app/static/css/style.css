@@ -950,3 +950,29 @@ html{
     font-weight:600;
 
 }
+
+.price-change{
+
+    margin-top:15px;
+
+}
+
+.positive{
+
+    color:#22c55e;
+
+    font-weight:700;
+
+    font-size:18px;
+
+}
+
+.negative{
+
+    color:#ef4444;
+
+    font-weight:700;
+
+    font-size:18px;
+
+}

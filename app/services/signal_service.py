@@ -42,7 +42,16 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     stock = yf.Ticker(symbol)
     info = stock.info
-    history = stock.history(period=period)
+    current_price = info.get("currentPrice") or info.get("regularMarketPrice")
+    previous_close = info.get("previousClose")
+
+    price_change = None
+    price_change_percent = None
+
+    if current_price and previous_close:
+        price_change = current_price - previous_close
+        price_change_percent = (price_change / previous_close) * 100
+        history = stock.history(period=period)
 
     if history.empty:
         return {
@@ -171,4 +180,12 @@ def generate_signal(symbol: str, period: str = "6mo"):
     "company": info.get("longName"),
     "sector": info.get("sector"),
     "industry": info.get("industry"),
+
+    "price_change": round(price_change, 2) if price_change else 0,
+
+    "price_change_percent": round(price_change_percent, 2) if price_change_percent else 0,
+
+    "is_positive": price_change >= 0 if price_change is not None else True,
+
+    "market_status": "OPEN",
 }
