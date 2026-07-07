@@ -906,3 +906,47 @@ html{
     text-decoration:underline;
 
 }
+
+.market-data{
+
+    margin-top:25px;
+
+}
+
+.market-data div{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.market-data div:last-child{
+
+    border:none;
+
+}
+
+.market-data span{
+
+    color:#94A3B8;
+
+    font-size:15px;
+
+}
+
+.market-data strong{
+
+    color:white;
+
+    font-size:17px;
+
+    font-weight:600;
+
+}

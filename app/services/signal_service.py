@@ -1,9 +1,47 @@
 import yfinance as yf
 
+def format_market_cap(value):
+
+    if not value:
+        return "N/A"
+
+    if value >= 1_000_000_000_000:
+        return f"₹ {value/1_000_000_000_000:.2f} T"
+
+    elif value >= 1_000_000_000:
+        return f"₹ {value/1_000_000_000:.2f} B"
+
+    elif value >= 1_000_000:
+        return f"₹ {value/1_000_000:.2f} M"
+
+    return f"₹ {value:,}"
+
+
+def format_volume(value):
+
+    if not value:
+        return "N/A"
+
+    if value >= 1_000_000:
+        return f"{value/1_000_000:.2f} M"
+
+    elif value >= 1_000:
+        return f"{value/1_000:.2f} K"
+
+    return str(value)
+
+
+def format_price(value):
+
+    if value is None:
+        return "N/A"
+
+    return f"{value:,.2f}"
 
 def generate_signal(symbol: str, period: str = "6mo"):
 
     stock = yf.Ticker(symbol)
+    info = stock.info
     history = stock.history(period=period)
 
     if history.empty:
@@ -18,7 +56,7 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     history = history.dropna(subset=["Close"])
 
-    latest = history.iloc[-1]
+    
 
     # Moving Averages
     history["MA20"] = history["Close"].rolling(20).mean()
@@ -113,7 +151,7 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     return {
     "symbol": symbol.upper(),
-    "price": f"{latest['Close']:,.2f}",
+    "price": format_price(float(latest["Close"])),
     "score": score,
     "confidence": confidence,
     "risk": risk,
@@ -122,4 +160,15 @@ def generate_signal(symbol: str, period: str = "6mo"):
     "RSI": round(float(latest["RSI"]), 2),
     "MACD": round(float(latest["MACD"]), 2),
     "Signal": round(float(latest["Signal"]), 2),
+    "open": format_price(info.get("open")),
+    "high": format_price(info.get("dayHigh")),
+    "low": format_price(info.get("dayLow")),
+    "previous_close": format_price(info.get("previousClose")),
+
+    "volume": format_volume(info.get("volume")),
+    "market_cap": format_market_cap(info.get("marketCap")),
+    "pe_ratio": round(info.get("trailingPE", 0), 2),
+    "company": info.get("longName"),
+    "sector": info.get("sector"),
+    "industry": info.get("industry"),
 }

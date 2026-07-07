@@ -39,7 +39,9 @@
 
 <h1>{{ result.symbol }}</h1>
 
-<p>AI Technical Analysis Report</p>
+<h3>{{ result.company }}</h3>
+
+<p>{{ result.sector }} • {{ result.industry }}</p>
 
 </div>
 
@@ -48,11 +50,35 @@
 
 <div class="stat-card">
 
-<h4>💰 Current Price</h4>
+    <h4>💰 Current Price</h4>
 
-<h2>₹ {{ result.price }}</h2>
+    <h2>₹ {{ result.price }}</h2>
 
-<small>Live Market Price</small>
+    <small>Live Market Price</small>
+
+    <div class="market-data">
+
+        <div>
+            <span>Open</span>
+            <strong>₹ {{ result.open }}</strong>
+        </div>
+
+        <div>
+            <span>High</span>
+            <strong>₹ {{ result.high }}</strong>
+        </div>
+
+        <div>
+            <span>Low</span>
+            <strong>₹ {{ result.low }}</strong>
+        </div>
+
+        <div>
+            <span>Prev Close</span>
+            <strong>₹ {{ result.previous_close }}</strong>
+        </div>
+
+    </div>
 
 </div>
 
@@ -85,11 +111,26 @@
 
 <div class="stat-card">
 
-<h4>🎯 Confidence</h4>
+    <h4>📊 Market Statistics</h4>
 
-<h2>{{ result.confidence }}</h2>
+    <div class="market-data">
 
-<small>AI Prediction Score</small>
+        <div>
+            <span>Volume</span>
+            <strong>{{ result.volume }}</strong>
+        </div>
+
+        <div>
+            <span>Market Cap</span>
+            <strong>{{ result.market_cap }}</strong>
+        </div>
+
+        <div>
+            <span>P/E Ratio</span>
+            <strong>{{ result.pe_ratio }}</strong>
+        </div>
+
+    </div>
 
 </div>
 
