@@ -1075,3 +1075,291 @@ html{
     color:white;
 
 }
+
+/* Watchlist */
+
+.watchlist{
+
+    margin-top:50px;
+
+    text-align:center;
+
+}
+
+.watchlist h3{
+
+    color:white;
+
+    margin-bottom:25px;
+
+    font-size:24px;
+
+}
+
+.watchlist h4{
+
+    color:#CBD5E1;
+
+    margin-bottom:20px;
+
+    margin-top:20px;
+
+    font-size:20px;
+
+}
+
+.watchlist-grid{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+.watchlist-grid a{
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#1f2937;
+
+    padding:14px 28px;
+
+    border-radius:30px;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+.watchlist-grid a:hover{
+
+    background:#2563eb;
+
+    transform:translateY(-3px);
+
+}
+
+/* Search Suggestions */
+
+.search-box{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+#suggestions{
+
+    position:absolute;
+
+    width:100%;
+
+    background:white;
+
+    border-radius:16px;
+
+    margin-top:8px;
+
+    overflow:hidden;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.15);
+
+    z-index:999;
+
+    max-height:360px;
+
+    overflow-y:auto;
+
+}
+
+#suggestions div{
+
+    padding:12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    color:#111827;
+
+    font-weight:600;
+
+}
+
+#suggestions div:hover{
+
+    background:#DBEAFE;
+
+}
+
+/* Professional Suggestions */
+
+.suggestion-item{
+
+    padding:14px;
+
+    border-bottom:1px solid #E5E7EB;
+
+    cursor:pointer;
+
+}
+
+.suggestion-item strong{
+
+    font-size:16px;
+
+    color:#111827;
+
+}
+
+.suggestion-item small{
+
+    color:#475569;
+
+    display:block;
+
+    margin-top:3px;
+
+}
+
+.suggestion-item span{
+
+    color:#2563EB;
+
+    font-size:12px;
+
+    display:block;
+
+    margin-top:5px;
+
+}
+
+.suggestion-item:hover{
+
+    background:#EFF6FF;
+
+}
+
+/* ===========================
+Professional Search Results
+=========================== */
+
+.stock-result{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.stock-left{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.stock-symbol{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.stock-name{
+
+    font-size:13px;
+
+    color:#64748B;
+
+    margin-top:4px;
+
+}
+
+.stock-right{
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+}
+
+/* ===============================
+Premium Search Box
+=============================== */
+
+.search-input-wrapper{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+.search-icon{
+
+    position:absolute;
+
+    left:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    font-size:18px;
+
+    color:#64748B;
+
+    pointer-events:none;
+
+}
+
+#stock-search{
+
+    width:100%;
+
+    padding:16px 20px 16px 50px;
+
+    border:none;
+
+    border-radius:16px;
+
+    font-size:16px;
+
+    background:white;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+#stock-search:focus{
+
+    outline:none;
+
+    box-shadow:0 0 0 4px rgba(37,99,235,.20);
+
+}

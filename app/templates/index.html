@@ -74,19 +74,84 @@
 
             <label>Stock Symbol</label>
 
-            <input
-                type="text"
-                name="symbol"
-                placeholder="Example: RELIANCE or AAPL"
-                required>
+            <div class="search-box">
+
+    <div class="search-input-wrapper">
+
+    <span class="search-icon">🔍</span>
+
+    <input
+        type="text"
+        id="stock-search"
+        name="symbol"
+        placeholder="Search companies, symbols..."
+        autocomplete="off"
+        required>
+
+</div>
+
+    <div id="suggestions"></div>
+
+</div>
 
             <button type="submit">
 
                 🚀 Analyze Stock
 
             </button>
+</form>
 
-        </form>
+<!-- ================= 🚀 Quick Analyze ================= -->
+
+<div class="watchlist">
+
+    <h3>🚀 Quick Analyze</h3>
+
+    <h4>🇮🇳 Indian Stocks</h4>
+
+    <div class="watchlist-grid">
+
+        <a href="/stock/RELIANCE">RELIANCE</a>
+
+        <a href="/stock/TCS">TCS</a>
+
+        <a href="/stock/INFY">INFY</a>
+
+        <a href="/stock/HDFCBANK">HDFCBANK</a>
+
+        <a href="/stock/SBIN">SBIN</a>
+
+        <a href="/stock/ICICIBANK">ICICIBANK</a>
+
+        <a href="/stock/ITC">ITC</a>
+
+        <a href="/stock/LT">LT</a>
+
+    </div>
+
+    <h4 style="margin-top:40px;">🇺🇸 US Stocks</h4>
+
+    <div class="watchlist-grid">
+
+        <a href="/analyze?market=us&symbol=AAPL">AAPL</a>
+
+        <a href="/analyze?market=us&symbol=MSFT">MSFT</a>
+
+        <a href="/analyze?market=us&symbol=NVDA">NVDA</a>
+
+        <a href="/analyze?market=us&symbol=AMZN">AMZN</a>
+
+        <a href="/analyze?market=us&symbol=META">META</a>
+
+        <a href="/analyze?market=us&symbol=TSLA">TSLA</a>
+
+        <a href="/analyze?market=us&symbol=GOOGL">GOOGL</a>
+
+        <a href="/analyze?market=us&symbol=NFLX">NFLX</a>
+
+    </div>
+
+</div>
 
     </section>
 
@@ -191,6 +256,123 @@
 
 </footer>
 <div class="background-glow"></div>
+<script>
+
+let stocks = [];
+
+fetch("/api/stocks")
+.then(response => response.json())
+.then(data => {
+
+    stocks = data;  
+
+});
+const input = document.getElementById("stock-search");
+
+const suggestions = document.getElementById("suggestions");
+
+input.addEventListener("keyup", function(){
+
+    const value = this.value.toUpperCase();
+
+    suggestions.innerHTML="";
+
+    if(value===""){
+
+    suggestions.innerHTML="";
+
+    return;
+
+}
+
+    stocks
+.filter(stock =>
+
+    stock.symbol.toUpperCase().includes(value) ||
+
+    stock.name.toUpperCase().includes(value)
+
+)
+.slice(0,6)
+.forEach(stock=>{
+    const div=document.createElement("div");
+
+    div.className="suggestion-item";
+
+    div.innerHTML = `
+
+<div class="stock-result">
+
+    <div class="stock-left">
+
+        <div class="stock-symbol">
+
+            ${stock.market==="india" ? "🇮🇳" : "🇺🇸"} ${stock.symbol}
+
+        </div>
+
+        <div class="stock-name">
+
+            ${stock.name}
+
+        </div>
+
+    </div>
+
+    <div class="stock-right">
+
+        ${stock.sector}
+
+    </div>
+
+</div>
+
+`;
+
+    div.onclick = function(){
+
+    document.body.style.cursor = "wait";
+
+    const market = stock.market;
+
+    window.location.href =
+        `/analyze?market=${market}&symbol=${stock.symbol}`;
+
+};
+
+    suggestions.appendChild(div);
+
+});
+
+});
+
+document.addEventListener("click", function(event){
+
+    if(!event.target.closest(".search-box")){
+
+        suggestions.innerHTML = "";
+
+    }
+
+});
+
+    input.addEventListener("keydown", function(event){
+
+    if(event.key === "Enter"){
+
+        suggestions.innerHTML = "";
+
+        if(input.value.trim() === ""){
+
+            event.preventDefault();
+
+        }
+
+    }
+
+});
+
+</script>
 </body>
 
 </html>

@@ -1,0 +1,56 @@
+[
+  {
+    "symbol": "RELIANCE",
+    "name": "Reliance Industries Ltd",
+    "market": "india",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "TCS",
+    "name": "Tata Consultancy Services",
+    "market": "india",
+    "sector": "IT"
+  },
+  {
+    "symbol": "INFY",
+    "name": "Infosys Ltd",
+    "market": "india",
+    "sector": "IT"
+  },
+  {
+    "symbol": "HDFCBANK",
+    "name": "HDFC Bank",
+    "market": "india",
+    "sector": "Banking"
+  },
+  {
+    "symbol": "SBIN",
+    "name": "State Bank of India",
+    "market": "india",
+    "sector": "Banking"
+  },
+  {
+    "symbol": "AAPL",
+    "name": "Apple Inc",
+    "market": "us",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "MSFT",
+    "name": "Microsoft Corporation",
+    "market": "us",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA Corporation",
+    "market": "us",
+    "sector": "Semiconductor"
+  },
+  {
+    "symbol": "AMZN",
+    "name": "Amazon.com Inc",
+    "market": "us",
+    "sector": "E-Commerce"
+  }
+]

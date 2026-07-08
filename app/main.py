@@ -5,6 +5,8 @@ from app.services.signal_service import generate_signal
 from app.services.chart_service import create_stock_chart
 from fastapi.staticfiles import StaticFiles
 from app.services.news_service import get_stock_news
+from fastapi.responses import RedirectResponse
+import json
 app = FastAPI(
     title="TradeSense AI",
     description="AI-Powered Stock Market Analysis Platform",
@@ -48,3 +50,21 @@ def health():
     return {
         "status": "Running Successfully"
     }
+
+
+@app.get("/stock/{symbol}")
+def stock_redirect(symbol: str):
+
+    symbol = symbol.upper()
+
+    return RedirectResponse(
+        url=f"/analyze?market=india&symbol={symbol}"
+    )
+
+@app.get("/api/stocks")
+def stocks():
+
+    with open("data/stocks.json", "r") as file:
+        data = json.load(file)
+
+    return data
