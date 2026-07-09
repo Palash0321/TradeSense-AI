@@ -170,6 +170,16 @@
 
     <small>Technical Recommendation</small>
 
+    <br><br>
+
+<button
+    class="watchlist-btn"
+    onclick="addToWatchlist()">
+
+⭐ Add to Watchlist
+
+</button>
+
 </div>
 
 
@@ -281,6 +291,48 @@
 </div>
 
 </div>
+
+<script>
+
+function addToWatchlist(){
+
+    let watchlist =
+        JSON.parse(localStorage.getItem("watchlist")) || [];
+
+    const stock = {
+
+        symbol: "{{ result.symbol }}",
+
+        company: "{{ result.company }}"
+
+    };
+
+    const exists = watchlist.find(
+
+        s => s.symbol === stock.symbol
+
+    );
+
+    if(!exists){
+
+        watchlist.push(stock);
+
+    }
+
+    localStorage.setItem(
+
+        "watchlist",
+
+        JSON.stringify(watchlist)
+
+    );
+
+    alert("Added to Watchlist ⭐");
+
+}
+
+</script>
+
 </body>
 
 </html>

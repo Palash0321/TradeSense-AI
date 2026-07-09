@@ -1,0 +1,31 @@
+symbol,name,market,sector,industry,exchange
+RELIANCE,Reliance Industries Ltd,india,Energy,Oil & Gas,NSE
+TCS,Tata Consultancy Services,india,IT,Software,NSE
+INFY,Infosys Ltd,india,IT,Software,NSE
+HDFCBANK,HDFC Bank,india,Banking,Private Bank,NSE
+SBIN,State Bank of India,india,Banking,Public Bank,NSE
+AAPL,Apple Inc,us,Technology,Consumer Electronics,NASDAQ
+MSFT,Microsoft Corporation,us,Technology,Software,NASDAQ
+NVDA,NVIDIA Corporation,us,Semiconductor,AI Chips,NASDAQ
+AMZN,Amazon.com Inc,us,E-Commerce,Retail,NASDAQ
+META,Meta Platforms Inc,us,Technology,Social Media,NASDAQ
+LT,Larsen & Toubro,india,Infrastructure,Engineering,NSE
+ITC,ITC Ltd,india,FMCG,Tobacco,NSE
+AXISBANK,Axis Bank,india,Banking,Private Bank,NSE
+KOTAKBANK,Kotak Mahindra Bank,india,Banking,Private Bank,NSE
+TATAMOTORS,Tata Motors,india,Automobile,Automobile,NSE
+TATASTEEL,Tata Steel,india,Metal,Steel,NSE
+TATAPOWER,Tata Power,india,Power,Electric Utility,NSE
+TATACONSUM,Tata Consumer Products,india,FMCG,Consumer Goods,NSE
+BAJAJFINSV,Bajaj Finserv,india,Finance,Financial Services,NSE
+BAJFINANCE,Bajaj Finance,india,Finance,NBFC,NSE
+ASIANPAINT,Asian Paints,india,Paints,Chemicals,NSE
+MARUTI,Maruti Suzuki,india,Automobile,Automobile,NSE
+ULTRACEMCO,UltraTech Cement,india,Cement,Cement,NSE
+SUNPHARMA,Sun Pharmaceutical,india,Pharma,Healthcare,NSE
+ADANIENT,Adani Enterprises,india,Conglomerate,Diversified,NSE
+ADANIPORTS,Adani Ports,india,Logistics,Ports,NSE
+POWERGRID,Power Grid Corp,india,Power,Utility,NSE
+ONGC,ONGC,india,Energy,Oil & Gas,NSE
+WIPRO,Wipro Ltd,india,IT,Software,NSE
+HCLTECH,HCL Technologies,india,IT,Software,NSE

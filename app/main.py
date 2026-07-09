@@ -7,6 +7,11 @@ from fastapi.staticfiles import StaticFiles
 from app.services.news_service import get_stock_news
 from fastapi.responses import RedirectResponse
 import json
+from app.services.signal_service import get_live_price
+from app.services.screener_service import get_top_stocks
+from app.services.database_service import get_connection
+from fastapi.responses import JSONResponse
+
 app = FastAPI(
     title="TradeSense AI",
     description="AI-Powered Stock Market Analysis Platform",
@@ -68,3 +73,91 @@ def stocks():
         data = json.load(file)
 
     return data
+
+@app.get("/api/price/{symbol}")
+def price(symbol: str):
+
+    if symbol.endswith(".NS"):
+
+        final_symbol = symbol
+
+    else:
+
+        final_symbol = symbol
+
+    return get_live_price(final_symbol)
+
+@app.get("/api/screener")
+def screener(market: str = "india"):
+
+    stocks = get_top_stocks(market)
+
+    return stocks
+
+@app.get("/watchlist")
+def watchlist(request: Request):
+
+    return templates.TemplateResponse(
+
+        request=request,
+
+        name="watchlist.html"
+
+    )
+
+@app.get("/api/search")
+def search_stocks(
+
+    query: str = "",
+
+    market: str = "india"
+
+):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+
+    """
+    SELECT symbol,name,market,sector
+    FROM stocks
+    WHERE market = ?
+    AND (
+        symbol LIKE ?
+        OR name LIKE ?
+    )
+    ORDER BY
+        CASE
+            WHEN symbol LIKE ? THEN 1
+            WHEN name LIKE ? THEN 2
+            ELSE 3
+        END,
+        symbol
+    LIMIT 10
+    """,
+
+    (
+
+        market,
+
+        f"%{query}%",
+
+        f"%{query}%",
+
+        f"{query}%",
+
+        f"{query}%"
+
+    )
+
+)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return JSONResponse(
+        content=[dict(row) for row in rows]
+    )

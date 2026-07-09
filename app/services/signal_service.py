@@ -211,3 +211,30 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     "market_status": market_status,
 }
+
+def get_live_price(symbol: str):
+
+    stock = yf.Ticker(symbol)
+
+    history = stock.history(period="2d")
+
+    if history.empty:
+        return None
+
+    latest = float(history["Close"].iloc[-1])
+
+    previous = float(history["Close"].iloc[-2])
+
+    change = latest - previous
+
+    change_percent = (change / previous) * 100
+
+    return {
+
+        "price": round(latest,2),
+
+        "change": round(change,2),
+
+        "change_percent": round(change_percent,2)
+
+    }

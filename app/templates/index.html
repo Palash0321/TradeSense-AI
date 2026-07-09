@@ -28,15 +28,13 @@
 
         <ul class="nav-links">
 
-            <li><a href="/">Home</a></li>
+            <li><a href="/">🏠 Home</a></li>
 
-            <li><a href="#features">Features</a></li>
+<li><a href="#markets">📈 Markets</a></li>
 
-            <li><a href="#">Markets</a></li>
+<li><a href="#screener">🤖 AI Screener</a></li>
 
-            <li><a href="#">About</a></li>
-
-            <li><a href="#">Contact</a></li>
+<li><a href="/watchlist">⭐ Watchlist</a></li>
 
         </ul>
 
@@ -64,7 +62,9 @@
 
             <label>Select Market</label>
 
-            <select name="market">
+            <select
+    name="market"
+    id="market-select">
 
                 <option value="india">🇮🇳 Indian Market</option>
 
@@ -103,13 +103,19 @@
 
 <!-- ================= 🚀 Quick Analyze ================= -->
 
+<section id="markets">
+
 <div class="watchlist">
 
     <h3>🚀 Quick Analyze</h3>
 
-    <h4>🇮🇳 Indian Stocks</h4>
+     <!-- Indian Stocks -->
 
-    <div class="watchlist-grid">
+    <div class="market-group">
+
+            <h4 class="market-heading">🇮🇳 Indian Stocks</h4>
+
+            <div class="watchlist-grid">
 
         <a href="/stock/RELIANCE">RELIANCE</a>
 
@@ -126,12 +132,15 @@
         <a href="/stock/ITC">ITC</a>
 
         <a href="/stock/LT">LT</a>
-
     </div>
+</div>
 
-    <h4 style="margin-top:40px;">🇺🇸 US Stocks</h4>
+<!-- US Stocks -->
+    <div class="market-group">
 
-    <div class="watchlist-grid">
+            <h4 class="market-heading">🇺🇸 US Stocks</h4>
+
+            <div class="watchlist-grid">
 
         <a href="/analyze?market=us&symbol=AAPL">AAPL</a>
 
@@ -153,7 +162,23 @@
 
 </div>
 
-    </section>
+</div>
+
+</section>
+
+<section
+id="screener"
+class="screener-section">
+
+    <h2>🔥 AI Stock Screener</h2>
+
+    <div id="screener-container">
+
+        Loading AI Analysis...
+
+    </div>
+
+</section>
 
 <section class="stats">
 
@@ -226,7 +251,7 @@
 
             <div class="feature-card">
 
-                <h3>🇺🇸 US Market</h3>
+                <h3>🇺🇸 US Stocks</h3>
 
                 <p>
 
@@ -258,15 +283,6 @@
 <div class="background-glow"></div>
 <script>
 
-let stocks = [];
-
-fetch("/api/stocks")
-.then(response => response.json())
-.then(data => {
-
-    stocks = data;  
-
-});
 const input = document.getElementById("stock-search");
 
 const suggestions = document.getElementById("suggestions");
@@ -274,6 +290,8 @@ const suggestions = document.getElementById("suggestions");
 input.addEventListener("keyup", function(){
 
     const value = this.value.toUpperCase();
+
+    const market = document.getElementById("market-select").value;
 
     suggestions.innerHTML="";
 
@@ -285,41 +303,80 @@ input.addEventListener("keyup", function(){
 
 }
 
-    stocks
-.filter(stock =>
+ fetch(`/api/search?query=${value}&market=${market}`)
 
-    stock.symbol.toUpperCase().includes(value) ||
+    .then(response => response.json())
 
-    stock.name.toUpperCase().includes(value)
+    .then(stocks => {
 
-)
-.slice(0,6)
-.forEach(stock=>{
-    const div=document.createElement("div");
+        suggestions.innerHTML = "";
+        if(stocks.length === 0){
 
-    div.className="suggestion-item";
+    suggestions.innerHTML = `
 
-    div.innerHTML = `
+    <div class="no-result">
 
-<div class="stock-result">
+    <div class="no-result-icon">🔍</div>
 
-    <div class="stock-left">
+    <h3>No Results Found</h3>
 
-        <div class="stock-symbol">
+    <p>
+
+        <strong>${value}</strong> is not available in the
+
+        <strong>${market === "india" ? "Indian" : "US"}</strong>
+
+        market.
+
+    </p>
+
+    <small>
+
+        Try changing the market or search for another company.
+
+    </small>
+
+</div>
+
+`;
+
+    return;
+
+}
+
+        stocks.forEach(stock => {
+
+            const div = document.createElement("div");
+
+            div.className = "suggestion-item";
+
+           div.innerHTML = `
+
+<div class="search-card">
+
+    <div class="search-header">
+
+        <div class="search-symbol">
 
             ${stock.market==="india" ? "🇮🇳" : "🇺🇸"} ${stock.symbol}
 
         </div>
 
-        <div class="stock-name">
+        <div class="search-exchange">
 
-            ${stock.name}
+            ${stock.market==="india" ? "NSE" : "NASDAQ"}
 
         </div>
 
     </div>
 
-    <div class="stock-right">
+    <div class="search-company">
+
+        ${stock.name}
+
+    </div>
+
+    <div class="search-sector">
 
         ${stock.sector}
 
@@ -329,20 +386,22 @@ input.addEventListener("keyup", function(){
 
 `;
 
-    div.onclick = function(){
+            div.onclick = function(){
 
-    document.body.style.cursor = "wait";
+                document.body.style.cursor = "wait";
 
-    const market = stock.market;
+                const market = stock.market;
 
-    window.location.href =
-        `/analyze?market=${market}&symbol=${stock.symbol}`;
+                window.location.href =
+                    `/analyze?market=${market}&symbol=${stock.symbol}`;
 
-};
+            };
 
-    suggestions.appendChild(div);
+            suggestions.appendChild(div);
 
-});
+        });
+
+    });
 
 });
 
@@ -353,7 +412,6 @@ document.addEventListener("click", function(event){
         suggestions.innerHTML = "";
 
     }
-
 });
 
     input.addEventListener("keydown", function(event){
@@ -370,9 +428,9 @@ document.addEventListener("click", function(event){
 
     }
 
-});
-
+}); 
 </script>
+<script src="/static/js/watchlist.js"></script>
 </body>
 
 </html>
