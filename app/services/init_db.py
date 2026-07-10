@@ -11,19 +11,32 @@ CREATE TABLE IF NOT EXISTS stocks(
 
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-    symbol TEXT NOT NULL,
+    symbol TEXT UNIQUE,
 
-    name TEXT NOT NULL,
+    name TEXT,
 
-    market TEXT NOT NULL,
+    market TEXT,
+
+    exchange TEXT,
 
     sector TEXT,
 
     industry TEXT,
 
-    exchange TEXT
+    country TEXT,
+
+    currency TEXT
 
 )
+               
+CREATE INDEX IF NOT EXISTS idx_symbol
+ON stocks(symbol);
+
+CREATE INDEX IF NOT EXISTS idx_name
+ON stocks(name);
+
+CREATE INDEX IF NOT EXISTS idx_market
+ON stocks(market);
 
 """)
 

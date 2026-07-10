@@ -9,8 +9,7 @@ from fastapi.responses import RedirectResponse
 import json
 from app.services.signal_service import get_live_price
 from app.services.screener_service import get_top_stocks
-from app.services.database_service import get_connection
-from fastapi.responses import JSONResponse
+from app.core.stock_universe import StockUniverse
 
 app = FastAPI(
     title="TradeSense AI",
@@ -114,50 +113,12 @@ def search_stocks(
 
 ):
 
-    conn = get_connection()
+    universe = StockUniverse()
 
-    cursor = conn.cursor()
+    return universe.search(
 
-    cursor.execute(
+        query,
 
-    """
-    SELECT symbol,name,market,sector
-    FROM stocks
-    WHERE market = ?
-    AND (
-        symbol LIKE ?
-        OR name LIKE ?
-    )
-    ORDER BY
-        CASE
-            WHEN symbol LIKE ? THEN 1
-            WHEN name LIKE ? THEN 2
-            ELSE 3
-        END,
-        symbol
-    LIMIT 10
-    """,
+        market
 
-    (
-
-        market,
-
-        f"%{query}%",
-
-        f"%{query}%",
-
-        f"{query}%",
-
-        f"{query}%"
-
-    )
-
-)
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return JSONResponse(
-        content=[dict(row) for row in rows]
     )
