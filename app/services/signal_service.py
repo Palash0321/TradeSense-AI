@@ -184,6 +184,7 @@ def generate_signal(symbol: str, period: str = "6mo"):
     "symbol": symbol.upper(),
     "price": format_price(float(latest["Close"])),
     "score": score,
+    "ai_score": abs(score),
     "confidence": confidence,
     "risk": risk,
     "signal": recommendation,

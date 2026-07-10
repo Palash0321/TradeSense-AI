@@ -2,18 +2,26 @@
 // Current Selected Market
 // ======================================
 
-let currentMarket = "india";
+let currentMarket =
+    localStorage.getItem("selectedMarket") || "india";
 
 const marketSelect =
     document.getElementById("market-select");
 
-if(marketSelect){
+if (marketSelect) {
 
-    currentMarket = marketSelect.value;
+    marketSelect.value = currentMarket;
 
-    marketSelect.addEventListener("change", function(){
+    marketSelect.addEventListener("change", function () {
 
         currentMarket = this.value;
+
+        localStorage.setItem(
+            "selectedMarket",
+            currentMarket
+        );
+
+        loadAIPicks();
 
     });
 
@@ -24,6 +32,8 @@ if(marketSelect){
 const watchlistContainer = document.getElementById("watchlist-items");
 
 const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+
+if (watchlistContainer) {
 
 if(watchlist.length === 0){
 
@@ -139,6 +149,8 @@ card.onclick = function(){
 
 }
 
+}
+
 function removeStock(event, symbol){
 
     event.stopPropagation();
@@ -166,44 +178,60 @@ function removeStock(event, symbol){
 }
 
 // =====================================================
-// AI SCREENER
+// AI STOCK SCREENER
 // =====================================================
 
-const screenerContainer =
-    document.getElementById("screener-container");
+async function loadAIPicks() {
 
-fetch(`/api/screener?market=${currentMarket}`)
-.then(response => response.json())
-.then(data => {
+    const container = document.getElementById("screener-container");
 
-    screenerContainer.innerHTML = "";
+    if (!container) return;
 
-    data
-        .sort((a,b) => b.score - a.score)
-        .slice(0,8)
-        .forEach(stock => {
+    container.innerHTML = "<p>Loading AI Picks...</p>";
+
+    try {
+
+        const response = await fetch(
+    `/api/ai-picks?market=${currentMarket}`
+);
+
+        const stocks = await response.json();
+
+console.log(stocks);
+
+        if (!stocks.length) {
+
+            container.innerHTML = "<p>No AI Picks Available.</p>";
+
+            return;
+
+        }
+
+        container.innerHTML = "";
+
+        stocks.forEach((stock, index) => {
+
+            console.log(stock);
 
             const card = document.createElement("div");
 
-            card.className = "screener-card";
+            card.className = "ai-card";
 
             card.innerHTML = `
 
-<div class="rating">
+<div class="rank">
 
-    ${
-        stock.score >= 75
-        ? "⭐⭐⭐⭐⭐"
-        : stock.score >= 50
-        ? "⭐⭐⭐⭐"
-        : stock.score >= 25
-        ? "⭐⭐⭐"
-        : "⭐⭐"
-    }
+#${index + 1}
 
 </div>
 
 <h3>${stock.symbol}</h3>
+
+<p class="company">
+
+${stock.company}
+
+</p>
 
 <div class="signal ${stock.signal.toLowerCase()}">
 
@@ -213,25 +241,25 @@ ${stock.signal}
 
 <p>
 
-Confidence
+<strong>AI Score:</strong>
 
-<strong>
-
-${stock.confidence}
-
-</strong>
+${stock.ai_score}
 
 </p>
 
 <p>
 
-Score
+<strong>Confidence:</strong>
 
-<strong>
+${stock.confidence}
 
-${stock.score}
+</p>
 
-</strong>
+<p>
+
+<strong>Price:</strong>
+
+₹ ${stock.price}
 
 </p>
 
@@ -252,8 +280,22 @@ ${stock.score}
 
             };
 
-            screenerContainer.appendChild(card);
+            container.appendChild(card);
 
         });
 
-});
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        container.innerHTML =
+
+        "<p>Unable to load AI Picks.</p>";
+
+    }
+
+}
+
+loadAIPicks();

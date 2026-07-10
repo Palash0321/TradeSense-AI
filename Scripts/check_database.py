@@ -1,13 +1,13 @@
 import sqlite3
 
 conn = sqlite3.connect("app/database/stocks.db")
-
 cursor = conn.cursor()
 
-cursor.execute("SELECT COUNT(*) FROM stocks")
+cursor.execute("PRAGMA table_info(stocks);")
 
-count = cursor.fetchone()[0]
+print("\n===== STOCKS TABLE STRUCTURE =====\n")
 
-print(f"Total Stocks = {count}")
+for row in cursor.fetchall():
+    print(row)
 
 conn.close()

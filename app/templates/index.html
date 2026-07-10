@@ -429,6 +429,15 @@ document.addEventListener("click", function(event){
     }
 
 }); 
+
+document.querySelector("form").addEventListener("submit", function(){
+
+    localStorage.setItem(
+        "selectedMarket",
+        document.getElementById("market-select").value
+    );
+
+});
 </script>
 <script src="/static/js/watchlist.js"></script>
 </body>

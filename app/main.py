@@ -10,6 +10,7 @@ import json
 from app.services.signal_service import get_live_price
 from app.services.screener_service import get_top_stocks
 from app.core.stock_universe import StockUniverse
+from app.services.ai_screener_service import get_ai_picks
 
 app = FastAPI(
     title="TradeSense AI",
@@ -122,3 +123,15 @@ def search_stocks(
         market
 
     )
+
+@app.get("/api/ai-picks")
+def ai_picks(market: str = "india"):
+
+    universe = StockUniverse()
+
+    symbols = universe.get_market_symbols(
+        market,
+        limit=100
+    )
+
+    return get_ai_picks(symbols)

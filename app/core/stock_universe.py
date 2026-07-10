@@ -16,6 +16,8 @@ class StockUniverse:
 
     def search(self, query, market):
 
+        
+
         # Load symbol aliases
         with open("data/symbol_alias.json", "r") as file:
             alias = json.load(file)
@@ -62,3 +64,31 @@ class StockUniverse:
             dict(row)
             for row in self.cursor.fetchall()
         ]
+
+    def get_market_symbols(self, market, limit=100):
+
+        self.cursor.execute(
+            """
+            SELECT symbol
+            FROM stocks
+            WHERE market = ?
+            ORDER BY symbol
+            LIMIT ?
+            """,
+            (market, limit)
+        )
+
+        rows = self.cursor.fetchall()
+
+        symbols = []
+
+        for row in rows:
+
+            symbol = row["symbol"]
+
+            if market == "india":
+                symbol += ".NS"
+
+            symbols.append(symbol)
+
+        return symbols
