@@ -1,13 +1,26 @@
 import sqlite3
 
 conn = sqlite3.connect("app/database/stocks.db")
+conn.row_factory = sqlite3.Row
+
 cursor = conn.cursor()
 
-cursor.execute("PRAGMA table_info(stocks);")
+cursor.execute("""
+SELECT
+    symbol,
+    ai_score,
+    signal,
+    confidence,
+    breakout
+FROM stocks
+WHERE market='india'
+ORDER BY last_scanned DESC
+LIMIT 20
+""")
 
-print("\n===== STOCKS TABLE STRUCTURE =====\n")
+rows = cursor.fetchall()
 
-for row in cursor.fetchall():
-    print(row)
+for row in rows:
+    print(dict(row))
 
 conn.close()

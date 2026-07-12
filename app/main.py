@@ -11,6 +11,8 @@ from app.services.signal_service import get_live_price
 from app.services.screener_service import get_top_stocks
 from app.core.stock_universe import StockUniverse
 from app.services.ai_screener_service import get_ai_picks
+from app.services.database_service import get_connection
+from app.api.admin import router as admin_router
 
 app = FastAPI(
     title="TradeSense AI",
@@ -127,11 +129,90 @@ def search_stocks(
 @app.get("/api/ai-picks")
 def ai_picks(market: str = "india"):
 
-    universe = StockUniverse()
+    conn = get_connection()
 
-    symbols = universe.get_market_symbols(
-        market,
-        limit=100
+    cursor = conn.cursor()
+
+    cursor.execute(
+    """
+    SELECT
+        symbol,
+        name,
+        ai_score,
+        signal,
+        confidence
+    FROM stocks
+    WHERE
+        market = ?
+        AND ai_score IS NOT NULL
+        AND ai_score >= 50
+    ORDER BY
+        ai_score DESC,
+        signal DESC
+    LIMIT 20
+    """,
+    (market,)
+)
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    results = []
+
+    for row in rows:
+
+        symbol = row["symbol"]
+
+        if market == "india":
+            symbol += ".NS"
+
+        results.append({
+
+            "symbol": symbol,
+
+            "company": row["name"],
+
+            "ai_score": row["ai_score"],
+
+            "signal": row["signal"],
+
+            "confidence": row["confidence"]
+
+        })
+
+    return results
+
+app.include_router(admin_router)
+
+@app.get("/api/breakouts")
+def breakout_scanner(market: str = "india"):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            symbol,
+            name,
+            ai_score,
+            signal,
+            breakout,
+            trend,
+            rsi
+        FROM stocks
+        WHERE
+            market=?
+            AND breakout='YES'
+        ORDER BY ai_score DESC
+        LIMIT 20
+        """,
+        (market,)
     )
 
-    return get_ai_picks(symbols)
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in rows]

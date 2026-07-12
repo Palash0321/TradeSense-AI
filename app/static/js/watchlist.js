@@ -181,6 +181,8 @@ function removeStock(event, symbol){
 // AI STOCK SCREENER
 // =====================================================
 
+let currentFilter = "ALL";
+
 async function loadAIPicks() {
 
     const container = document.getElementById("screener-container");
@@ -207,9 +209,17 @@ console.log(stocks);
 
         }
 
-        container.innerHTML = "";
+       container.innerHTML = "";
 
-        stocks.forEach((stock, index) => {
+const filteredStocks = stocks.filter(stock => {
+
+    if(currentFilter === "ALL") return true;
+
+    return stock.signal === currentFilter;
+
+});
+
+filteredStocks.forEach((stock, index) => {
 
             console.log(stock);
 
@@ -255,14 +265,6 @@ ${stock.confidence}
 
 </p>
 
-<p>
-
-<strong>Price:</strong>
-
-₹ ${stock.price}
-
-</p>
-
 `;
 
             card.onclick = function(){
@@ -299,3 +301,23 @@ ${stock.confidence}
 }
 
 loadAIPicks();
+
+document.querySelectorAll(".filter-btn").forEach(button=>{
+
+    button.addEventListener("click",function(){
+
+        document.querySelectorAll(".filter-btn").forEach(
+
+            b=>b.classList.remove("active")
+
+        );
+
+        this.classList.add("active");
+
+        currentFilter=this.dataset.filter;
+
+        loadAIPicks();
+
+    });
+
+});

@@ -1,58 +1,38 @@
-import yfinance as yf
-from datetime import datetime
-
-def format_market_cap(value):
-
-    if not value:
-        return "N/A"
-
-    if value >= 1_000_000_000_000:
-        return f"₹ {value/1_000_000_000_000:.2f} T"
-
-    elif value >= 1_000_000_000:
-        return f"₹ {value/1_000_000_000:.2f} B"
-
-    elif value >= 1_000_000:
-        return f"₹ {value/1_000_000:.2f} M"
-
-    return f"₹ {value:,}"
-
-
-def format_volume(value):
-
-    if not value:
-        return "N/A"
-
-    if value >= 1_000_000:
-        return f"{value/1_000_000:.2f} M"
-
-    elif value >= 1_000:
-        return f"{value/1_000:.2f} K"
-
-    return str(value)
-
-
-def format_price(value):
-
-    if value is None:
-        return "N/A"
-
-    return f"{value:,.2f}"
+from app.core.indicators.moving_average import calculate_moving_averages
+from app.core.indicators.rsi import calculate_rsi
+from app.core.indicators.macd import calculate_macd
+from app.core.indicators.market_status import get_market_status
+from app.core.scoring.score_engine import calculate_score
+from app.core.scoring.recommendation import get_recommendation
+from app.core.scoring.confidence import calculate_confidence
+from app.core.scoring.risk import calculate_risk
+from app.services.market_data_service import get_stock_data
+from app.core.utils.formatter import (
+    format_price,
+    format_volume,
+    format_market_cap,
+)
 
 def generate_signal(symbol: str, period: str = "6mo"):
 
-    stock = yf.Ticker(symbol)
-    info = stock.info
+    data = get_stock_data(symbol, period)
+
+    info = data["info"]
     current_price = info.get("currentPrice") or info.get("regularMarketPrice")
     previous_close = info.get("previousClose")
 
     price_change = None
     price_change_percent = None
 
+    history = data["history"]
+
     if current_price and previous_close:
+
         price_change = current_price - previous_close
-        price_change_percent = (price_change / previous_close) * 100
-        history = stock.history(period=period)
+
+        price_change_percent = (
+            price_change / previous_close
+        ) * 100
 
     if history.empty:
         return {
@@ -69,122 +49,35 @@ def generate_signal(symbol: str, period: str = "6mo"):
     
 
     # Moving Averages
-    history["MA20"] = history["Close"].rolling(20).mean()
-    history["MA50"] = history["Close"].rolling(50).mean()
+    history = calculate_moving_averages(history)
 
     # RSI
-    delta = history["Close"].diff()
-
-    gain = delta.where(delta > 0, 0)
-    loss = -delta.where(delta < 0, 0)
-
-    avg_gain = gain.rolling(14).mean()
-    avg_loss = loss.rolling(14).mean()
-
-    rs = avg_gain / avg_loss
-
-    history["RSI"] = 100 - (100 / (1 + rs))
+    history = calculate_rsi(history)
 
     # MACD
-    history["EMA12"] = history["Close"].ewm(span=12, adjust=False).mean()
-    history["EMA26"] = history["Close"].ewm(span=26, adjust=False).mean()
-
-    history["MACD"] = history["EMA12"] - history["EMA26"]
-    history["Signal"] = history["MACD"].ewm(span=9, adjust=False).mean()
+    history = calculate_macd(history)
 
     # Remove rows where Close is NaN
     history = history.dropna(subset=["Close"])
 
     latest = history.iloc[-1]
 
-    score = 0
-    reasons = []
+    score, reasons = calculate_score(latest)
 
-        # Trend
-    if latest["MA20"] > latest["MA50"]:
-        score += 25
-        reasons.append("MA20 is above MA50 (Bullish Trend)")
-    else:
-        score -= 25
-        reasons.append("MA20 is below MA50 (Bearish Trend)")
+    recommendation = get_recommendation(score)
 
-        # RSI
-    if latest["RSI"] < 30:
-        score += 25
-        reasons.append("RSI indicates Oversold (Potential Buy)")
-    elif latest["RSI"] > 70:
-        score -= 25
-        reasons.append("RSI indicates Overbought (Potential Sell)")
-    else:
-        reasons.append("RSI is Neutral")
+    confidence = calculate_confidence(score)
 
-        # MACD
-    # MACD
-    if latest["MACD"] > latest["Signal"]:
-        score += 25
-        reasons.append("MACD is above Signal (Bullish Momentum)")
-    else:
-        score -= 25
-        reasons.append("MACD is below Signal (Bearish Momentum)")
+    risk = calculate_risk(score)
 
-        # Price vs MA20
-   # Price vs MA20
-    if latest["Close"] > latest["MA20"]:
-        score += 25
-        reasons.append("Price is above MA20 (Positive Trend)")
-    else:
-        score -= 25
-        reasons.append("Price is below MA20 (Negative Trend)")
-
-    if score >= 50:
-        recommendation = "BUY"
-
-    elif score <= -50:
-        recommendation = "SELL"
-
-    else:
-        recommendation = "HOLD"
-
-    confidence = f"{abs(score)}%"
-
-    if abs(score) == 100:
-        risk = "Low"
-
-    elif abs(score) == 75:
-        risk = "Medium"
-
-    elif abs(score) == 50:
-        risk = "High"
-
-    else:
-        risk = "Very High"
-
-    # -------- Market Status --------
-
-    now = datetime.now()
-
-    weekday = now.weekday()
-    hour = now.hour
-    minute = now.minute
-
-    market_status = "CLOSED"
-
-    # NSE Market Hours
-    if weekday < 5:
-
-        if (
-            (hour == 9 and minute >= 15)
-            or (9 < hour < 15)
-            or (hour == 15 and minute <= 30)
-        ):
-            market_status = "OPEN"
+    market_status = get_market_status()
 
 
     return {
     "symbol": symbol.upper(),
     "price": format_price(float(latest["Close"])),
     "score": score,
-    "ai_score": abs(score),
+    "ai_score": score,
     "confidence": confidence,
     "risk": risk,
     "signal": recommendation,
@@ -215,9 +108,7 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
 def get_live_price(symbol: str):
 
-    stock = yf.Ticker(symbol)
-
-    history = stock.history(period="2d")
+    history = get_stock_history(symbol, "2d")
 
     if history.empty:
         return None

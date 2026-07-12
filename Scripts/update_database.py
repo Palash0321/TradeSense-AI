@@ -9,6 +9,12 @@ queries = [
     "ALTER TABLE stocks ADD COLUMN confidence TEXT;",
     "ALTER TABLE stocks ADD COLUMN last_scanned TEXT;"
 ]
+queries.extend([
+    "ALTER TABLE stocks ADD COLUMN breakout TEXT;",
+    "ALTER TABLE stocks ADD COLUMN trend TEXT;",
+    "ALTER TABLE stocks ADD COLUMN rsi REAL;",
+    "ALTER TABLE stocks ADD COLUMN macd REAL;"
+])
 
 for query in queries:
     try:

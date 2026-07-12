@@ -2009,6 +2009,52 @@ AI Screener
 
 }
 
+.scanner-filter{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin:30px 0;
+
+}
+
+.filter-btn{
+
+    padding:10px 22px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:#1E293B;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.filter-btn:hover{
+
+    background:#2563EB;
+
+}
+
+.filter-btn.active{
+
+    background:#38BDF8;
+
+    color:#0F172A;
+
+    font-weight:700;
+
+}
+
 
 
 
