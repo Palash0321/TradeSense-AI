@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>TradeSense AI</title>
+<title>StockPilot</title>
 
 <link rel="stylesheet" href="/static/css/style.css">
 
@@ -19,7 +19,7 @@
 <nav class="navbar">
 
 <div class="logo">
-📈 TradeSense AI
+📈 StockPilot
 </div>
 
 <ul class="nav-links">
@@ -223,43 +223,115 @@
 </div>
 
 
-<div class="analysis-section">
+<div class="analysis-layout">
 
-    <div class="chart-card">
+    <!-- LEFT -->
 
-        <h2>📈 Live Technical Chart</h2>
+    <div class="chart-column">
 
-        <div class="chart-wrapper">
+        <div class="chart-card">
 
-    <div class="plotly-container">
+            <h2>📈 Live Market Chart</h2>
 
-        {{ chart|safe }}
+            <div id="tradingview_chart"></div>
 
-    </div>
-
-</div>
+        </div>
 
     </div>
 
-    <div class="reason-card">
+    <!-- RIGHT -->
 
-        <h2>📋 AI Analysis</h2>
+    <div class="right-panel">
+<div class="reason-card">
 
-        <ul>
+    <div class="signal-header">
 
-        {% for reason in result.reasons %}
+        <h2>🤖 TradeSense AI</h2>
 
-            <li>✅ {{ reason }}</li>
+        <span class="signal-badge
+            {% if result.signal == 'BUY' %}
+                signal-buy
+            {% elif result.signal == 'SELL' %}
+                signal-sell
+            {% else %}
+                signal-hold
+            {% endif %}
+        ">
+            {{ result.signal }}
+        </span>
+
+    </div>
+
+    <div class="decision-section">
+
+        <div class="decision-row">
+            <span>Confidence</span>
+            <strong>{{ result.confidence }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Risk</span>
+            <strong>{{ result.risk }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Trade Quality</span>
+            <strong>{{ result.risk_reward.verdict }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Risk / Reward</span>
+            <strong>1 : {{ result.risk_reward.ratio }}</strong>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="decision-section">
+
+        <div class="decision-row">
+            <span>Support</span>
+            <strong>₹ {{ result.support }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Resistance</span>
+            <strong>₹ {{ result.resistance }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Target</span>
+            <strong>₹ {{ result.prediction.target }}</strong>
+        </div>
+
+        <div class="decision-row">
+            <span>Stop Loss</span>
+            <strong>₹ {{ result.prediction.stoploss }}</strong>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h3>🧠 Why this decision?</h3>
+
+    <ul class="ai-points">
+
+        {% for item in result.ai_explanation %}
+
+        <li>{{ item }}</li>
 
         {% endfor %}
 
-        </ul>
+    </ul>
 
-    </div>
+        </div>
 
-</div>
+    </div>       <!-- right-panel -->
 
-</div>
+</div>           <!-- analysis-layout -->
+
 <!-- ================= NEWS SECTION ================= -->
 
 <div class="news-section">
@@ -286,9 +358,9 @@
 
         {% endfor %}
 
-    </div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
@@ -332,7 +404,19 @@ function addToWatchlist(){
 }
 
 </script>
+<script>
 
+window.stockData = {
+
+    symbol: "{{ result.symbol }}",
+
+    market: "{{ market }}"
+
+};
+
+</script>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<script src="/static/js/chart.js"></script>
 </body>
 
 </html>

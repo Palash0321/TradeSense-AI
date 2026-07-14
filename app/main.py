@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request
 from app.api.stocks import router as stock_router
 from fastapi.templating import Jinja2Templates
 from app.services.signal_service import generate_signal
-from app.services.chart_service import create_stock_chart
 from fastapi.staticfiles import StaticFiles
 from app.services.news_service import get_stock_news
 from fastapi.responses import RedirectResponse
@@ -13,6 +12,7 @@ from app.core.stock_universe import StockUniverse
 from app.services.ai_screener_service import get_ai_picks
 from app.services.database_service import get_connection
 from app.api.admin import router as admin_router
+from fastapi.responses import JSONResponse
 
 app = FastAPI(
     title="TradeSense AI",
@@ -38,8 +38,8 @@ def analyze(request: Request, market: str, symbol: str):
         symbol = symbol.upper()
 
     result = generate_signal(symbol)
+    print(result["risk_reward"])
     news = get_stock_news(symbol)
-    chart = create_stock_chart(symbol)
 
     return templates.TemplateResponse(
         request=request,
@@ -47,7 +47,6 @@ def analyze(request: Request, market: str, symbol: str):
         context={
     "request": request,
     "result": result,
-    "chart": chart,
     "news": news
 }
     )
@@ -216,3 +215,44 @@ def breakout_scanner(market: str = "india"):
     conn.close()
 
     return [dict(row) for row in rows]
+
+@app.get("/api/chart-data")
+def chart_data(symbol: str):
+
+    import yfinance as yf
+
+    history = yf.Ticker(symbol).history(period="6mo")
+
+    candles = []
+
+    for date, row in history.iterrows():
+
+        candles.append({
+
+            "time": date.strftime("%Y-%m-%d"),
+
+            "open": round(float(row["Open"]),2),
+
+            "high": round(float(row["High"]),2),
+
+            "low": round(float(row["Low"]),2),
+
+            "close": round(float(row["Close"]),2)
+
+        })
+
+    result = generate_signal(symbol)
+
+    return JSONResponse({
+
+        "candles": candles,
+
+        "support": result["support"],
+
+        "resistance": result["resistance"],
+
+        "target": result["prediction"]["target"],
+
+        "stoploss": result["prediction"]["stoploss"]
+
+    })

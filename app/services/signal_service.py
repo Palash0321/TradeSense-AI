@@ -7,6 +7,15 @@ from app.core.scoring.recommendation import get_recommendation
 from app.core.scoring.confidence import calculate_confidence
 from app.core.scoring.risk import calculate_risk
 from app.services.market_data_service import get_stock_data
+from app.core.prediction.predictor import generate_prediction
+from app.core.decision.decision_engine import generate_decision
+from app.core.explainability.explainability import explain
+from app.core.levels.support_resistance import (
+    calculate_support_resistance
+)
+from app.core.risk_reward.risk_reward import (
+    calculate_risk_reward
+)
 from app.core.utils.formatter import (
     format_price,
     format_volume,
@@ -46,6 +55,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     history = history.dropna(subset=["Close"])
 
+    levels = calculate_support_resistance(history)
+
     
 
     # Moving Averages
@@ -72,6 +83,32 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     market_status = get_market_status()
 
+    prediction = generate_prediction(latest, score)
+
+    decision = generate_decision({
+    "score": score,
+    "signal": recommendation,
+    "prediction": prediction,
+    "price": format_price(float(latest["Close"])),
+    "reasons": reasons
+})
+    
+    risk_reward = calculate_risk_reward(
+
+    float(latest["Close"]),
+
+    decision["target"],
+
+    decision["stoploss"]
+
+)
+
+    ai_explanation = explain(result={
+    "score": score,
+    "RSI": latest["RSI"],
+    "MACD": latest["MACD"],
+    "Signal": latest["Signal"]
+})
 
     return {
     "symbol": symbol.upper(),
@@ -102,6 +139,18 @@ def generate_signal(symbol: str, period: str = "6mo"):
     "price_change_percent": round(price_change_percent, 2) if price_change_percent else 0,
 
     "is_positive": price_change >= 0 if price_change is not None else True,
+
+    "prediction": prediction,
+
+    "decision": decision,
+
+    "ai_explanation": ai_explanation,
+
+    "support": levels["support"],
+
+    "resistance": levels["resistance"],
+
+    "risk_reward": risk_reward,
 
     "market_status": market_status,
 }
