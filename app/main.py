@@ -10,7 +10,10 @@ from app.services.signal_service import get_live_price
 from app.services.screener_service import get_top_stocks
 from app.core.stock_universe import StockUniverse
 from app.services.ai_screener_service import get_ai_picks
-from app.services.database_service import get_connection
+from app.services.database_service import (
+    get_connection,
+    initialize_database
+)
 from app.api.admin import router as admin_router
 from fastapi.responses import JSONResponse
 
@@ -19,6 +22,9 @@ app = FastAPI(
     description="AI-Powered Stock Market Analysis Platform",
     version="1.0.0"
 )
+
+initialize_database()
+
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
@@ -253,6 +259,73 @@ def chart_data(symbol: str):
 
         "target": result["prediction"]["target"],
 
-        "stoploss": result["prediction"]["stoploss"]
+        "stoploss": result["prediction"]["stoploss"],
+
+        "signal": result["signal"],
+
+        "confidence": result["confidence"],
 
     })
+
+@app.post("/api/watchlist")
+def add_to_watchlist(stock: dict):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    try:
+
+        cursor.execute(
+            """
+            INSERT INTO watchlist(symbol, company)
+            VALUES(?,?)
+            """,
+            (
+                stock["symbol"],
+                stock["company"]
+            )
+        )
+
+        conn.commit()
+
+        return {
+            "success": True,
+            "message": "Stock added to watchlist."
+        }
+
+    except Exception:
+
+        return {
+            "success": False,
+            "message": "Stock already exists."
+        }
+
+    finally:
+
+        conn.close()
+
+@app.get("/api/watchlist")
+def get_watchlist():
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute("""
+
+        SELECT
+            id,
+            symbol,
+            company,
+            added_on
+        FROM watchlist
+        ORDER BY added_on DESC
+
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return [dict(row) for row in rows]

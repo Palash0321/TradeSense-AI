@@ -366,40 +366,31 @@
 
 <script>
 
-function addToWatchlist(){
+async function addToWatchlist(){
 
-    let watchlist =
-        JSON.parse(localStorage.getItem("watchlist")) || [];
+    const response = await fetch("/api/watchlist",{
 
-    const stock = {
+        method:"POST",
 
-        symbol: "{{ result.symbol }}",
+        headers:{
 
-        company: "{{ result.company }}"
+            "Content-Type":"application/json"
 
-    };
+        },
 
-    const exists = watchlist.find(
+        body:JSON.stringify({
 
-        s => s.symbol === stock.symbol
+            symbol:"{{ result.symbol }}",
 
-    );
+            company:"{{ result.company }}"
 
-    if(!exists){
+        })
 
-        watchlist.push(stock);
+    });
 
-    }
+    const result = await response.json();
 
-    localStorage.setItem(
-
-        "watchlist",
-
-        JSON.stringify(watchlist)
-
-    );
-
-    alert("Added to Watchlist ⭐");
+    alert(result.message);
 
 }
 

@@ -55,6 +55,40 @@ fetch(`/api/chart-data?symbol=${window.stockData.symbol}`)
     // First candle time
     const firstTime = data.candles[0].time;
 
+    // Last candle
+const lastCandle = data.candles[data.candles.length - 1];
+
+// Marker text
+let markerText = data.signal;
+
+let markerColor = "#f59e0b";
+let markerPosition = "aboveBar";
+let markerShape = "circle";
+
+if (data.signal === "BUY") {
+
+    markerColor = "#22c55e";
+    markerPosition = "belowBar";
+    markerShape = "arrowUp";
+
+}
+
+if (data.signal === "SELL") {
+
+    markerColor = "#ef4444";
+    markerPosition = "aboveBar";
+    markerShape = "arrowDown";
+
+}
+
+if (data.signal === "HOLD") {
+
+    markerColor = "#f59e0b";
+    markerPosition = "aboveBar";
+    markerShape = "circle";
+
+}
+
     // ==========================
     // Support Line
     // ==========================
@@ -116,6 +150,16 @@ fetch(`/api/chart-data?symbol=${window.stockData.symbol}`)
         color: "#F59E0B",
         lineWidth: 2
     });
+
+    LightweightCharts.createSeriesMarkers(candleSeries, [
+    {
+        time: lastCandle.time,
+        position: markerPosition,
+        color: markerColor,
+        shape: markerShape,
+        text: `${markerText} (${data.confidence})`
+    }
+]);
 
     chart.timeScale().fitContent();
 
