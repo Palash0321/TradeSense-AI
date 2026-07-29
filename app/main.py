@@ -20,6 +20,7 @@ from app.ai.ranking_engine import rank_stocks
 from pydantic import BaseModel
 from app.services.portfolio_service import get_stock_metadata
 from app.routers import market
+from app.services.market_service import get_market_indices
 
 app = FastAPI(
     title="TradeSense AI",
@@ -1077,3 +1078,33 @@ def portfolio_price(market: str, symbol: str):
 
 
 app.include_router(market.router)
+
+@app.get("/api/market-sentiment")
+def market_sentiment():
+
+    indices = get_market_indices()
+
+    positive = sum(1 for i in indices if i["positive"])
+    negative = len(indices) - positive
+
+    if positive >= 5:
+        sentiment = "🟢 Strong Bullish"
+
+    elif positive >= 3:
+        sentiment = "🟡 Moderately Bullish"
+
+    elif positive == 2:
+        sentiment = "🟠 Neutral"
+
+    else:
+        sentiment = "🔴 Bearish"
+
+    return {
+
+        "sentiment": sentiment,
+
+        "positive": positive,
+
+        "negative": negative
+
+    }
