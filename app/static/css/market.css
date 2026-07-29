@@ -337,3 +337,79 @@
     color:#EF4444;
 
 }
+
+.market-news{
+
+    margin-bottom:50px;
+
+}
+
+.news-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+    gap:20px;
+
+}
+
+.news-card{
+
+    background:#141f44;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    padding:22px;
+
+    transition:.3s;
+
+}
+
+.news-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#38BDF8;
+
+    box-shadow:0 10px 24px rgba(56,189,248,.15);
+
+}
+
+.news-card h3{
+
+    font-size:18px;
+
+    margin-bottom:12px;
+
+    line-height:1.5;
+
+}
+
+.news-card p{
+
+    color:#94A3B8;
+
+    font-size:14px;
+
+    margin-bottom:18px;
+
+}
+
+.news-card a{
+
+    color:#38BDF8;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.news-card a:hover{
+
+    text-decoration:underline;
+
+}

@@ -90,3 +90,46 @@ async function loadSectors(){
 }
 
 loadSectors();
+
+async function loadMarketNews(){
+
+    const response = await fetch("/api/market-news");
+
+    const news = await response.json();
+
+    const container = document.getElementById("marketNews");
+
+    container.innerHTML = "";
+
+    news.forEach(article=>{
+
+        container.innerHTML += `
+
+        <div class="news-card">
+
+            <h3>${article.title}</h3>
+
+            <p>
+
+                Source:
+                ${article.source_query}
+
+            </p>
+
+            <a href="${article.link}"
+
+               target="_blank">
+
+               Read Full Article →
+
+            </a>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+loadMarketNews();
