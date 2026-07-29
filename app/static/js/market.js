@@ -133,3 +133,43 @@ async function loadMarketNews(){
 }
 
 loadMarketNews();
+
+function updateMarketClock(){
+
+    const now = new Date();
+
+    document.getElementById("currentTime").textContent =
+        now.toLocaleTimeString();
+
+    const hours = now.getHours();
+
+    const minutes = now.getMinutes();
+
+    const currentMinutes = hours * 60 + minutes;
+
+    const nseOpen = 9 * 60 + 15;
+
+    const nseClose = 15 * 60 + 30;
+
+    const nse = document.getElementById("nseStatus");
+
+    if(currentMinutes >= nseOpen && currentMinutes <= nseClose){
+
+        nse.innerHTML =
+            '<span class="market-open">OPEN</span>';
+
+    }else{
+
+        nse.innerHTML =
+            '<span class="market-closed">CLOSED</span>';
+
+    }
+
+    document.getElementById("nyseStatus").innerHTML =
+        '<span class="market-closed">See Next Version</span>';
+
+}
+
+updateMarketClock();
+
+setInterval(updateMarketClock,1000);

@@ -413,3 +413,77 @@
     text-decoration:underline;
 
 }
+
+.market-calendar{
+
+    margin-bottom:50px;
+
+}
+
+.calendar-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:20px;
+
+}
+
+.calendar-card{
+
+    background:#141f44;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
+    padding:24px;
+
+    transition:.3s;
+
+}
+
+.calendar-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#38BDF8;
+
+    box-shadow:0 10px 24px rgba(56,189,248,.15);
+
+}
+
+.calendar-card h3{
+
+    margin-bottom:15px;
+
+}
+
+.calendar-card div{
+
+    font-size:26px;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+
+}
+
+.calendar-card small{
+
+    color:#94A3B8;
+
+}
+
+.market-open{
+
+    color:#22C55E;
+
+}
+
+.market-closed{
+
+    color:#EF4444;
+
+}
