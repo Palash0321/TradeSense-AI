@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/cards.css">
+    <link rel="stylesheet" href="/static/css/badges.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        📈 StockPilot
+    </div>
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        <li>
+            <a href="/dashboard" class="active">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="/watchlist">
+                Watchlist
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<main class="page">
+
+<div class="container">
+
+    <!-- ============================= -->
+    <!-- DASHBOARD HEADER -->
+    <!-- ============================= -->
+
+    <section class="dashboard-header">
+
+        <div>
+
+            <p class="dashboard-eyebrow">
+                MARKET INTELLIGENCE
+            </p>
+
+            <h1>
+                Market Dashboard
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Track market conditions, AI opportunities
+                and your watchlist from one place.
+            </p>
+
+        </div>
+
+        <div class="dashboard-status">
+
+            <span class="status-dot"></span>
+
+            Live Market Intelligence
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================= -->
+    <!-- MARKET OVERVIEW -->
+    <!-- ============================= -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    MARKETS
+                </p>
+
+                <h2>
+                    Market Overview
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="market-overview-grid">
+
+            <article class="market-card">
+
+                <div class="market-card-top">
+
+                    <div>
+
+                        <span class="market-country">
+                            🇮🇳 INDIA
+                        </span>
+
+                        <h3>NIFTY 50</h3>
+
+                    </div>
+
+                    <span class="market-tag">
+                        NSE
+                    </span>
+
+                </div>
+
+                <div class="market-value">
+                    --
+                </div>
+
+                <div class="market-change neutral">
+                    Waiting for market data
+                </div>
+
+            </article>
+
+
+            <article class="market-card">
+
+                <div class="market-card-top">
+
+                    <div>
+
+                        <span class="market-country">
+                            🇮🇳 INDIA
+                        </span>
+
+                        <h3>SENSEX</h3>
+
+                    </div>
+
+                    <span class="market-tag">
+                        BSE
+                    </span>
+
+                </div>
+
+                <div class="market-value">
+                    --
+                </div>
+
+                <div class="market-change neutral">
+                    Waiting for market data
+                </div>
+
+            </article>
+
+
+            <article class="market-card">
+
+                <div class="market-card-top">
+
+                    <div>
+
+                        <span class="market-country">
+                            🇺🇸 USA
+                        </span>
+
+                        <h3>S&P 500</h3>
+
+                    </div>
+
+                    <span class="market-tag">
+                        US
+                    </span>
+
+                </div>
+
+                <div class="market-value">
+                    --
+                </div>
+
+                <div class="market-change neutral">
+                    Waiting for market data
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+<!-- ============================= -->
+<!-- MARKET MOVERS -->
+<!-- ============================= -->
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                MARKET MOVERS
+            </p>
+
+            <h2>
+                Today's Market Movers
+            </h2>
+
+        </div>
+
+        <div class="mover-market-label">
+            🇮🇳 India
+        </div>
+
+    </div>
+
+
+    <div class="market-movers-grid">
+
+        <!-- TOP GAINERS -->
+
+        <div class="movers-panel">
+
+            <div class="movers-panel-header">
+
+                <div>
+
+                    <span class="movers-label">
+                        PERFORMANCE
+                    </span>
+
+                    <h3>
+                        🔥 Top Gainers
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div
+                class="movers-list"
+                id="gainers-list">
+
+                <div class="movers-loading">
+                    Loading market movers...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOP LOSERS -->
+
+        <div class="movers-panel">
+
+            <div class="movers-panel-header">
+
+                <div>
+
+                    <span class="movers-label">
+                        PERFORMANCE
+                    </span>
+
+                    <h3>
+                        📉 Top Losers
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div
+                class="movers-list"
+                id="losers-list">
+
+                <div class="movers-loading">
+                    Loading market movers...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- AI OPPORTUNITIES -->
+<!-- ============================= -->
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                AI INTELLIGENCE
+            </p>
+
+            <h2>
+                Top AI Opportunities
+            </h2>
+
+            <p class="section-description">
+                Stocks currently ranked highest by the TradeSense analysis engine.
+            </p>
+
+        </div>
+
+        <a href="/#screener"
+           class="section-action">
+            View All →
+        </a>
+
+    </div>
+
+
+    <div
+        class="ai-opportunities-grid"
+        id="dashboard-ai-picks">
+
+        <div class="dashboard-loading">
+            Loading AI opportunities...
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- QUICK STOCK ANALYZER -->
+<!-- ============================= -->
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                QUICK ANALYSIS
+            </p>
+
+            <h2>
+                Analyze Any Stock
+            </h2>
+
+            <p class="section-description">
+                Enter a stock symbol to open the complete AI analysis.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="quick-analyzer">
+
+        <div class="quick-analyzer-content">
+
+            <div class="quick-analyzer-icon">
+                🔎
+            </div>
+
+            <div>
+
+                <h3>
+                    Stock Intelligence
+                </h3>
+
+                <p>
+                    Get AI score, signal, prediction,
+                    support, resistance and risk analysis.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            class="quick-analyzer-form"
+            id="quick-analyzer-form">
+
+            <select
+                id="quick-market"
+                class="quick-market-select">
+
+                <option value="india">
+                    🇮🇳 India
+                </option>
+
+                <option value="us">
+                    🇺🇸 USA
+                </option>
+
+            </select>
+
+
+            <input
+                type="text"
+                id="quick-symbol"
+                class="quick-symbol-input"
+                placeholder="RELIANCE or AAPL"
+                autocomplete="off"
+                required>
+
+
+            <button
+                type="submit"
+                class="quick-analyze-btn">
+
+                Analyze Stock →
+
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- MARKET NEWS -->
+<!-- ============================= -->
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                MARKET NEWS
+            </p>
+
+            <h2>
+                Latest Market Intelligence
+            </h2>
+
+            <p class="section-description">
+                Recent headlines covering Indian markets
+                and major market developments.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="market-news-grid"
+        id="market-news-container">
+
+        <div class="dashboard-loading">
+            Loading latest market news...
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- WATCHLIST SNAPSHOT -->
+<!-- ============================= -->
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                YOUR WATCHLIST
+            </p>
+
+            <h2>
+                Watchlist Snapshot
+            </h2>
+
+            <p class="section-description">
+                Monitor your saved stocks and latest AI signals.
+            </p>
+
+        </div>
+
+        <a href="/watchlist"
+           class="section-action">
+            View Watchlist →
+        </a>
+
+    </div>
+
+
+    <div
+        class="dashboard-watchlist"
+        id="dashboard-watchlist">
+
+        <div class="dashboard-loading">
+            Loading your watchlist...
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- ============================= -->
+    <!-- INTELLIGENCE -->
+    <!-- ============================= -->
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+
+                <p class="section-kicker">
+                    INTELLIGENCE
+                </p>
+
+                <h2>
+                    Your Market Command Center
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-feature-grid">
+
+
+            <article class="dashboard-feature-card">
+
+                <div class="feature-icon">
+                    🤖
+                </div>
+
+                <div>
+
+                    <span class="feature-label">
+                        AI ENGINE
+                    </span>
+
+                    <h3>
+                        AI Stock Picks
+                    </h3>
+
+                    <p>
+                        Discover stocks ranked using our
+                        technical analysis and scoring engine.
+                    </p>
+
+                </div>
+
+                <a href="/#screener"
+                   class="dashboard-link">
+
+                    Explore AI Picks →
+
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-feature-card">
+
+                <div class="feature-icon">
+                    ⭐
+                </div>
+
+                <div>
+
+                    <span class="feature-label">
+                        PERSONAL
+                    </span>
+
+                    <h3>
+                        Your Watchlist
+                    </h3>
+
+                    <p>
+                        Monitor saved stocks, AI signals,
+                        targets and market movement.
+                    </p>
+
+                </div>
+
+                <a href="/watchlist"
+                   class="dashboard-link">
+
+                    Open Watchlist →
+
+                </a>
+
+            </article>
+
+
+            <article class="dashboard-feature-card">
+
+                <div class="feature-icon">
+                    🔎
+                </div>
+
+                <div>
+
+                    <span class="feature-label">
+                        RESEARCH
+                    </span>
+
+                    <h3>
+                        Stock Analysis
+                    </h3>
+
+                    <p>
+                        Search a stock and inspect signals,
+                        indicators, risk and predictions.
+                    </p>
+
+                </div>
+
+                <a href="/"
+                   class="dashboard-link">
+
+                    Analyze Stock →
+
+                </a>
+
+            </article>
+
+        </div>
+
+    </section>
+
+</div>
+
+</main>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/dashboard.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+/* ==========================================
+                STOCKPILOT BASE
+==========================================*/
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #172554 0%,
+            var(--bg-primary) 35%,
+            var(--bg-secondary) 100%
+        );
+
+    color:var(--text-primary);
+
+    min-height:100vh;
+
+    line-height:1.6;
+
+    overflow-x:hidden;
+
+}
+
+
+/* Scrollbar */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#0F172A;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#334155;
+
+    border-radius:999px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#475569;
+
+}
+
+
+/* Links */
+
+a{
+
+    text-decoration:none;
+
+    color:inherit;
+
+}
+
+
+/* Images */
+
+img{
+
+    display:block;
+
+    max-width:100%;
+
+}
+
+
+/* Buttons */
+
+button{
+
+    font-family:inherit;
+
+}

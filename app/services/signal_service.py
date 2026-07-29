@@ -47,6 +47,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
         return {
         "symbol": symbol.upper(),
         "price": "N/A",
+        "score": 0,
+        "ai_score": 0,
         "signal": "HOLD",
         "confidence": "0%",
         "risk": "Unknown",

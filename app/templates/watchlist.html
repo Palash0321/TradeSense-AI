@@ -10,8 +10,17 @@ content="width=device-width, initial-scale=1.0">
 
 <title>My Watchlist</title>
 
-<link rel="stylesheet"
-href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/variables.css">
+<link rel="stylesheet" href="/static/css/base.css">
+<link rel="stylesheet" href="/static/css/layout.css">
+<link rel="stylesheet" href="/static/css/navbar.css">
+<link rel="stylesheet" href="/static/css/buttons.css">
+<link rel="stylesheet" href="/static/css/cards.css">
+<link rel="stylesheet" href="/static/css/badges.css">
+<script src="/static/js/api.js"></script>
+<link rel="stylesheet" href="/static/css/watchlist.css">
+<link rel="stylesheet" href="/static/css/utilities.css">
+<link rel="stylesheet" href="/static/css/responsive.css">
 
 </head>
 
@@ -27,15 +36,19 @@ href="/static/css/style.css">
 
 <ul class="nav-links">
 
-<li><a href="/">Home</a></li>
+    <li><a href="/">Home</a></li>
 
-<li><a href="/watchlist">Watchlist</a></li>
+    <li><a href="/watchlist" class="active">Watchlist</a></li>
 
 </ul>
 
 </nav>
 
-<section class="watchlist-page">
+<section class="page">
+
+<div class="container">
+
+<div class="section-title">
 
 <h1>
 
@@ -43,7 +56,11 @@ href="/static/css/style.css">
 
 </h1>
 
+</div>
+
 <div id="watchlist-items">
+
+</div>
 
 </div>
 

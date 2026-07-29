@@ -1,0 +1,69 @@
+/* ==========================================
+        STOCKPILOT DESIGN TOKENS
+==========================================*/
+
+:root{
+
+    /* ========= COLORS ========= */
+
+    --bg-primary:#0F172A;
+
+    --bg-secondary:#111827;
+
+    --bg-card:#182235;
+
+    --bg-card-hover:#1E293B;
+
+    --border-color:rgba(255,255,255,.08);
+
+    --text-primary:#F8FAFC;
+
+    --text-secondary:#94A3B8;
+
+    --accent:#38BDF8;
+
+    --accent-dark:#2563EB;
+
+    --success:#16A34A;
+
+    --warning:#D97706;
+
+    --danger:#DC2626;
+
+
+    /* ========= SHADOWS ========= */
+
+    --shadow-sm:
+        0 5px 15px rgba(0,0,0,.20);
+
+    --shadow-md:
+        0 15px 35px rgba(0,0,0,.28);
+
+    --shadow-lg:
+        0 25px 60px rgba(0,0,0,.38);
+
+
+    /* ========= BORDER ========= */
+
+    --radius-sm:10px;
+
+    --radius-md:16px;
+
+    --radius-lg:22px;
+
+
+    /* ========= SPACING ========= */
+
+    --space-1:8px;
+
+    --space-2:12px;
+
+    --space-3:18px;
+
+    --space-4:24px;
+
+    --space-5:32px;
+
+    --space-6:48px;
+
+}

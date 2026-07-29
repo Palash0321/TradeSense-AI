@@ -1,0 +1,331 @@
+/*====================================================
+                STOCKPILOT CARD SYSTEM
+====================================================*/
+
+.card{
+
+    background:var(--bg-card);
+
+    border:1px solid var(--border-color);
+
+    border-radius:var(--radius-lg);
+
+    padding:28px;
+
+    box-shadow:var(--shadow-md);
+
+    transition:
+        .30s ease;
+
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:var(--accent);
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+
+/*=====================================
+
+            HEADER
+
+======================================*/
+
+.card-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:20px;
+
+}
+
+
+/*=====================================
+
+            BODY
+
+======================================*/
+
+.card-body{
+
+    margin-top:26px;
+
+}
+
+
+/*=====================================
+
+            FOOTER
+
+======================================*/
+
+.card-footer{
+
+    margin-top:30px;
+
+    display:flex;
+
+    justify-content:flex-end;
+
+}
+
+
+/*=====================================
+
+        GRID CARD
+
+======================================*/
+
+.card-grid{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+
+/*=====================================
+
+        INFO BOX
+
+======================================*/
+
+.info-box{
+
+    background:#202C42;
+
+    border-radius:14px;
+
+    padding:16px;
+
+}
+
+.info-box span{
+
+    display:block;
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+    margin-bottom:8px;
+
+}
+
+.info-box strong{
+
+    font-size:22px;
+
+    color:var(--text-primary);
+
+}
+
+/*======================================================
+                    STAT CARD
+======================================================*/
+
+.stat-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+
+    margin-top:24px;
+
+}
+
+.stat-card{
+
+    background:#202C42;
+
+    border:1px solid var(--border-color);
+
+    border-radius:14px;
+
+    padding:18px;
+
+    transition:.25s;
+
+}
+
+.stat-card:hover{
+
+    border-color:var(--accent);
+
+    transform:translateY(-2px);
+
+}
+
+.stat-label{
+
+    color:var(--text-secondary);
+
+    font-size:13px;
+
+    margin-bottom:10px;
+
+}
+
+.stat-value{
+
+    color:var(--text-primary);
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+/*======================================================
+                    CARD FOOTER
+======================================================*/
+
+.card-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+    margin-top:28px;
+
+    padding-top:20px;
+
+    border-top:1px solid var(--border-color);
+
+}
+
+.card-meta{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:var(--text-secondary);
+
+    font-size:14px;
+
+}
+
+.card-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+/*======================================================
+                    PRICE WIDGET
+======================================================*/
+
+.price-widget{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.price-current{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    color:var(--text-primary);
+
+    line-height:1;
+
+}
+
+.price-change{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    width:max-content;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.price-up{
+
+    background:rgba(22,163,74,.15);
+
+    color:#4ADE80;
+
+}
+
+.price-down{
+
+    background:rgba(220,38,38,.15);
+
+    color:#F87171;
+
+}
+
+.market-status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    width:max-content;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.market-open{
+
+    background:rgba(22,163,74,.15);
+
+    color:#4ADE80;
+
+}
+
+.market-closed{
+
+    background:rgba(220,38,38,.15);
+
+    color:#F87171;
+
+}

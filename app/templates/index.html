@@ -8,6 +8,7 @@
 
     <title>StockPilot</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     
@@ -28,15 +29,11 @@
 
         <ul class="nav-links">
 
-            <li><a href="/">🏠 Home</a></li>
+    <li><a href="/" class="active">Home</a></li>
 
-<li><a href="#markets">📈 Markets</a></li>
+    <li><a href="/watchlist">Watchlist</a></li>
 
-<li><a href="#screener">🤖 AI Screener</a></li>
-
-<li><a href="/watchlist">⭐ Watchlist</a></li>
-
-        </ul>
+</ul>
 
     </nav>
 
@@ -44,19 +41,72 @@
 
     <section class="hero">
 
-        <h1>StockPilot</h1>
+        <div class="market-badge">
+            <span class="live-dot"></span>
+    🟢 Live Market Intelligence
+</div>
 
-        <h2>
-            AI-Powered Stock Analysis Platform
-        </h2>
+       <h1>
 
-        <p>
+    Analyze Stocks Like a Professional
 
-            Analyze Indian and US stocks using advanced technical indicators,
-            interactive charts and intelligent AI-generated BUY, SELL & HOLD
-            recommendations — all in seconds.
+    <span>
+        Powered by Artificial Intelligence
+    </span>
 
-        </p>
+</h1>
+
+       <p>
+
+    Get instant AI-powered Buy, Sell, or Hold recommendations using
+    technical indicators, trend analysis, support & resistance,
+    confidence scoring, and intelligent market insights for Indian
+    and US stocks.
+
+</p>
+<div class="hero-highlights">
+
+    <div class="highlight-card">
+
+        <div class="highlight-icon">⚡</div>
+
+        <h3>Real-Time Analysis</h3>
+
+        <p>Live AI powered stock insights.</p>
+
+    </div>
+
+    <div class="highlight-card">
+
+        <div class="highlight-icon">🤖</div>
+
+        <h3>AI Decision Engine</h3>
+
+        <p>Smart Buy, Hold & Sell signals.</p>
+
+    </div>
+
+    <div class="highlight-card">
+
+        <div class="highlight-icon">📈</div>
+
+        <h3>Technical Indicators</h3>
+
+        <p>RSI, MACD & Moving Averages.</p>
+
+    </div>
+
+    <div class="highlight-card">
+
+        <div class="highlight-icon">🌍</div>
+
+        <h3>Global Markets</h3>
+
+        <p>Analyze Indian & US stocks.</p>
+
+    </div>
+
+</div>
 
         <form action="/analyze" method="GET">
 

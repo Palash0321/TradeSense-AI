@@ -27,153 +27,351 @@ if (marketSelect) {
 
 }
 
-// ================= WATCHLIST =================
+// =====================================================
+// DATABASE WATCHLIST
+// =====================================================
 
-const watchlistContainer = document.getElementById("watchlist-items");
+const watchlistContainer =
+    document.getElementById("watchlist-items");
 
-const watchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
+async function loadWatchlist() {
 
-if (watchlistContainer) {
+    if (!watchlistContainer) return;
 
-if(watchlist.length === 0){
+    watchlistContainer.innerHTML =
+        "<p>Loading Watchlist...</p>";
 
-    watchlistContainer.innerHTML = `
+    try {
 
-        <div class="empty-watchlist">
+        const watchlist =
+    await getJSON("/api/watchlist");
 
-            <h3>📭 Your watchlist is empty</h3>
+        if (!watchlist.length) {
 
-            <p>Add your favorite stocks to track them here.</p>
+            watchlistContainer.innerHTML = `
 
-        </div>
+                <div class="empty-watchlist">
 
-    `;
+                    <h3>📭 Your watchlist is empty</h3>
 
-}
+                    <p>Add stocks from the analysis page.</p>
 
-if(watchlist.length > 0){
+                </div>
 
-watchlist.forEach(stock=>{
+            `;
+
+            return;
+
+        }
+
+        watchlistContainer.innerHTML = "";
+
+for (const stock of watchlist) {
 
     const card = document.createElement("div");
 
     card.className = "watchlist-card";
 
-    card.innerHTML = `
+card.innerHTML = `
 
-<div class="watchlist-top">
+<div class="watch-header">
 
-    <strong>${stock.symbol}</strong>
+    <div>
+
+        <h3 class="watch-symbol">${stock.symbol}</h3>
+
+        <p class="watch-company">
+            ${stock.company ?? "Unknown Company"}
+        </p>
+
+    </div>
 
     <button
-    class="remove-btn"
-    onclick="removeStock(event,'${stock.symbol}')">
+        class="remove-btn"
+        onclick="removeStock(event,'${stock.symbol}')"
+        title="Remove">
 
-    ❌
+        🗑
 
-</button>
+    </button>
 
 </div>
 
-<p class="live-price">
 
-Loading price...
+<div class="watch-main">
 
-</p>
+    <div class="price-widget">
 
-<p>${stock.company}</p>
+    <div class="price-current watch-price">
+
+        Loading...
+
+    </div>
+
+    <div class="market-status">
+
+        Loading...
+
+    </div>
+
+    <div class="price-change watch-change">
+
+        Loading...
+
+    </div>
+
+</div>
+
+    <div class="watch-signal">
+
+        Loading...
+
+    </div>
+
+</div>
+
+
+<div class="stat-grid">
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+
+            AI Score
+
+        </div>
+
+        <div class="stat-value ai-score">
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+
+            Target
+
+        </div>
+
+        <div class="stat-value target-price">
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+
+            Risk
+
+        </div>
+
+        <div class="stat-value risk-level">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card-footer">
+
+    <div class="card-meta">
+
+        ⭐ Added to Watchlist
+
+    </div>
+
+    <div class="card-actions">
+
+        <button class="analyze-btn">
+
+            📊 Analyze Stock
+
+        </button>
+
+    </div>
+
+</div>
 
 `;
-
-card.onclick = function(){
-
-        const market = stock.symbol.endsWith(".NS") ? "india" : "us";
-
-        const symbol = stock.symbol.replace(".NS","");
-
-        window.location.href =
-        `/analyze?market=${market}&symbol=${symbol}`;
-
-    };
 
     watchlistContainer.appendChild(card);
 
-    fetch(`/api/price/${stock.symbol}`)
-    .then(response => response.json())
-    .then(data => {
+    try {
 
-        const priceElement = card.querySelector(".live-price");
+        const market =
+            stock.symbol.endsWith(".NS")
+                ? "india"
+                : "us";
 
-        if(priceElement){
+        const symbol =
+            stock.symbol.replace(".NS", "");
 
-            priceElement.innerHTML = `
+        const data = await getJSON(
+    `/api/stock-summary?market=${market}&symbol=${symbol}`
+);
 
-<div class="watch-price">
+        card.querySelector(".watch-price").textContent =
+    `₹ ${data.price}`;
 
-    ₹ ${data.price}
 
-</div>
+    const marketStatus =
+    card.querySelector(".market-status");
 
-<div class="${
-    data.change >= 0 ? "green" : "red"
-}">
+if (data.market_status === "OPEN") {
 
-    ${data.change >= 0 ? "🟢" : "🔴"}
+    marketStatus.innerHTML =
+        "🟢 Market Open";
 
-    ${data.change}
+    marketStatus.className =
+        "market-status market-open";
 
-    (${data.change_percent}%)
+}
+else {
 
-</div>
+    marketStatus.innerHTML =
+        "🔴 Market Closed";
+
+    marketStatus.className =
+        "market-status market-closed";
+
+}
+
+
+const changeElement =
+    card.querySelector(".watch-change");
+
+if (data.is_positive) {
+
+    changeElement.className =
+        "price-change price-up watch-change";
+
+    changeElement.innerHTML =
+        `▲ ₹${data.change} (${data.change_percent}%)`;
+
+}
+else {
+
+    changeElement.className =
+        "price-change price-down watch-change";
+
+    changeElement.innerHTML =
+        `▼ ₹${Math.abs(data.change)} (${Math.abs(data.change_percent)}%)`;
+
+}
+
+const badgeClass = {
+
+    "BUY": "badge-buy",
+
+    "SELL": "badge-sell",
+
+    "HOLD": "badge-hold",
+
+    "STRONG BUY": "badge-strong-buy",
+
+    "STRONG SELL": "badge-strong-sell"
+
+};
+
+card.querySelector(".watch-signal").innerHTML = `
+
+    <div class="badge ${badgeClass[data.signal] || "badge-hold"}">
+
+        ${data.signal}
+
+    </div>
+
+    <small>
+
+        Confidence : ${data.confidence}
+
+    </small>
 
 `;
 
-        }
+        card.querySelector(".ai-score").textContent =
+    data.ai_score;
 
-    })
-    .catch(error => {
+card.querySelector(".target-price").textContent =
+    "₹ " + data.target;
 
-        console.error("Price Error:", error);
+card.querySelector(".risk-level").textContent =
+    data.risk;
 
-        const priceElement = card.querySelector(".live-price");
+    }
 
-        if(priceElement){
+    catch (error) {
 
-            priceElement.innerHTML = "Price Unavailable";
+        console.error(error);
 
-        }
+    }
 
-    });
-
-});
-
-}
-
-}
-
-function removeStock(event, symbol){
+    card.querySelector(".analyze-btn").onclick = function (event) {
 
     event.stopPropagation();
 
-    let watchlist = JSON.parse(
-        localStorage.getItem("watchlist")
-    ) || [];
+    const market =
+        stock.symbol.endsWith(".NS")
+            ? "india"
+            : "us";
 
-    watchlist = watchlist.filter(
+    const symbol =
+        stock.symbol.replace(".NS", "");
 
-        stock => stock.symbol !== symbol
+    window.location.href =
+        `/analyze?market=${market}&symbol=${symbol}`;
+
+};
+
+}
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        watchlistContainer.innerHTML =
+            "<p>Unable to load watchlist.</p>";
+
+    }
+
+}
+
+loadWatchlist();
+
+async function removeStock(event, symbol) {
+
+    event.stopPropagation();
+
+    if (!confirm(`Remove ${symbol} from Watchlist?`))
+        return;
+
+    const response = await fetch(
+
+        `/api/watchlist/${symbol}`,
+
+        {
+
+            method: "DELETE"
+
+        }
 
     );
 
-    localStorage.setItem(
+    const result = await response.json();
 
-        "watchlist",
+    if (result.success) {
 
-        JSON.stringify(watchlist)
+        loadWatchlist();
 
-    );
-
-    location.reload();
+    }
 
 }
 
@@ -185,89 +383,198 @@ let currentFilter = "ALL";
 
 async function loadAIPicks() {
 
-    const container = document.getElementById("screener-container");
+    const container =
+        document.getElementById("screener-container");
 
     if (!container) return;
 
-    container.innerHTML = "<p>Loading AI Picks...</p>";
+    container.innerHTML =
+        "<p>Loading AI Picks...</p>";
 
     try {
 
-        const response = await fetch(
-    `/api/ai-picks?market=${currentMarket}`
-);
-
-        const stocks = await response.json();
-
-console.log(stocks);
+        const stocks =
+    await getJSON(`/api/ai-picks?market=${currentMarket}`);
 
         if (!stocks.length) {
 
-            container.innerHTML = "<p>No AI Picks Available.</p>";
+            container.innerHTML =
+                "<p>No AI Picks Available.</p>";
 
             return;
 
         }
 
-       container.innerHTML = "";
+        container.innerHTML = "";
 
-const filteredStocks = stocks.filter(stock => {
+        const filteredStocks = stocks.filter(stock => {
 
-    if(currentFilter === "ALL") return true;
+            if (currentFilter === "ALL")
+                return true;
 
-    return stock.signal === currentFilter;
+            return stock.signal === currentFilter;
 
-});
+        });
 
-filteredStocks.forEach((stock, index) => {
+        filteredStocks.forEach((stock, index) => {
 
-            console.log(stock);
+    const card =
+        document.createElement("div");
 
-            const card = document.createElement("div");
+    card.className =
+        "ai-card";
 
-            card.className = "ai-card";
+    card.innerHTML = `
 
-            card.innerHTML = `
+<div class="watch-header">
 
-<div class="rank">
+    <div>
 
-#${index + 1}
+        <h3 class="watch-symbol">
+
+            #${index + 1} ${stock.symbol}
+
+        </h3>
+
+        <p class="watch-company">
+
+            ${stock.company}
+
+        </p>
+
+    </div>
 
 </div>
 
-<h3>${stock.symbol}</h3>
+<div class="watch-main">
 
-<p class="company">
+    <div class="price-widget">
 
-${stock.company}
+        <div class="price-current">
 
-</p>
+            ₹ ${stock.price ?? "--"}
 
-<div class="signal ${stock.signal.toLowerCase()}">
+        </div>
 
-${stock.signal}
+        <div class="market-status">
+
+            Loading...
+
+        </div>
+
+        <div class="price-change">
+
+            Loading...
+
+        </div>
+
+    </div>
+
+    <div class="watch-signal">
+
+    </div>
 
 </div>
 
-<p>
+<div class="stat-grid">
 
-<strong>AI Score:</strong>
+    <div class="stat-card">
 
-${stock.ai_score}
+        <div class="stat-label">
 
-</p>
+            AI Score
 
-<p>
+        </div>
 
-<strong>Confidence:</strong>
+        <div class="stat-value">
 
-${stock.confidence}
+            ${stock.ai_score}
 
-</p>
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+
+            Confidence
+
+        </div>
+
+        <div class="stat-value">
+
+            ${stock.confidence}
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+
+            Signal
+
+        </div>
+
+        <div class="stat-value">
+
+            ${stock.signal}
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card-footer">
+
+    <div class="card-meta">
+
+        🤖 Ranked by AI
+
+    </div>
+
+    <div class="card-actions">
+
+        <button class="analyze-btn">
+
+            📊 Analyze
+
+        </button>
+
+    </div>
+
+</div>
 
 `;
 
-            card.onclick = function(){
+const badgeClass = {
+
+    "BUY": "badge-buy",
+
+    "SELL": "badge-sell",
+
+    "HOLD": "badge-hold",
+
+    "STRONG BUY": "badge-strong-buy",
+
+    "STRONG SELL": "badge-strong-sell"
+
+};
+
+card.querySelector(".watch-signal").innerHTML = `
+
+<div class="badge ${badgeClass[stock.signal] || "badge-hold"}">
+
+    ${stock.signal}
+
+</div>
+
+`;
+
+            card.onclick = function () {
 
                 const market =
                     stock.symbol.endsWith(".NS")
@@ -275,10 +582,10 @@ ${stock.confidence}
                     : "us";
 
                 const symbol =
-                    stock.symbol.replace(".NS","");
+                    stock.symbol.replace(".NS", "");
 
                 window.location.href =
-                `/analyze?market=${market}&symbol=${symbol}`;
+                    `/analyze?market=${market}&symbol=${symbol}`;
 
             };
 
@@ -288,13 +595,12 @@ ${stock.confidence}
 
     }
 
-    catch(error){
+    catch (error) {
 
         console.error(error);
 
         container.innerHTML =
-
-        "<p>Unable to load AI Picks.</p>";
+            "<p>Unable to load AI Picks.</p>";
 
     }
 
@@ -302,19 +608,20 @@ ${stock.confidence}
 
 loadAIPicks();
 
-document.querySelectorAll(".filter-btn").forEach(button=>{
+document.querySelectorAll(".filter-btn").forEach(button => {
 
-    button.addEventListener("click",function(){
+    button.addEventListener("click", function () {
 
-        document.querySelectorAll(".filter-btn").forEach(
+        document.querySelectorAll(".filter-btn").forEach(btn => {
 
-            b=>b.classList.remove("active")
+            btn.classList.remove("active");
 
-        );
+        });
 
         this.classList.add("active");
 
-        currentFilter=this.dataset.filter;
+        currentFilter =
+            this.dataset.filter;
 
         loadAIPicks();
 

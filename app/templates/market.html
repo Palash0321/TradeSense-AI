@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Market Intelligence | TradeSense AI</title>
+
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/market.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        📈 TradeSense AI
+    </div>
+
+    <ul class="nav-links">
+
+        <li><a href="/">Home</a></li>
+
+        <li><a href="/dashboard">Dashboard</a></li>
+
+        <li><a href="/watchlist">Watchlist</a></li>
+
+        <li><a href="/portfolio">Portfolio</a></li>
+
+        <li><a href="/market" class="active">
+            Market
+        </a></li>
+
+    </ul>
+
+</nav>
+
+<main class="market-page">
+
+    <section class="market-header">
+
+        <p class="market-kicker">
+            MARKET INTELLIGENCE
+        </p>
+
+        <h1>
+            Global Markets
+        </h1>
+
+        <p>
+            Live indices, market sentiment,
+            sector performance and AI insights.
+        </p>
+
+    </section>
+
+  <section class="market-grid">
+
+    {% for index in indices %}
+
+    <article class="market-card">
+
+        <span>{{ index.name }}</span>
+
+        <strong>{{ index.price }}</strong>
+
+        {% if index.positive %}
+            <p class="positive">
+                ▲ {{ index.change_percent }}%
+            </p>
+        {% else %}
+            <p class="negative">
+                ▼ {{ index.change_percent }}%
+            </p>
+        {% endif %}
+
+    </article>
+
+    {% endfor %}
+
+</section>
+
+</main>
+
+<script src="/static/js/market.js"></script>
+
+</body>
+</html>

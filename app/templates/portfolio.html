@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Portfolio | TradeSense AI</title>
+
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/badges.css">
+    <link rel="stylesheet" href="/static/css/portfolio.css">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        📈 TradeSense AI
+    </div>
+
+    <ul class="nav-links">
+
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        <li>
+            <a href="/dashboard">Dashboard</a>
+        </li>
+
+        <li>
+            <a href="/watchlist">Watchlist</a>
+        </li>
+
+        <li>
+            <a href="/portfolio" class="active">Portfolio</a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<main class="portfolio-page">
+
+    <!-- HEADER -->
+
+    <section class="portfolio-header">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                PORTFOLIO INTELLIGENCE
+            </p>
+
+            <h1>My Portfolio</h1>
+
+            <p>
+                Track holdings, investment value,
+                returns and AI insights.
+            </p>
+
+        </div>
+
+        <button
+            class="add-holding-btn"
+            id="open-add-holding">
+
+            + Add Holding
+
+        </button>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section class="portfolio-summary">
+
+        <article class="portfolio-stat">
+
+            <span>Total Investment</span>
+
+            <strong id="total-investment">
+                ₹0.00
+            </strong>
+
+        </article>
+
+
+        <article class="portfolio-stat">
+
+            <span>Current Value</span>
+
+            <strong id="current-value">
+                ₹0.00
+            </strong>
+
+        </article>
+
+
+        <article class="portfolio-stat">
+
+            <span>Total P/L</span>
+
+            <strong id="total-profit-loss">
+                ₹0.00
+            </strong>
+
+            <small id="total-profit-percent">
+                0.00%
+            </small>
+
+        </article>
+
+
+        <article class="portfolio-stat">
+
+            <span>Holdings</span>
+
+            <strong id="holding-count">
+                0
+            </strong>
+
+        </article>
+
+    </section>
+
+
+    <!-- ============================= -->
+<!-- PORTFOLIO ANALYTICS -->
+<!-- ============================= -->
+
+<section class="portfolio-analytics">
+
+    <div class="portfolio-analytics-heading">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                PERFORMANCE
+            </p>
+
+            <h2>
+                Portfolio Analytics
+            </h2>
+
+        </div>
+
+    </div>
+
+
+    <div class="portfolio-analytics-grid">
+
+        <!-- BEST PERFORMER -->
+
+        <article class="analytics-card">
+
+            <div class="analytics-icon">
+                🏆
+            </div>
+
+            <span class="analytics-label">
+                Best Performer
+            </span>
+
+            <strong id="best-performer">
+                --
+            </strong>
+
+            <small
+                id="best-performer-return"
+                class="analytics-return">
+
+                --
+
+            </small>
+
+        </article>
+
+
+        <!-- WORST PERFORMER -->
+
+        <article class="analytics-card">
+
+            <div class="analytics-icon">
+                📉
+            </div>
+
+            <span class="analytics-label">
+                Worst Performer
+            </span>
+
+            <strong id="worst-performer">
+                --
+            </strong>
+
+            <small
+                id="worst-performer-return"
+                class="analytics-return">
+
+                --
+
+            </small>
+
+        </article>
+
+
+        <!-- PORTFOLIO RETURN -->
+
+        <article class="analytics-card">
+
+            <div class="analytics-icon">
+                📊
+            </div>
+
+            <span class="analytics-label">
+                Portfolio Return
+            </span>
+
+            <strong id="portfolio-return">
+                0.00%
+            </strong>
+
+            <small>
+                Overall unrealized return
+            </small>
+
+        </article>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- PORTFOLIO ALLOCATION -->
+<!-- ============================= -->
+
+<section class="portfolio-allocation">
+
+    <div class="portfolio-analytics-heading">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                DIVERSIFICATION
+            </p>
+
+            <h2>
+                Portfolio Allocation
+            </h2>
+
+            <p class="allocation-description">
+                See how your portfolio value is distributed across holdings.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="allocation-card">
+
+        <div
+            class="allocation-bar"
+            id="allocation-bar">
+        </div>
+
+
+        <div
+            class="allocation-list"
+            id="allocation-list">
+
+            <div class="portfolio-loading">
+                Loading allocation...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- PORTFOLIO RISK INTELLIGENCE -->
+<!-- ============================= -->
+
+<section class="portfolio-risk-section">
+
+    <div class="portfolio-analytics-heading">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                RISK INTELLIGENCE
+            </p>
+
+            <h2>
+                Diversification Analysis
+            </h2>
+
+            <p class="allocation-description">
+                Understand concentration and diversification risk
+                across your portfolio.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="portfolio-risk-grid">
+
+        <article class="portfolio-risk-card">
+
+            <span class="analytics-label">
+                Diversification Score
+            </span>
+
+            <strong id="diversification-score">
+                --
+            </strong>
+
+            <small id="diversification-label">
+                Calculating...
+            </small>
+
+        </article>
+
+
+        <article class="portfolio-risk-card">
+
+            <span class="analytics-label">
+                Largest Position
+            </span>
+
+            <strong id="largest-position">
+                --
+            </strong>
+
+            <small id="largest-position-percent">
+                --
+            </small>
+
+        </article>
+
+
+        <article class="portfolio-risk-card">
+
+            <span class="analytics-label">
+                Concentration Risk
+            </span>
+
+            <strong id="concentration-risk">
+                --
+            </strong>
+
+            <small>
+                Based on current portfolio allocation
+            </small>
+
+        </article>
+
+    </div>
+
+
+    <div
+        class="portfolio-risk-message"
+        id="portfolio-risk-message">
+
+        Analyzing your portfolio...
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- SECTOR EXPOSURE -->
+<!-- ============================= -->
+
+<section class="sector-exposure-section">
+
+    <div class="portfolio-analytics-heading">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                SECTOR INTELLIGENCE
+            </p>
+
+            <h2>
+                Sector Exposure
+            </h2>
+
+            <p class="allocation-description">
+                Understand how your portfolio is distributed
+                across different market sectors.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="sector-exposure-card">
+
+        <div
+            class="sector-bar"
+            id="sector-bar">
+        </div>
+
+
+        <div
+            class="sector-list"
+            id="sector-list">
+
+            <div class="portfolio-loading">
+                Analyzing sectors...
+            </div>
+
+        </div>
+
+
+        <div
+            class="sector-warning"
+            id="sector-warning">
+
+            Calculating sector concentration...
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ============================= -->
+<!-- PORTFOLIO AI INSIGHTS -->
+<!-- ============================= -->
+
+<section class="portfolio-ai-section">
+
+    <div class="portfolio-analytics-heading">
+
+        <div>
+
+            <p class="portfolio-kicker">
+                AI INTELLIGENCE
+            </p>
+
+            <h2>
+                Portfolio AI Insights
+            </h2>
+
+            <p class="allocation-description">
+                Automated insights based on your portfolio
+                performance and concentration.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="portfolio-ai-card"
+        id="portfolio-ai-insights">
+
+        <div class="portfolio-loading">
+            Analyzing portfolio...
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- HOLDINGS -->
+
+    <section class="holdings-section">
+
+        <div class="holdings-heading">
+
+            <div>
+
+                <p class="portfolio-kicker">
+                    HOLDINGS
+                </p>
+
+                <h2>Your Investments</h2>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="portfolio-holdings"
+            id="portfolio-holdings">
+
+            <div class="portfolio-loading">
+                Loading portfolio...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ADD HOLDING MODAL -->
+
+    <div
+        class="portfolio-modal"
+        id="portfolio-modal">
+
+        <div class="portfolio-modal-card">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="portfolio-kicker">
+                        NEW POSITION
+                    </p>
+
+                    <h2>Add Holding</h2>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="close-portfolio-modal">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <form id="portfolio-form">
+
+                <label>
+                    Market
+                </label>
+
+                <select id="portfolio-market">
+
+                    <option value="india">
+                        India
+                    </option>
+
+                    <option value="us">
+                        USA
+                    </option>
+
+                </select>
+
+
+                <label>
+                    Stock Symbol
+                </label>
+
+                <input
+                    type="text"
+                    id="portfolio-symbol"
+                    placeholder="RELIANCE"
+                    required>
+
+
+                <label>
+                    Company Name
+                </label>
+
+                <input
+                    type="text"
+                    id="portfolio-company"
+                    placeholder="Reliance Industries"
+                    required>
+
+
+                <label>
+                    Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="portfolio-quantity"
+                    min="0.0001"
+                    step="any"
+                    required>
+
+
+                <label>
+                    Average Buy Price
+                </label>
+
+                <input
+                    type="number"
+                    id="portfolio-buy-price"
+                    min="0.01"
+                    step="any"
+                    required>
+
+
+                <button
+                    type="submit"
+                    class="save-holding-btn">
+
+                    Add to Portfolio
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/portfolio.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+.market-page{
+
+    max-width:1400px;
+
+    margin:auto;
+
+    padding:40px 30px 80px;
+
+}
+
+.market-header{
+
+    margin-bottom:60px;
+
+}
+
+.market-kicker{
+
+    color:#38BDF8;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+}
+
+.market-header h1{
+
+    margin:10px 0;
+
+    font-size:60px;
+
+}
+
+.market-header p{
+
+    color:#94A3B8;
+
+}
+
+.market-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:20px;
+
+}
+
+.market-card{
+
+    padding:28px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:#141f44;
+
+}
+
+.market-card span{
+
+    color:#94A3B8;
+
+    font-size:13px;
+
+}
+
+.market-card strong{
+
+    display:block;
+
+    margin-top:15px;
+
+    font-size:30px;
+
+}
+
+.positive{
+
+    color:#22c55e;
+
+    font-weight:700;
+
+    margin-top:15px;
+
+}
+
+.negative{
+
+    color:#ef4444;
+
+    font-weight:700;
+
+    margin-top:15px;
+
+}
