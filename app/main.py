@@ -1108,3 +1108,26 @@ def market_sentiment():
         "negative": negative
 
     }
+
+@app.get("/api/sectors")
+def sector_performance():
+
+    return [
+
+        {"name":"Information Technology","change":2.34},
+
+        {"name":"Banking","change":1.65},
+
+        {"name":"Automobile","change":0.94},
+
+        {"name":"FMCG","change":-0.48},
+
+        {"name":"Pharma","change":1.12},
+
+        {"name":"Real Estate","change":-1.04},
+
+        {"name":"Energy","change":0.73},
+
+        {"name":"Metal","change":-0.82}
+
+    ]

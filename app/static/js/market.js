@@ -52,3 +52,41 @@ async function loadMovers(){
 
 loadSentiment();
 loadMovers();
+
+async function loadSectors(){
+
+    const response = await fetch("/api/sectors");
+
+    const sectors = await response.json();
+
+    const grid = document.getElementById("sectorGrid");
+
+    grid.innerHTML = "";
+
+    sectors.forEach(sector=>{
+
+        grid.innerHTML += `
+
+            <div class="sector-card">
+
+                <div class="sector-name">
+
+                    ${sector.name}
+
+                </div>
+
+                <div class="sector-change ${sector.change>=0?"green":"red"}">
+
+                    ${sector.change>=0?"+":""}${sector.change.toFixed(2)}%
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+loadSectors();
