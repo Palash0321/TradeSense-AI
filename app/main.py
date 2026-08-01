@@ -26,6 +26,7 @@ from app.services.sentiment_service import get_fear_greed
 from fastapi import Query
 from datetime import datetime, timedelta, time
 from app.services.market_data.provider import provider
+from app.auth.routes import router as auth_router
 
 
 app = FastAPI(
@@ -33,6 +34,8 @@ app = FastAPI(
     description="AI-Powered Stock Market Analysis Platform",
     version="1.0.0"
 )
+
+app.include_router(auth_router)
 
 initialize_database()
 
