@@ -222,3 +222,126 @@ def create_stock_chart(symbol: str, period: str = "6mo"):
         "displaylogo": False,
     }
 )
+
+import pandas as pd
+
+async def get_index_history(symbol: str, period: str = "1mo"):
+
+    ticker = yf.Ticker(symbol)
+
+    history = ticker.history(period=period)
+
+    if history.empty:
+        return []
+
+    # Calculate EMA before reset_index
+    history["EMA20"] = history["Close"].ewm(
+        span=20,
+        adjust=False
+    ).mean()
+
+    history["EMA50"] = history["Close"].ewm(
+        span=50,
+        adjust=False
+    ).mean()
+
+    # ==========================
+# RSI (14)
+# ==========================
+
+    delta = history["Close"].diff()
+
+    gain = delta.clip(lower=0)
+    loss = -delta.clip(upper=0)
+
+    avg_gain = gain.rolling(window=14).mean()
+    avg_loss = loss.rolling(window=14).mean()
+
+    rs = avg_gain / avg_loss
+
+    history["RSI"] = 100 - (100 / (1 + rs))
+
+    # ==========================
+# MACD
+# ==========================
+
+    ema12 = history["Close"].ewm(span=12, adjust=False).mean()
+
+    ema26 = history["Close"].ewm(span=26, adjust=False).mean()
+
+    history["MACD"] = ema12 - ema26
+
+    history["MACD_SIGNAL"] = (
+        history["MACD"]
+        .ewm(span=9, adjust=False)
+        .mean()
+    )
+
+    history["MACD_HIST"] = (
+        history["MACD"]
+        - history["MACD_SIGNAL"]
+    )
+
+    history = history.reset_index()
+
+    history = history.reset_index()
+
+    # yfinance sometimes uses Datetime instead of Date
+    date_column = "Date" if "Date" in history.columns else "Datetime"
+
+    candles = []
+
+    for _, row in history.iterrows():
+
+        candles.append({
+
+            "time": row[date_column].strftime("%Y-%m-%d"),
+
+            "open": round(float(row["Open"]), 2),
+
+            "high": round(float(row["High"]), 2),
+
+            "low": round(float(row["Low"]), 2),
+
+            "close": round(float(row["Close"]), 2),
+
+            "volume": int(row["Volume"]),
+
+            "ema20": (
+                None if pd.isna(row["EMA20"])
+                else round(float(row["EMA20"]), 2)
+            ),
+
+            "ema50": (
+                None if pd.isna(row["EMA50"])
+                else round(float(row["EMA50"]), 2)
+            ),
+
+            "rsi": (
+    None
+    if pd.isna(row["RSI"])
+    else round(float(row["RSI"]), 2)
+),
+
+"macd": (
+    None
+    if pd.isna(row["MACD"])
+    else round(float(row["MACD"]), 4)
+),
+
+"macd_signal": (
+    None
+    if pd.isna(row["MACD_SIGNAL"])
+    else round(float(row["MACD_SIGNAL"]), 4)
+),
+
+"macd_hist": (
+    None
+    if pd.isna(row["MACD_HIST"])
+    else round(float(row["MACD_HIST"]), 4)
+),
+
+        })
+
+    return candles
+

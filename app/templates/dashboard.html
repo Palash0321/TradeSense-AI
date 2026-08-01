@@ -1,58 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+Dashboard | TradeSense AI
 
-    <title>Dashboard</title>
+{% endblock %}
 
-    <link rel="stylesheet" href="/static/css/variables.css">
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/layout.css">
-    <link rel="stylesheet" href="/static/css/navbar.css">
-    <link rel="stylesheet" href="/static/css/buttons.css">
-    <link rel="stylesheet" href="/static/css/cards.css">
-    <link rel="stylesheet" href="/static/css/badges.css">
-    <link rel="stylesheet" href="/static/css/dashboard.css">
+{% block css %}
 
-</head>
+<link rel="stylesheet" href="/static/css/dashboard.css">
 
-<body>
+{% endblock %}
 
-<nav class="navbar">
+{% block content %}
 
-    <div class="logo">
-        📈 StockPilot
-    </div>
-
-    <ul class="nav-links">
-
-        <li>
-            <a href="/">Home</a>
-        </li>
-
-        <li>
-            <a href="/dashboard" class="active">
-                Dashboard
-            </a>
-        </li>
-
-        <li>
-            <a href="/watchlist">
-                Watchlist
-            </a>
-        </li>
-
-    </ul>
-
-</nav>
-
-
-<main class="page">
-
+<section class="page">
 <div class="container">
 
     <!-- ============================= -->
@@ -80,14 +42,422 @@
 
         <div class="dashboard-status">
 
-            <span class="status-dot"></span>
+    <span
+        id="market-status"
+        class="market-status green">
 
-            Live Market Intelligence
+        LIVE
 
-        </div>
+    </span>
+
+</div>
 
     </section>
 
+    <section class="hero-kpi-section">
+
+    <div class="hero-kpi-card">
+
+        <span>NIFTY 50</span>
+
+        <h2 id="hero-nifty">--</h2>
+
+        <p id="hero-nifty-change">
+
+            Loading...
+
+        </p>
+
+    </div>
+
+    <div class="hero-kpi-card">
+
+        <span>SENSEX</span>
+
+        <h2 id="hero-sensex">--</h2>
+
+        <p id="hero-sensex-change">
+
+            Loading...
+
+        </p>
+
+    </div>
+
+    <div class="hero-kpi-card">
+
+        <span>S&P 500</span>
+
+        <h2 id="hero-sp500">--</h2>
+
+        <p id="hero-sp500-change">
+
+            Loading...
+
+        </p>
+
+    </div>
+
+    <div class="hero-kpi-card">
+
+        <span>Market Mood</span>
+
+        <h2 id="hero-mood">
+
+            --
+
+        </h2>
+
+        <p>
+
+            AI Powered
+
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- AI MARKET INTELLIGENCE -->
+<!-- ========================================= -->
+
+<section class="ai-market-panel">
+
+    <div class="ai-market-header">
+
+        <h2>🤖 AI Market Intelligence</h2>
+
+        <span id="ai-market-time">
+
+            Updating...
+
+        </span>
+
+    </div>
+
+    <div class="ai-market-grid">
+
+        <div class="ai-market-card">
+            <span>Market Sentiment</span>
+            <strong id="ai-sentiment">--</strong>
+        </div>
+
+        <div class="ai-market-card">
+            <span>PCR</span>
+            <strong id="ai-pcr">--</strong>
+        </div>
+
+        <div class="ai-market-card">
+            <span>Support</span>
+            <strong id="ai-support">--</strong>
+        </div>
+
+        <div class="ai-market-card">
+            <span>Resistance</span>
+            <strong id="ai-resistance">--</strong>
+        </div>
+
+        <div class="ai-market-card">
+            <span>Max Pain</span>
+            <strong id="ai-max-pain">--</strong>
+        </div>
+
+        <div class="ai-market-card">
+            <span>AI Recommendation</span>
+            <strong id="ai-recommendation">--</strong>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ========================================= -->
+<!-- SMART MONEY DASHBOARD -->
+<!-- ========================================= -->
+
+<section class="smart-money-panel">
+
+    <div class="smart-money-header">
+
+        <h2>💰 Smart Money Dashboard</h2>
+
+    </div>
+
+    <div class="smart-money-grid">
+
+        <div class="smart-money-card">
+
+            <span>FII Activity</span>
+
+            <strong id="fii-activity">
+
+                --
+
+            </strong>
+
+        </div>
+
+        <div class="smart-money-card">
+
+            <span>DII Activity</span>
+
+            <strong id="dii-activity">
+
+                --
+
+            </strong>
+
+        </div>
+
+        <div class="smart-money-card">
+
+            <span>OI Build-up</span>
+
+            <strong id="oi-buildup">
+
+                --
+
+            </strong>
+
+        </div>
+
+        <div class="smart-money-card">
+
+            <span>Trade Setup</span>
+
+            <strong id="trade-setup">
+
+                --
+
+            </strong>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="dashboard-section">
+
+    <div class="dashboard-section-heading">
+
+        <div>
+
+            <p class="section-kicker">
+                LIVE INDICES
+            </p>
+
+            <h2>
+                Live Index Charts
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="live-index-grid">
+
+        <div class="live-index-card">
+
+    <div class="chart-header">
+
+        <div class="chart-title">
+
+            <h2>Live Market Charts</h2>
+
+            <p>Professional market analysis</p>
+
+        </div>
+
+       <div class="chart-selector-group">
+
+    <select id="index-selector">
+
+        <option value="^NSEI">NIFTY 50</option>
+        <option value="^BSESN">SENSEX</option>
+        <option value="^NSEBANK">BANK NIFTY</option>
+        <option value="NIFTY_FIN_SERVICE.NS">FINNIFTY</option>
+        <option value="^GSPC">S&P 500</option>
+        <option value="^IXIC">NASDAQ</option>
+
+    </select>
+
+    <select id="expiry-selector">
+
+        <option value="spot">Spot</option>
+
+    </select>
+
+</div>
+
+    </div>
+
+
+    <div class="chart-toolbar">
+
+        <div class="toolbar-left">
+
+            <button class="draw-btn active" data-tool="none">
+                Cursor
+            </button>
+
+            <button class="draw-btn" data-tool="trend">
+                Trend Line
+            </button>
+
+            <button class="draw-btn" data-tool="horizontal">
+                Horizontal Line
+            </button>
+
+        </div>
+
+
+        <div class="toolbar-right">
+
+            <label class="indicator-item">
+
+                <input type="checkbox"
+                       id="ema20-toggle"
+                       checked>
+
+                EMA20
+
+            </label>
+
+            <label class="indicator-item">
+
+                <input type="checkbox"
+                       id="ema50-toggle"
+                       checked>
+
+                EMA50
+
+            </label>
+
+            <label>
+    <input type="checkbox"
+           id="bb-toggle"
+           checked>
+    Bollinger Bands
+</label>
+
+<label>
+    <input
+        type="checkbox"
+        id="vwap-toggle"
+        checked>
+
+    VWAP
+</label>
+
+            <label class="indicator-item">
+
+    <input
+        type="checkbox"
+        id="macd-toggle"
+        checked>
+
+    MACD
+
+</label>
+
+            <div class="timeframe-buttons">
+
+                <button class="tf-btn active" data-period="1d">1D</button>
+                <button class="tf-btn" data-period="5d">5D</button>
+                <button class="tf-btn" data-period="1mo">1M</button>
+                <button class="tf-btn" data-period="6mo">6M</button>
+                <button class="tf-btn" data-period="1y">1Y</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="ohlc-panel"
+         class="ohlc-panel">
+
+        <span>O: --</span>
+        <span>H: --</span>
+        <span>L: --</span>
+        <span>C: --</span>
+        <span>V: --</span>
+
+    </div>
+
+
+    <div id="nifty-live-chart"
+     class="live-chart">
+</div>
+<div id="volume-chart"
+     class="volume-chart">
+</div>
+<div id="rsi-chart"
+     class="indicator-chart">
+</div>
+<div id="macd-chart"
+     class="macd-chart">
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+<section class="option-chain-section">
+
+    <div class="option-chain-header">
+
+        <h2>Option Chain</h2>
+
+        <div class="option-chain-summary">
+
+    <div class="summary-card">
+        <span>Spot</span>
+        <strong id="oc-spot">--</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>PCR</span>
+        <strong id="oc-pcr">--</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Support</span>
+        <strong id="oc-support">--</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Resistance</span>
+        <strong id="oc-resistance">--</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Bias</span>
+        <strong id="oc-bias">--</strong>
+    </div>
+
+    <div class="summary-card">
+        <span>Max Pain</span>
+        <strong id="oc-max-pain">--</strong>
+    </div>
+
+</div>
+
+    </div>
+
+    <div id="option-chain-container">
+
+        Loading option chain...
+
+    </div>
+
+</section>
 
     <!-- ============================= -->
     <!-- MARKET OVERVIEW -->
@@ -134,13 +504,22 @@
 
                 </div>
 
-                <div class="market-value">
-                    --
-                </div>
+                <div
+    class="market-value"
+    id="nifty-price">
+    --
+</div>
 
-                <div class="market-change neutral">
-                    Waiting for market data
-                </div>
+<div
+    class="market-change neutral"
+    id="nifty-change">
+    Waiting for market data
+</div>
+
+<canvas
+    id="nifty-chart"
+    class="mini-chart">
+</canvas>
 
             </article>
 
@@ -165,13 +544,22 @@
 
                 </div>
 
-                <div class="market-value">
-                    --
-                </div>
+                <div
+    class="market-value"
+    id="sensex-price">
+    --
+</div>
 
-                <div class="market-change neutral">
-                    Waiting for market data
-                </div>
+<div
+    class="market-change neutral"
+    id="sensex-change">
+    Waiting for market data
+</div>
+
+<canvas
+    id="sensex-chart"
+    class="mini-chart">
+</canvas>
 
             </article>
 
@@ -196,13 +584,22 @@
 
                 </div>
 
-                <div class="market-value">
-                    --
-                </div>
+                <div
+    class="market-value"
+    id="sp500-price">
+    --
+</div>
 
-                <div class="market-change neutral">
-                    Waiting for market data
-                </div>
+<div
+    class="market-change neutral"
+    id="sp500-change">
+    Waiting for market data
+</div>
+
+<canvas
+    id="sp500-chart"
+    class="mini-chart">
+</canvas>
 
             </article>
 
@@ -345,9 +742,37 @@
         class="ai-opportunities-grid"
         id="dashboard-ai-picks">
 
-        <div class="dashboard-loading">
-            Loading AI opportunities...
-        </div>
+        <div class="dashboard-ai-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-ai-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-ai-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-ai-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
 
     </div>
 
@@ -478,9 +903,29 @@
         class="market-news-grid"
         id="market-news-container">
 
-        <div class="dashboard-loading">
-            Loading latest market news...
-        </div>
+        <div class="market-news-card skeleton-card">
+
+    <div style="width:100%">
+
+        <div class="skeleton skeleton-title"></div>
+
+        <div class="skeleton skeleton-text"></div>
+
+    </div>
+
+</div>
+
+<div class="market-news-card skeleton-card">
+
+    <div style="width:100%">
+
+        <div class="skeleton skeleton-title"></div>
+
+        <div class="skeleton skeleton-text"></div>
+
+    </div>
+
+</div>
 
     </div>
 
@@ -522,9 +967,37 @@
         class="dashboard-watchlist"
         id="dashboard-watchlist">
 
-        <div class="dashboard-loading">
-            Loading your watchlist...
-        </div>
+        <div class="dashboard-watch-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-watch-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-watch-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
+
+<div class="dashboard-watch-card skeleton-card">
+
+    <div class="skeleton skeleton-title"></div>
+
+    <div class="skeleton skeleton-text"></div>
+
+</div>
 
     </div>
 
@@ -660,11 +1133,20 @@
 
 </div>
 
-</main>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
 
 <script src="/static/js/api.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"></script>
+
+<script src="/static/js/indicators.js"></script>
+
 <script src="/static/js/dashboard.js"></script>
 
-</body>
-
-</html>
+{% endblock %}

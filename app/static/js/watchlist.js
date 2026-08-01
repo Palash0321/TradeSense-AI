@@ -34,6 +34,8 @@ if (marketSelect) {
 const watchlistContainer =
     document.getElementById("watchlist-items");
 
+let watchlistData = [];
+
 async function loadWatchlist() {
 
     if (!watchlistContainer) return;
@@ -45,6 +47,8 @@ async function loadWatchlist() {
 
         const watchlist =
     await getJSON("/api/watchlist");
+
+watchlistData = [...watchlist];
 
         if (!watchlist.length) {
 
@@ -64,7 +68,6 @@ async function loadWatchlist() {
 
         }
 
-        watchlistContainer.innerHTML = "";
 
 for (const stock of watchlist) {
 
@@ -345,6 +348,121 @@ card.querySelector(".risk-level").textContent =
 }
 
 loadWatchlist();
+
+const searchBox = document.getElementById("watchlist-search");
+
+if (searchBox) {
+
+    searchBox.addEventListener("input", function () {
+
+        const query = this.value.trim().toLowerCase();
+
+        document.querySelectorAll(".watchlist-card").forEach(card => {
+
+            const symbol = card.querySelector(".watch-symbol")
+                .textContent
+                .toLowerCase();
+
+            const company = card.querySelector(".watch-company")
+                .textContent
+                .toLowerCase();
+
+            if (
+                symbol.includes(query) ||
+                company.includes(query)
+            ) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+
+        });
+
+    });
+
+}   
+
+// ======================================
+// WATCHLIST SORTING
+// ======================================
+
+const sortSelect =
+    document.getElementById("watchlist-sort");
+
+if (sortSelect) {
+
+    sortSelect.addEventListener("change", function () {
+
+        const cards = Array.from(
+            watchlistContainer.querySelectorAll(".watchlist-card")
+        );
+
+        cards.sort((a, b) => {
+
+            switch (this.value) {
+
+                case "symbol":
+
+                    return a.querySelector(".watch-symbol")
+                        .textContent
+                        .localeCompare(
+                            b.querySelector(".watch-symbol")
+                            .textContent
+                        );
+
+                case "score":
+
+                    return Number(
+                        b.querySelector(".ai-score").textContent
+                    ) - Number(
+                        a.querySelector(".ai-score").textContent
+                    );
+
+                case "price":
+
+                    return parseFloat(
+                        b.querySelector(".watch-price")
+                            .textContent
+                            .replace(/[^\d.-]/g, "")
+                    ) - parseFloat(
+                        a.querySelector(".watch-price")
+                            .textContent
+                            .replace(/[^\d.-]/g, "")
+                    );
+
+                case "change":
+
+                    return parseFloat(
+                        (
+                            b.querySelector(".watch-change")
+                                .textContent
+                                .match(/-?\d+(\.\d+)?(?=%)/) || [0]
+                        )[0]
+                    ) - parseFloat(
+                        (
+                            a.querySelector(".watch-change")
+                                .textContent
+                                .match(/-?\d+(\.\d+)?(?=%)/) || [0]
+                        )[0]
+                    );
+
+                default:
+
+                    return 0;
+
+            }
+
+        });
+
+        cards.forEach(card => {
+
+            watchlistContainer.appendChild(card);
+
+        });
+
+    });
+
+}
 
 async function removeStock(event, symbol) {
 

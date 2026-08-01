@@ -21,6 +21,12 @@ from pydantic import BaseModel
 from app.services.portfolio_service import get_stock_metadata
 from app.routers import market
 from app.services.market_service import get_market_indices
+from app.services.macro_service import get_macro_data
+from app.services.sentiment_service import get_fear_greed
+from fastapi import Query
+from datetime import datetime, timedelta, time
+from app.services.market_data.provider import provider
+
 
 app = FastAPI(
     title="TradeSense AI",
@@ -34,11 +40,15 @@ templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 app.include_router(stock_router)
-@app.get("/")
-def home(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html"
+from fastapi.responses import RedirectResponse
+
+
+@app.get("/", include_in_schema=False)
+async def home():
+
+    return RedirectResponse(
+        url="/dashboard",
+        status_code=302
     )
 
 @app.get("/analyze")
@@ -425,6 +435,50 @@ async def dashboard(request: Request):
         name="dashboard.html"
     )
 
+def get_market_status():
+
+    now = datetime.now()
+
+    current = now.time()
+
+    if now.weekday() >= 5:
+
+        return {
+
+            "status": "CLOSED",
+
+            "color": "red"
+
+        }
+
+    if time(9, 0) <= current < time(9, 15):
+
+        return {
+
+            "status": "PRE OPEN",
+
+            "color": "yellow"
+
+        }
+
+    if time(9, 15) <= current <= time(15, 30):
+
+        return {
+
+            "status": "LIVE",
+
+            "color": "green"
+
+        }
+
+    return {
+
+        "status": "CLOSED",
+
+        "color": "red"
+
+    }
+
 @app.get("/api/market-overview")
 def market_overview():
 
@@ -505,6 +559,8 @@ def market_overview():
                 "change_percent": None,
                 "is_positive": None
             }
+
+    results["market_status"] = get_market_status()
 
     return results
 
@@ -628,53 +684,6 @@ def market_movers(market: str = "india"):
         "losers": losers
 
     }
-
-@app.get("/api/market-news")
-def market_news():
-
-    news_queries = [
-        "NIFTY",
-        "Indian stock market",
-        "Sensex"
-    ]
-
-    combined_news = []
-
-    seen_titles = set()
-
-    for query in news_queries:
-
-        try:
-
-            articles = get_stock_news(query)
-
-            for article in articles:
-
-                title = article.get("title")
-
-                if not title:
-                    continue
-
-                if title in seen_titles:
-                    continue
-
-                seen_titles.add(title)
-
-                combined_news.append({
-                    "title": title,
-                    "link": article.get("link"),
-                    "published": article.get("published"),
-                    "source_query": query
-                })
-
-        except Exception as error:
-
-            print(
-                f"News error for {query}:",
-                error
-            )
-
-    return combined_news[:8]
 
 
 # =====================================================
@@ -1079,55 +1088,199 @@ def portfolio_price(market: str, symbol: str):
 
 app.include_router(market.router)
 
-@app.get("/api/market-sentiment")
-def market_sentiment():
+@app.get("/api/expiries")
+async def get_expiries(index: str = Query(default="NIFTY")):
 
-    indices = get_market_indices()
+    from datetime import datetime, timedelta
 
-    positive = sum(1 for i in indices if i["positive"])
-    negative = len(indices) - positive
+    today = datetime.today()
 
-    if positive >= 5:
-        sentiment = "🟢 Strong Bullish"
+    expiries = []
 
-    elif positive >= 3:
-        sentiment = "🟡 Moderately Bullish"
+    current = today
 
-    elif positive == 2:
-        sentiment = "🟠 Neutral"
+    while len(expiries) < 8:
+
+        if current.weekday() == 3:      # Thursday
+
+            expiries.append(
+                current.strftime("%d %b %Y")
+            )
+
+        current += timedelta(days=1)
+
+    monthly = expiries[-1]
+
+    if index.upper() in ["NIFTY", "^NSEI"]:
+
+        contracts = [
+            "Spot",
+            *expiries,
+            f"Monthly ({monthly})"
+        ]
+
+    elif index.upper() in ["BANKNIFTY", "^NSEBANK"]:
+
+        contracts = [
+            "Spot",
+            *expiries,
+            f"Monthly ({monthly})"
+        ]
+
+    elif index.upper() in ["FINNIFTY"]:
+
+        contracts = [
+            "Spot",
+            *expiries
+        ]
 
     else:
-        sentiment = "🔴 Bearish"
+
+        contracts = ["Spot"]
 
     return {
+        "index": index,
+        "contracts": contracts
+    }
 
-        "sentiment": sentiment,
+@app.get("/api/option-chain")
+async def get_option_chain(
 
-        "positive": positive,
+    index: str,
 
-        "negative": negative
+    expiry: str
+
+):
+
+    symbol_map = {
+
+        "^NSEI": "^NSEI",
+
+        "^NSEBANK": "^NSEBANK",
+
+        "^BSESN": "^BSESN",
+
+        "FINNIFTY": "NIFTY_FIN_SERVICE.NS"
 
     }
 
-@app.get("/api/sectors")
-def sector_performance():
+    yahoo_symbol = symbol_map.get(index, "^NSEI")
 
-    return [
+    history = provider.get_history(
 
-        {"name":"Information Technology","change":2.34},
+        yahoo_symbol,
 
-        {"name":"Banking","change":1.65},
+        period="5d",
 
-        {"name":"Automobile","change":0.94},
+        interval="1d"
 
-        {"name":"FMCG","change":-0.48},
+    )
 
-        {"name":"Pharma","change":1.12},
+    if history.empty:
 
-        {"name":"Real Estate","change":-1.04},
+        return {
 
-        {"name":"Energy","change":0.73},
+            "index": index,
 
-        {"name":"Metal","change":-0.82}
+            "expiry": expiry,
 
-    ]
+            "spot": 0,
+
+            "data": []
+
+        }
+
+    spot = round(float(history["Close"].iloc[-1]), 2)
+
+    base = int(round(spot / 100) * 100)
+
+    strikes = []
+
+    for strike in range(base - 1000, base + 1100, 100):
+
+        distance = abs(strike - base)
+
+        intrinsic = max(0, base - strike)
+
+        call_ltp = max(10, 400 - distance * 0.35)
+
+        put_ltp = max(10, 400 - distance * 0.35)
+
+        call_oi = max(10000, 500000 - distance * 300)
+
+        put_oi = max(10000, 500000 - distance * 300)
+
+        strikes.append({
+
+            "strike": strike,
+
+            "call": {
+
+                "ltp": round(call_ltp, 2),
+
+                "oi": int(call_oi),
+
+                "iv": round(12 + distance / 250, 2)
+
+            },
+
+            "put": {
+
+                "ltp": round(put_ltp, 2),
+
+                "oi": int(put_oi),
+
+                "iv": round(12 + distance / 250, 2)
+
+            }
+
+        })
+
+    max_call = max(
+    strikes,
+    key=lambda row: row["call"]["oi"]
+)
+
+    max_put = max(
+    strikes,
+    key=lambda row: row["put"]["oi"]
+)
+
+    total_call = sum(
+    row["call"]["oi"]
+    for row in strikes
+)
+
+    total_put = sum(
+    row["put"]["oi"]
+    for row in strikes
+)
+
+    pcr = round(total_put / total_call, 2)
+
+    if pcr > 1.1:
+        bias = "Bullish"
+    elif pcr < 0.9:
+        bias = "Bearish"
+    else:
+        bias = "Neutral"
+
+    return {
+
+    "index": index,
+
+    "expiry": expiry,
+
+    "spot": spot,
+
+    "support": max_put["strike"],
+
+    "resistance": max_call["strike"],
+
+    "pcr": pcr,
+
+    "bias": bias,
+
+    "data": strikes
+
+}

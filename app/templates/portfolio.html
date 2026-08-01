@@ -1,56 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+Portfolio | TradeSense AI
 
-    <title>Portfolio | TradeSense AI</title>
+{% endblock %}
 
-    <link rel="stylesheet" href="/static/css/variables.css">
-    <link rel="stylesheet" href="/static/css/base.css">
-    <link rel="stylesheet" href="/static/css/layout.css">
-    <link rel="stylesheet" href="/static/css/navbar.css">
-    <link rel="stylesheet" href="/static/css/buttons.css">
-    <link rel="stylesheet" href="/static/css/badges.css">
-    <link rel="stylesheet" href="/static/css/portfolio.css">
+{% block css %}
 
-</head>
+<link rel="stylesheet" href="/static/css/portfolio.css">
 
-<body>
+{% endblock %}
 
-<nav class="navbar">
-
-    <div class="logo">
-        📈 TradeSense AI
-    </div>
-
-    <ul class="nav-links">
-
-        <li>
-            <a href="/">Home</a>
-        </li>
-
-        <li>
-            <a href="/dashboard">Dashboard</a>
-        </li>
-
-        <li>
-            <a href="/watchlist">Watchlist</a>
-        </li>
-
-        <li>
-            <a href="/portfolio" class="active">Portfolio</a>
-        </li>
-
-    </ul>
-
-</nav>
+{% block content %}
 
 
-<main class="portfolio-page">
+<section class="portfolio-page">
 
     <!-- HEADER -->
 
@@ -625,12 +590,14 @@
 
     </div>
 
-</main>
+</section>
 
+{% endblock %}
+
+{% block scripts %}
 
 <script src="/static/js/api.js"></script>
+
 <script src="/static/js/portfolio.js"></script>
 
-</body>
-
-</html>
+{% endblock %}

@@ -195,6 +195,89 @@
 
 </section>
 
+<section class="macro-dashboard">
+
+    <div class="section-title">
+
+        <h2>Global Market Indicators</h2>
+
+        <p>Important economic indicators affecting the markets</p>
+
+    </div>
+
+    <div id="macroGrid" class="macro-grid">
+
+        <div class="loading-card">
+
+            Loading indicators...
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="market-breadth">
+
+    <div class="section-title">
+
+        <h2>Market Breadth</h2>
+
+        <p>Overall strength of today's market</p>
+
+    </div>
+
+    <div class="breadth-grid">
+
+        <div class="breadth-card">
+            <h3>Advancing</h3>
+            <div id="advancingCount">--</div>
+        </div>
+
+        <div class="breadth-card">
+            <h3>Declining</h3>
+            <div id="decliningCount">--</div>
+        </div>
+
+        <div class="breadth-card">
+            <h3>Advance / Decline</h3>
+            <div id="adRatio">--</div>
+        </div>
+
+        <div class="breadth-card">
+            <h3>Market Health</h3>
+            <div id="marketHealth">--</div>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="fear-greed-section">
+
+    <div class="section-title">
+        <h2>Fear & Greed Index</h2>
+        <p>Current market sentiment indicator</p>
+    </div>
+
+    <div class="fear-greed-card">
+
+        <div class="gauge-container">
+
+            <div id="fearGreedScore" class="fear-score">
+                --
+            </div>
+
+            <div id="fearGreedLabel" class="fear-label">
+                Loading...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
   <section class="market-grid">
 
     {% for index in indices %}

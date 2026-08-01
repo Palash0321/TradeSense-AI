@@ -173,3 +173,113 @@ function updateMarketClock(){
 updateMarketClock();
 
 setInterval(updateMarketClock,1000);
+
+async function loadMacro(){
+
+    const response = await fetch("/api/macro");
+
+    const data = await response.json();
+
+    const grid = document.getElementById("macroGrid");
+
+    grid.innerHTML="";
+
+    data.forEach(item=>{
+
+        grid.innerHTML += `
+
+            <div class="macro-card">
+
+                <div class="macro-title">
+
+                    ${item.title}
+
+                </div>
+
+                <div class="macro-value">
+
+                    ${item.value}
+
+                </div>
+
+                <div class="macro-desc">
+
+                    ${item.desc}
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+loadMacro();
+
+async function loadMarketBreadth(){
+
+    const response =
+        await fetch("/api/market-breadth");
+
+    const data =
+        await response.json();
+
+    document.getElementById("advancingCount").textContent =
+        data.advancing;
+
+    document.getElementById("decliningCount").textContent =
+        data.declining;
+
+    document.getElementById("adRatio").textContent =
+        data.ratio;
+
+    document.getElementById("marketHealth").textContent =
+        data.health;
+
+}
+
+loadMarketBreadth();
+
+async function loadFearGreed(){
+
+    const response = await fetch("/api/fear-greed");
+
+    const data = await response.json();
+
+    const score = document.getElementById("fearGreedScore");
+
+    const label = document.getElementById("fearGreedLabel");
+
+    score.textContent = data.score;
+
+    label.textContent = data.label;
+
+    score.classList.remove(
+        "fear-green",
+        "fear-yellow",
+        "fear-red"
+    );
+
+    if(data.score < 45){
+
+        score.classList.add("fear-red");
+
+    }
+
+    else if(data.score < 60){
+
+        score.classList.add("fear-yellow");
+
+    }
+
+    else{
+
+        score.classList.add("fear-green");
+
+    }
+
+}
+
+loadFearGreed();

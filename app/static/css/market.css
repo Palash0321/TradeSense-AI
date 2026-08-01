@@ -487,3 +487,187 @@
     color:#EF4444;
 
 }
+
+.macro-dashboard{
+
+    margin-bottom:50px;
+
+}
+
+.macro-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+.macro-card{
+
+    background:#141f44;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    padding:22px;
+
+    transition:.3s;
+
+}
+
+.macro-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#38BDF8;
+
+    box-shadow:0 12px 26px rgba(56,189,248,.15);
+
+}
+
+.macro-title{
+
+    font-size:15px;
+
+    color:#94A3B8;
+
+}
+
+.macro-value{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    margin-top:12px;
+
+}
+
+.macro-desc{
+
+    margin-top:10px;
+
+    color:#CBD5E1;
+
+    font-size:14px;
+
+}
+
+.market-breadth{
+
+    margin-bottom:50px;
+
+}
+
+.breadth-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+.breadth-card{
+
+    background:#141f44;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:16px;
+
+    padding:24px;
+
+    text-align:center;
+
+    transition:.3s;
+
+}
+
+.breadth-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#38BDF8;
+
+    box-shadow:0 12px 28px rgba(56,189,248,.18);
+
+}
+
+.breadth-card h3{
+
+    font-size:16px;
+
+    color:#94A3B8;
+
+    margin-bottom:15px;
+
+}
+
+.breadth-card div{
+
+    font-size:30px;
+
+    font-weight:700;
+
+}
+
+.fear-greed-section{
+
+    margin-bottom:50px;
+
+}
+
+.fear-greed-card{
+
+    background:#141f44;
+
+    border-radius:18px;
+
+    padding:35px;
+
+    text-align:center;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+.fear-score{
+
+    font-size:70px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.fear-label{
+
+    font-size:22px;
+
+    font-weight:600;
+
+}
+
+.fear-green{
+
+    color:#22C55E;
+
+}
+
+.fear-yellow{
+
+    color:#FACC15;
+
+}
+
+.fear-red{
+
+    color:#EF4444;
+
+}

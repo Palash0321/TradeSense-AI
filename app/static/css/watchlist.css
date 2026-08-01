@@ -140,3 +140,79 @@
     width:220px;
 
 }
+
+/* ===========================
+   Watchlist Toolbar
+=========================== */
+
+.watchlist-toolbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.watchlist-toolbar input{
+
+    flex:1;
+
+    min-width:240px;
+
+    padding:12px 16px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#1f2937;
+
+    color:#fff;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.watchlist-toolbar input:focus{
+
+    box-shadow:0 0 0 2px #3b82f6;
+
+}
+
+.watchlist-toolbar select{
+
+    padding:12px 16px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#1f2937;
+
+    color:#fff;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+}
+
+.watchlist-toolbar select:focus{
+
+    outline:none;
+
+    box-shadow:0 0 0 2px #3b82f6;
+
+}

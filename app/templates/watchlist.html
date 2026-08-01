@@ -1,48 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
 
-<meta charset="UTF-8">
+Watchlist | TradeSense AI
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+{% endblock %}
 
-<title>My Watchlist</title>
+{% block css %}
 
-<link rel="stylesheet" href="/static/css/variables.css">
-<link rel="stylesheet" href="/static/css/base.css">
-<link rel="stylesheet" href="/static/css/layout.css">
-<link rel="stylesheet" href="/static/css/navbar.css">
-<link rel="stylesheet" href="/static/css/buttons.css">
-<link rel="stylesheet" href="/static/css/cards.css">
-<link rel="stylesheet" href="/static/css/badges.css">
-<script src="/static/js/api.js"></script>
 <link rel="stylesheet" href="/static/css/watchlist.css">
-<link rel="stylesheet" href="/static/css/utilities.css">
-<link rel="stylesheet" href="/static/css/responsive.css">
 
-</head>
+{% endblock %}
 
-<body>
-
-<nav class="navbar">
-
-<div class="logo">
-
-📈 TradeSense AI
-
-</div>
-
-<ul class="nav-links">
-
-    <li><a href="/">Home</a></li>
-
-    <li><a href="/watchlist" class="active">Watchlist</a></li>
-
-</ul>
-
-</nav>
+{% block content %}
 
 <section class="page">
 
@@ -58,6 +28,39 @@ content="width=device-width, initial-scale=1.0">
 
 </div>
 
+<div class="watchlist-toolbar">
+
+    <input
+        type="text"
+        id="watchlist-search"
+        placeholder="🔍 Search stock...">
+
+    <select id="watchlist-sort">
+
+        <option value="default">
+            Sort By
+        </option>
+
+        <option value="symbol">
+            Symbol (A-Z)
+        </option>
+
+        <option value="price">
+            Price
+        </option>
+
+        <option value="change">
+            Change %
+        </option>
+
+        <option value="score">
+            AI Score
+        </option>
+
+    </select>
+
+</div>
+
 <div id="watchlist-items">
 
 </div>
@@ -66,8 +69,12 @@ content="width=device-width, initial-scale=1.0">
 
 </section>
 
+{% endblock %}
+
+{% block scripts %}
+
+<script src="/static/js/api.js"></script>
+
 <script src="/static/js/watchlist.js"></script>
 
-</body>
-
-</html>
+{% endblock %}

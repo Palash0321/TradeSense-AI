@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}TradeSense AI{% endblock %}
+    </title>
+
+    <!-- Global CSS -->
+
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+    <link rel="stylesheet" href="/static/css/buttons.css">
+    <link rel="stylesheet" href="/static/css/cards.css">
+    <link rel="stylesheet" href="/static/css/badges.css">
+    <link rel="stylesheet" href="/static/css/utilities.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+
+    {% block css %}{% endblock %}
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+
+        📈 TradeSense AI
+
+    </div>
+
+    <ul class="nav-links">
+
+        <li><a href="/dashboard">Dashboard</a></li>
+
+        <li><a href="/watchlist">Watchlist</a></li>
+
+        <li><a href="/portfolio">Portfolio</a></li>
+
+    </ul>
+
+</nav>
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+
+        <a href="/dashboard">📊 Dashboard</a>
+
+        <a href="/watchlist">⭐ Watchlist</a>
+
+        <a href="/portfolio">💼 Portfolio</a>
+
+        <a href="#">📈 AI Signals</a>
+
+        <a href="#">📑 Option Chain</a>
+
+        <a href="#">🔎 Screener</a>
+
+        <a href="#">📰 Market News</a>
+
+        <a href="#">⚙ Settings</a>
+
+    </aside>
+
+    <main class="main-content">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+</div>
+
+{% block scripts %}
+
+{% endblock %}
+
+</body>
+
+</html>
