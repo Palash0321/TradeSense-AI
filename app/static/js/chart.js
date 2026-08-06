@@ -6,41 +6,75 @@ const chart = LightweightCharts.createChart(chartContainer, {
 
     layout: {
 
-        background: {
+    background: {
 
-            color: "#111827"
-
-        },
-
-        textColor: "#d1d5db"
+        color: "#111827"
 
     },
+
+    textColor: "#d1d5db",
+
+    fontFamily: "Inter"
+
+},
+
+crosshair: {
+
+    mode: LightweightCharts.CrosshairMode.Normal
+
+},
+
+rightPriceScale: {
+
+    borderColor: "#374151"
+
+},
+
+timeScale: {
+
+    borderColor: "#374151",
+
+    rightOffset: 8,
+
+    barSpacing: 10
+
+},
 
     grid: {
 
         vertLines: {
-
             color: "#1f2937"
-
         },
 
         horzLines: {
-
             color: "#1f2937"
-
         }
 
     },
 
-    width: chartContainer.clientWidth,
+    autoSize: true,
 
-    height: 650
+    height: 780
 
 });
 
 const candleSeries = chart.addSeries(
     LightweightCharts.CandlestickSeries
 );
+
+candleSeries.applyOptions({
+
+    priceFormat: {
+
+        type: "price",
+
+        precision: 2,
+
+        minMove: 0.01
+
+    }
+
+});
 
 fetch(`/api/chart-data?symbol=${window.stockData.symbol}`)
 .then(response => response.json())
@@ -57,6 +91,26 @@ fetch(`/api/chart-data?symbol=${window.stockData.symbol}`)
 
     // Last candle
 const lastCandle = data.candles[data.candles.length - 1];
+
+// ==========================
+// Current Price Line
+// ==========================
+
+candleSeries.createPriceLine({
+
+    price: lastCandle.close,
+
+    color: "#22C55E",
+
+    lineWidth: 2,
+
+    lineStyle: LightweightCharts.LineStyle.Dashed,
+
+    axisLabelVisible: true,
+
+    title: "Current"
+
+});
 
 // Marker text
 let markerText = data.signal;
@@ -162,5 +216,15 @@ if (data.signal === "HOLD") {
 ]);
 
     chart.timeScale().fitContent();
+
+});
+
+window.addEventListener("resize", () => {
+
+    chart.applyOptions({
+
+        width: chartContainer.clientWidth
+
+    });
 
 });

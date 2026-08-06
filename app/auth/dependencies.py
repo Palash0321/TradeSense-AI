@@ -15,7 +15,15 @@ def get_current_user(
 
     token = credentials.credentials
 
+    print("=" * 60)
+    print("TOKEN RECEIVED:")
+    print(token)
+    print("=" * 60)
+
     payload = verify_access_token(token)
+
+    print("PAYLOAD:", payload)
+
 
     if payload is None:
         raise HTTPException(

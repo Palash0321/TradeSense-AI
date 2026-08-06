@@ -1,0 +1,1304 @@
+/* =========================================================
+   TradeSense AI v2
+   RESULT PAGE
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#0B1120;
+    --card:#111827;
+    --card2:#1E293B;
+
+    --border:rgba(255,255,255,.06);
+
+    --text:#F8FAFC;
+    --muted:#94A3B8;
+
+    --green:#22C55E;
+    --red:#EF4444;
+    --blue:#3B82F6;
+    --orange:#F59E0B;
+
+    --radius:22px;
+
+}
+
+body{
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    font-family:'Inter',sans-serif;
+
+    line-height:1.5;
+
+}
+
+.dashboard{
+
+    width:95%;
+
+    max-width:1700px;
+
+    margin:40px auto 80px;
+
+}
+
+/* =========================================================
+   COMPANY HEADER
+========================================================= */
+
+.company-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:var(--card);
+
+    padding:40px;
+
+    border-radius:var(--radius);
+
+    border:1px solid var(--border);
+
+    margin-bottom:35px;
+
+}
+
+.company-header h1{
+
+    font-size:54px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+}
+
+.company-header h3{
+
+    font-size:24px;
+
+    margin-bottom:8px;
+
+}
+
+.company-header p{
+
+    color:var(--muted);
+
+}
+
+.market-open,
+.market-closed{
+
+    padding:12px 22px;
+
+    border-radius:30px;
+
+    font-weight:700;
+
+}
+
+.market-open{
+
+    background:#15803D;
+
+}
+
+.market-closed{
+
+    background:#DC2626;
+
+}
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.summary-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.summary-card{
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:28px;
+
+    transition:.25s;
+
+}
+
+.summary-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:var(--blue);
+
+}
+
+.summary-card h4{
+
+    color:var(--muted);
+
+    margin-bottom:20px;
+
+}
+
+.summary-card h1{
+
+    font-size:52px;
+
+    margin-bottom:15px;
+
+}
+
+.mini-grid{
+
+    display:grid;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+.mini-grid div{
+
+    display:flex;
+
+    justify-content:space-between;
+
+}
+
+.mini-grid span{
+
+    color:var(--muted);
+
+}
+
+.positive{
+
+    color:var(--green);
+
+    font-weight:700;
+
+}
+
+.negative{
+
+    color:var(--red);
+
+    font-weight:700;
+
+}
+
+/* =========================================================
+   CONFIDENCE BAR
+========================================================= */
+
+.confidence-bar{
+
+    width:100%;
+
+    height:10px;
+
+    background:#334155;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    margin:18px 0;
+
+}
+
+.confidence-fill{
+
+    height:100%;
+
+    border-radius:30px;
+
+    background:linear-gradient(90deg,#22C55E,#3B82F6);
+
+}
+
+/* ==========================================
+   AI Progress Bars
+========================================== */
+
+.progress{
+
+    width:100%;
+
+    height:10px;
+
+    background:#243044;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    margin-top:8px;
+
+    margin-bottom:18px;
+
+}
+
+.progress-fill{
+
+    height:100%;
+
+    width:0;
+
+    transition:width .8s ease;
+
+}
+
+.confidence-fill-ai{
+
+    background:linear-gradient(
+        90deg,
+        #22C55E,
+        #3B82F6
+    );
+
+}
+
+.probability-fill{
+
+    background:linear-gradient(
+        90deg,
+        #F59E0B,
+        #EF4444
+    );
+
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.watchlist-btn{
+
+    width:100%;
+
+    margin-top:22px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#2563EB;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.watchlist-btn:hover{
+
+    background:#1D4ED8;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* =========================================================
+   MAIN GRID
+========================================================= */
+
+.main-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 360px;
+
+    gap:30px;
+
+    align-items:start;
+
+    margin:40px 0;
+
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.chart-card{
+
+    background:#111827;
+
+    border-radius:22px;
+
+    padding:22px;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    height:fit-content;
+
+}
+
+.chart-card h2{
+
+    margin-bottom:25px;
+
+}
+
+#tradingview_chart{
+
+    width:100%;
+
+    min-width:0;
+
+    height:780px;
+
+}
+
+
+/* =========================================================
+   AI PANEL
+========================================================= */
+
+.ai-card{
+
+    background:#111827;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    border-radius:22px;
+
+    padding:30px;
+
+    position:sticky;
+
+    top:25px;
+
+    max-height:calc(100vh - 40px);
+
+    overflow-y:auto;
+
+}
+
+.ai-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+.section-title{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#60A5FA;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    margin-top:10px;
+
+}
+
+.ai-grid{
+
+    display:grid;
+
+    gap:8px;
+
+}
+
+.ai-grid div{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.05);
+
+}
+
+.ai-grid div:last-child{
+
+    border-bottom:none;
+
+}
+
+.ai-grid span{
+
+    color:var(--muted);
+
+}
+
+.ai-grid strong{
+
+    color:white;
+
+    font-weight:700;
+
+}
+
+/* =========================================================
+   BOTTOM GRID
+========================================================= */
+
+.bottom-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:30px;
+
+    margin-top:35px;
+
+}
+
+.bottom-card{
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    padding:30px;
+
+    transition:.25s;
+
+}
+
+.bottom-card:hover{
+
+    border-color:var(--blue);
+
+    transform:translateY(-4px);
+
+}
+
+.bottom-card h2{
+
+    font-size:24px;
+
+    margin-bottom:22px;
+
+}
+
+.reason-list{
+
+    list-style:none;
+
+}
+
+.reason-list li{
+
+    padding:15px 0;
+
+    border-bottom:1px solid rgba(255,255,255,.06);
+
+    color:#CBD5E1;
+
+    line-height:1.7;
+
+}
+
+.reason-list li:last-child{
+
+    border-bottom:none;
+
+}
+
+
+/* =========================================================
+   NEWS SECTION
+========================================================= */
+
+.news-section{
+
+    margin-top:45px;
+
+}
+
+.news-section h2{
+
+    font-size:30px;
+
+    margin-bottom:25px;
+
+}
+
+.news-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+
+    gap:25px;
+
+}
+
+.news-card{
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    transition:.3s;
+
+}
+
+.news-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:var(--blue);
+
+}
+
+.news-card h3{
+
+    font-size:20px;
+
+    line-height:1.5;
+
+    margin-bottom:15px;
+
+}
+
+.news-card small{
+
+    color:var(--muted);
+
+}
+
+.news-card a{
+
+    display:inline-block;
+
+    margin-top:20px;
+
+    color:var(--blue);
+
+    font-weight:700;
+
+    text-decoration:none;
+
+}
+
+.news-card a:hover{
+
+    color:#60A5FA;
+
+}
+
+
+/* =========================================================
+   SIGNAL BADGES
+========================================================= */
+
+.signal{
+
+    padding:10px 18px;
+
+    border-radius:30px;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    box-shadow:0 0 18px rgba(37,99,235,.25);
+
+}
+
+.signal.buy{
+
+    background:#16A34A;
+
+}
+
+.signal.sell{
+
+    background:#DC2626;
+
+}
+
+.signal.hold{
+
+    background:#F59E0B;
+
+}
+
+.signal.avoid{
+
+    background:#7F1D1D;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1300px){
+
+    .summary-grid{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .main-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .ai-card{
+
+        position:static;
+
+        max-height:none;
+
+    }
+
+    .intelligence-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+    .company-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+
+    }
+
+    .summary-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .bottom-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .news-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .company-header h1{
+
+        font-size:38px;
+
+    }
+
+    .summary-card h1{
+
+        font-size:40px;
+
+    }
+
+    .intelligence-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+}
+
+/* ==========================================
+   Premium AI Metrics
+========================================== */
+
+.metric-value{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.score-badge{
+
+    background:#2563EB;
+
+    color:white;
+
+    padding:4px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.grade{
+
+    padding:6px 14px;
+
+    border-radius:18px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:white;
+
+}
+
+.grade.a-plus,
+.grade.a{
+
+    background:#16A34A;
+
+}
+
+.grade.b{
+
+    background:#2563EB;
+
+}
+
+.grade.c{
+
+    background:#F59E0B;
+
+}
+
+.grade.d{
+
+    background:#DC2626;
+
+}
+
+/* ==========================================
+   Risk Badge
+========================================== */
+
+.risk-badge{
+
+    padding:6px 14px;
+
+    border-radius:18px;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:700;
+
+}
+
+.risk-low{
+
+    background:#16A34A;
+
+}
+
+.risk-medium{
+
+    background:#F59E0B;
+
+}
+
+.risk-high{
+
+    background:#DC2626;
+
+}
+
+/* =========================================================
+   AI CONFIDENCE GAUGE
+========================================================= */
+
+.gauge-section{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin:10px 0 25px;
+
+}
+
+.gauge-circle{
+
+    width:170px;
+
+    height:170px;
+
+    border-radius:50%;
+
+    background:conic-gradient(
+
+        #22C55E 0deg,
+
+        #3B82F6 250deg,
+
+        #1E293B 250deg
+
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.gauge-inner{
+
+    width:130px;
+
+    height:130px;
+
+    border-radius:50%;
+
+    background:#111827;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.gauge-inner h2{
+
+    font-size:34px;
+
+    font-weight:800;
+
+}
+
+.gauge-inner p{
+
+    color:#94A3B8;
+
+    font-size:14px;
+
+}
+
+/* =========================================================
+   AI CONFIDENCE GAUGE
+========================================================= */
+
+.gauge-section{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:10px 0 30px;
+
+}
+
+.gauge-circle{
+
+    width:170px;
+
+    height:170px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#1E293B;
+
+    transition:.8s ease;
+
+    box-shadow:0 0 30px rgba(37,99,235,.25);
+
+}
+
+.gauge-inner{
+
+    width:130px;
+
+    height:130px;
+
+    border-radius:50%;
+
+    background:#111827;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+}
+
+.gauge-inner h2{
+
+    font-size:46px;
+
+    font-weight:800;
+
+    color:#ffffff;
+
+    line-height:1;
+
+    margin:0;
+
+    letter-spacing:-1px;
+
+}
+
+.gauge-inner p{
+
+    margin-top:12px;
+
+    font-size:15px;
+
+    color:#94A3B8;
+
+    font-weight:600;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+
+}
+
+.section-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin:28px 0 18px;
+
+}
+
+.section-header h3{
+
+    color:#60A5FA;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
+
+.decision-badge{
+
+    background:#1D4ED8;
+
+    color:white;
+
+    padding:6px 14px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+/* ==========================================
+   Trade Probability
+========================================== */
+
+.probability-card{
+
+    margin-top:10px;
+
+    margin-bottom:20px;
+
+}
+
+.probability-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:10px;
+
+}
+
+.probability-header span{
+
+    color:#CBD5E1;
+
+    font-size:14px;
+
+}
+
+.probability-header strong{
+
+    color:white;
+
+    font-size:15px;
+
+}
+
+.probability-bar{
+
+    width:100%;
+
+    height:12px;
+
+    background:#243044;
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+}
+
+.probability-fill{
+
+    height:100%;
+
+    width:0;
+
+    border-radius:30px;
+
+    background:linear-gradient(
+        90deg,
+        #2563EB,
+        #22C55E
+    );
+
+    transition:width .8s ease;
+
+}
+
+/* ==========================================
+   MARKET QUALITY
+========================================== */
+
+.quality-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:18px;
+
+    margin-top:15px;
+
+}
+
+.quality-card{
+
+    background:#1E293B;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    text-align:center;
+
+    border:1px solid rgba(255,255,255,.05);
+
+    transition:.3s;
+
+}
+
+.quality-card:hover{
+
+    transform:translateY(-4px);
+
+    border-color:#3B82F6;
+
+}
+
+.quality-card h4{
+
+    color:#94A3B8;
+
+    margin-bottom:12px;
+
+}
+
+.quality-card h2{
+
+    font-size:28px;
+
+    color:white;
+
+    margin-bottom:8px;
+
+}
+
+.quality-card p{
+
+    color:#CBD5E1;
+
+    font-size:13px;
+
+}
+
+/* ==========================================
+   MARKET INTELLIGENCE
+========================================== */
+
+.market-intelligence{
+
+    margin:50px 0;
+
+}
+
+.market-intelligence h2{
+
+    font-size:28px;
+
+    margin-bottom:25px;
+
+}
+
+.intelligence-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:22px;
+
+}
+
+.intel-card{
+
+    background:#111827;
+
+    border:1px solid rgba(255,255,255,.06);
+
+    border-radius:20px;
+
+    padding:25px;
+
+    transition:.3s;
+
+}
+
+.intel-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#2563EB;
+
+}
+
+.intel-card h4{
+
+    color:#94A3B8;
+
+    margin-bottom:12px;
+
+    font-size:14px;
+
+}
+
+.intel-card h3{
+
+    font-size:28px;
+
+    color:white;
+
+    margin-bottom:8px;
+
+}
+
+.intel-card p{
+
+    color:#CBD5E1;
+
+    font-size:14px;
+
+}

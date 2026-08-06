@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login | TradeSense AI</title>
+
+    <link rel="stylesheet"
+          href="/static/css/style.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Inter,sans-serif;
+        }
+
+        body{
+
+            background:#0d1117;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            height:100vh;
+
+            color:white;
+
+        }
+
+        .login-card{
+
+            width:420px;
+
+            background:#161b22;
+
+            border-radius:18px;
+
+            padding:40px;
+
+            box-shadow:0 20px 40px rgba(0,0,0,.45);
+
+        }
+
+        h1{
+
+            text-align:center;
+
+            margin-bottom:10px;
+
+        }
+
+        p{
+
+            text-align:center;
+
+            color:#9ca3af;
+
+            margin-bottom:35px;
+
+        }
+
+        input{
+
+            width:100%;
+
+            padding:15px;
+
+            margin-bottom:18px;
+
+            border:none;
+
+            border-radius:10px;
+
+            background:#21262d;
+
+            color:white;
+
+            font-size:15px;
+
+        }
+
+        button{
+
+            width:100%;
+
+            padding:15px;
+
+            background:#16a34a;
+
+            border:none;
+
+            color:white;
+
+            border-radius:10px;
+
+            font-size:16px;
+
+            cursor:pointer;
+
+        }
+
+        button:hover{
+
+            background:#15803d;
+
+        }
+
+        .error{
+
+            margin-top:20px;
+
+            color:#ef4444;
+
+            text-align:center;
+
+        }
+
+        .register{
+
+            margin-top:25px;
+
+            text-align:center;
+
+        }
+
+        .register a{
+
+            color:#3b82f6;
+
+            text-decoration:none;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="login-card">
+
+<h1>TradeSense AI</h1>
+
+<p>Login to your account</p>
+
+<form id="loginForm">
+
+<input
+type="email"
+id="email"
+placeholder="Email"
+required>
+
+<input
+type="password"
+id="password"
+placeholder="Password"
+required>
+
+<button>
+
+Login
+
+</button>
+
+</form>
+
+<div
+class="error"
+id="error">
+
+</div>
+
+<div class="register">
+
+Don't have an account?
+
+<a href="/register">
+
+Register
+
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+const form=document.getElementById("loginForm");
+
+form.addEventListener("submit",async(e)=>{
+
+e.preventDefault();
+
+const email=document.getElementById("email").value;
+
+const password=document.getElementById("password").value;
+
+const response=await fetch("/auth/login",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+email,
+
+password
+
+})
+
+});
+
+const data=await response.json();
+
+if(response.ok){
+
+localStorage.setItem(
+
+"access_token",
+
+data.access_token
+
+);
+
+localStorage.setItem(
+
+"user",
+
+JSON.stringify(data.user)
+
+);
+
+window.location="/dashboard";
+
+}
+
+else{
+
+document.getElementById("error").innerText=data.detail;
+
+}
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="/static/css/backtest.css">
+
+{% endblock %}
+
+{% block title %}
+Backtesting
+{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">
+📈 Strategy Backtesting
+</h1>
+
+<div class="control-panel">
+
+    <div class="control-card">
+
+        <label>Stock Symbol</label>
+
+        <input
+            id="symbol"
+            value="RELIANCE.NS">
+
+    </div>
+
+    <div class="control-card">
+
+        <label>Strategy</label>
+
+        <select id="strategy">
+
+            <option value="ema">
+                EMA Crossover
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="control-card">
+
+        <label>Timeframe</label>
+
+        <select>
+
+            <option>5 Years</option>
+
+        </select>
+
+    </div>
+
+    <div class="control-card">
+
+    <label>Initial Capital</label>
+
+    <input
+        id="capital"
+        type="number"
+        value="100000">
+
+</div>
+
+    <div class="control-card">
+
+    <label>Brokerage (₹)</label>
+
+    <input
+        id="brokerage"
+        type="number"
+        value="20">
+
+</div>
+
+<div class="control-card">
+
+    <label>Slippage (%)</label>
+
+    <input
+        id="slippage"
+        type="number"
+        value="0.10"
+        step="0.01">
+
+</div>
+
+    <div class="control-card">
+
+        <button
+            id="runBacktest"
+            class="run-btn">
+
+            ▶ Run Backtest
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="metrics-grid">
+
+    <div class="metric-card">
+        <h3>Total Trades</h3>
+        <h2 id="totalTrades">-</h2>
+    </div>
+
+    <div class="metric-card">
+        <h3>Winning Trades</h3>
+        <h2 id="winningTrades">-</h2>
+    </div>
+
+    <div class="metric-card">
+        <h3>Win Rate</h3>
+        <h2 id="winRate">-</h2>
+    </div>
+
+    <div class="metric-card">
+        <h3>Net Profit</h3>
+        <h2 id="netProfit">-</h2>
+    </div>
+
+    <div class="metric-card">
+        <h3>📉 Max Drawdown</h3>
+        <h2 id="maxDrawdown">-</h2>
+    </div>
+
+    <div class="metric-card">
+        <h3>🏔 Peak Capital</h3>
+        <h2 id="peakCapital">-</h2>
+    </div>
+
+    <div class="metric-card">
+
+    <h3>📊 Sharpe Ratio</h3>
+
+    <h2 id="sharpeRatio">-</h2>
+
+</div>
+
+<div class="metric-card">
+
+    <h3>💰 Profit Factor</h3>
+
+    <h2 id="profitFactor">-</h2>
+
+</div>
+
+<div class="metric-card">
+
+    <h3>⏱ Avg Holding</h3>
+
+    <h2 id="holdingDays">-</h2>
+
+</div>
+
+</div>
+
+
+<div class="metric-card">
+
+<h2>📈 Equity Curve</h2>
+
+<div
+style="
+height:420px;
+position:relative;
+">
+
+<canvas id="equityChart"></canvas>
+
+</div>
+
+</div>
+
+<br><br>
+
+<div class="metric-card">
+
+<h2>📜 Trade History</h2>
+
+<table class="backtest-table">
+
+<thead>
+
+<tr>
+
+<th>Buy Date</th>
+<th>Sell Date</th>
+<th>Buy</th>
+<th>Sell</th>
+<th>Shares</th>
+<th>P/L</th>
+<th>Return %</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tradeTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="/static/js/backtest.js"></script>
+
+{% endblock %}

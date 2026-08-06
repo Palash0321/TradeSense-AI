@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/paper_dashboard.css">
+{% endblock %}
+Paper Trading Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+">
+
+<h1>
+📈 Paper Trading Dashboard
+</h1>
+
+<button
+    id="refreshDashboard"
+    class="refresh-btn">
+
+    <span>🔄</span>
+
+    Refresh
+
+</button>
+
+</div>
+
+<div class="dashboard-grid">
+
+    <div class="dashboard-card">
+        <h3>Cash Balance</h3>
+        <h2 id="cash-balance">Loading...</h2>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>Portfolio Value</h3>
+        <h2 id="portfolio-value">Loading...</h2>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>Total Assets</h3>
+        <h2 id="total-assets">Loading...</h2>
+    </div>
+
+    <div class="dashboard-card">
+        <h3>Total P/L</h3>
+        <h2 id="profit-loss">Loading...</h2>
+    </div>
+
+</div>
+
+<div
+    class="dashboard-grid"
+    style="margin-top:30px;"
+>
+
+    <div class="dashboard-card">
+
+        <h3>🏆 Best Stock</h3>
+
+        <h2 id="best-stock">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>📉 Worst Stock</h3>
+
+        <h2 id="worst-stock">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>💰 Total Profit</h3>
+
+        <h2 id="total-profit">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>🕒 Last Updated</h3>
+
+        <h2 id="last-updated">
+            Loading...
+        </h2>
+
+    </div>
+
+</div>
+
+<h2>📊 Performance Summary</h2>
+
+<div class="dashboard-grid">
+
+    <div class="dashboard-card">
+
+        <h3>🟢 Winning Positions</h3>
+
+        <h2 id="winningPositions">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>🔴 Losing Positions</h3>
+
+        <h2 id="losingPositions">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>💼 Total Holdings</h3>
+
+        <h2 id="holdingCount">
+            Loading...
+        </h2>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h3>🏆 Portfolio Health</h3>
+
+        <h2 id="portfolioHealth">
+            Loading...
+        </h2>
+
+    </div>
+
+</div>
+
+<h2>📊 Holdings</h2>
+
+<table id="portfolio-table">
+
+    <thead>
+
+        <tr>
+
+            <th>Symbol</th>
+            <th>Qty</th>
+            <th>Average</th>
+            <th>Current</th>
+            <th>Investment</th>
+            <th>Value</th>
+            <th>P/L</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    </tbody>
+
+</table>
+
+</table>
+
+<h2>📊 Portfolio Allocation</h2>
+
+<canvas
+    id="allocationChart"
+    height="120">
+</canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2>📈 Portfolio Growth</h2>
+
+<div
+    style="
+        background:#161b22;
+        padding:20px;
+        border-radius:15px;
+        margin-top:25px;
+        margin-bottom:25px;
+    "
+>
+
+    <canvas
+        id="growthChart"
+        height="90">
+    </canvas>
+
+</div>
+
+<h2>📜 Recent Trades</h2>
+
+<table id="history-table">
+
+
+    <thead>
+
+        <tr>
+
+            <th>Date</th>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+    </tbody>
+
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="/static/js/paper_dashboard.js"></script>
+
+{% endblock %}

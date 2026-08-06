@@ -40,3 +40,64 @@ def get_stock_metadata(symbol: str):
             "sector": "Unknown"
 
         }
+
+    # =====================================================
+# PORTFOLIO ANALYTICS
+# =====================================================
+
+def calculate_portfolio_metrics(holding):
+
+    investment = holding.quantity * holding.buy_price
+
+    current_value = holding.quantity * holding.current_price
+
+    profit_loss = current_value - investment
+
+    if investment == 0:
+
+        profit_percent = 0
+
+    else:
+
+        profit_percent = (
+            profit_loss / investment
+        ) * 100
+
+    return {
+
+        "id": holding.id,
+
+        "symbol": holding.symbol,
+
+        "quantity": holding.quantity,
+
+        "buy_price": round(
+            holding.buy_price,
+            2,
+        ),
+
+        "current_price": round(
+            holding.current_price,
+            2,
+        ),
+
+        "investment": round(
+            investment,
+            2,
+        ),
+
+        "current_value": round(
+            current_value,
+            2,
+        ),
+
+        "profit_loss": round(
+            profit_loss,
+            2,
+        ),
+
+        "profit_percent": round(
+            profit_percent,
+            2,
+        ),
+    }

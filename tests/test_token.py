@@ -1,0 +1,7 @@
+from app.auth.jwt_handler import verify_access_token
+
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJwYWxhc2hAZ21haWwuY29tIiwiZXhwIjoxNzg1NjY2MDE1fQ.DnpbsFOrk4FOF6iDKnqqonVFn4przoEJv6Na2OSuhQU"
+
+payload = verify_access_token(token)
+
+print(payload)

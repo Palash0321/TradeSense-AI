@@ -27,8 +27,36 @@ from fastapi import Query
 from datetime import datetime, timedelta, time
 from app.services.market_data.provider import provider
 from app.auth.routes import router as auth_router
-
-
+from app.api.watchlist import router as watchlist_router
+from app.api.portfolio import router as portfolio_router
+from app.api.portfolio_summary import (
+    router as portfolio_summary_router
+)
+from app.api.dashboard import (
+    router as dashboard_router
+)
+from app.api.transactions import (
+    router as transactions_router
+)
+from app.api.paper_trading import (
+    router as paper_router
+)
+from app.api.paper_orders import (
+    router as paper_orders_router
+)   
+from app.api.paper_portfolio import (
+    router as paper_portfolio_router
+)
+from app.api.paper_history import router as paper_history_router
+from app.api.paper_dashboard import (
+    router as paper_dashboard_router
+)
+from app.api.paper_analytics import (
+    router as paper_analytics_router
+)
+from app.api.backtest import (
+    router as backtest_router
+)
 app = FastAPI(
     title="TradeSense AI",
     description="AI-Powered Stock Market Analysis Platform",
@@ -36,6 +64,52 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+app.include_router(watchlist_router)
+app.include_router(portfolio_router)
+app.include_router(
+    portfolio_summary_router
+)
+app.include_router(
+    dashboard_router
+)
+app.include_router(
+    transactions_router
+)
+app.include_router(
+    paper_router
+)
+app.include_router(
+    paper_orders_router
+)
+app.include_router(
+    paper_portfolio_router
+)
+app.include_router(paper_history_router)
+app.include_router(
+    paper_dashboard_router
+)
+app.include_router(
+    paper_analytics_router
+)
+app.include_router(
+    backtest_router
+)
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
+
+templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/", response_class=HTMLResponse)
+def dashboard(request: Request):
+    return templates.TemplateResponse(
+    request=request,
+    name="dashboard.html",
+    context={
+        "request": request
+    }
+)
 
 initialize_database()
 
@@ -128,6 +202,22 @@ def watchlist(request: Request):
 
         name="watchlist.html"
 
+    )
+
+@app.get("/login")
+def login_page(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+    )
+
+@app.get("/register")
+def register_page(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="register.html",
     )
 
 @app.get("/api/search")
@@ -283,6 +373,7 @@ def stock_summary(market: str, symbol: str):
 @app.get("/api/chart-data")
 def chart_data(symbol: str):
 
+    import math
     import yfinance as yf
 
     history = yf.Ticker(symbol).history(period="6mo")
@@ -291,124 +382,57 @@ def chart_data(symbol: str):
 
     for date, row in history.iterrows():
 
-        candles.append({
+            open_price = float(row["Open"])
+            high_price = float(row["High"])
+            low_price = float(row["Low"])
+            close_price = float(row["Close"])
 
-            "time": date.strftime("%Y-%m-%d"),
+            import math
 
-            "open": round(float(row["Open"]),2),
+            if (
+                math.isnan(open_price)
+                or math.isnan(high_price)
+                or math.isnan(low_price)
+                or math.isnan(close_price)
+            ):
+                continue
 
-            "high": round(float(row["High"]),2),
+            candles.append({
 
-            "low": round(float(row["Low"]),2),
+                "time": date.strftime("%Y-%m-%d"),
 
-            "close": round(float(row["Close"]),2)
+                "open": round(open_price, 2),
 
-        })
+                "high": round(high_price, 2),
+
+                "low": round(low_price, 2),
+
+                "close": round(close_price, 2)
+
+            })
 
     result = generate_signal(symbol)
 
-    return JSONResponse({
+    print("\n===================")
+    print("SUPPORT =", result["support"])
+    print("RESISTANCE =", result["resistance"])
+    print("TARGET =", result["prediction"]["target"])
+    print("STOPLOSS =", result["prediction"]["stoploss"])
+    print("===================\n")
 
+    response = {
         "candles": candles,
-
         "support": result["support"],
-
         "resistance": result["resistance"],
-
         "target": result["prediction"]["target"],
-
         "stoploss": result["prediction"]["stoploss"],
-
         "signal": result["signal"],
-
         "confidence": result["confidence"],
-
-    })
-
-@app.post("/api/watchlist")
-@app.delete("/api/watchlist/{symbol}")
-def remove_watchlist(symbol: str):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        DELETE FROM watchlist
-        WHERE symbol = ?
-        """,
-        (symbol,)
-    )
-
-    conn.commit()
-
-    conn.close()
-
-    return {
-        "success": True
     }
-def add_to_watchlist(stock: dict):
 
-    conn = get_connection()
+    return response
 
-    cursor = conn.cursor()
 
-    try:
-
-        cursor.execute(
-            """
-            INSERT INTO watchlist(symbol, company)
-            VALUES(?,?)
-            """,
-            (
-                stock["symbol"],
-                stock["company"]
-            )
-        )
-
-        conn.commit()
-
-        return {
-            "success": True,
-            "message": "Stock added to watchlist."
-        }
-
-    except Exception:
-
-        return {
-            "success": False,
-            "message": "Stock already exists."
-        }
-
-    finally:
-
-        conn.close()
-
-@app.get("/api/watchlist")
-def get_watchlist():
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-
-        SELECT
-            id,
-            symbol,
-            company,
-            added_on
-        FROM watchlist
-        ORDER BY added_on DESC
-
-    """)
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return [dict(row) for row in rows]
 
 @app.get("/api/top-picks")
 def get_top_picks():
@@ -688,201 +712,6 @@ def market_movers(market: str = "india"):
 
     }
 
-
-# =====================================================
-# PORTFOLIO MODEL
-# =====================================================
-
-class PortfolioStock(BaseModel):
-
-    symbol: str
-    company: str
-    quantity: float
-    buy_price: float
-
-
-# =====================================================
-# GET PORTFOLIO
-# =====================================================
-
-@app.get("/api/portfolio")
-def get_portfolio():
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute("""
-
-    SELECT
-        id,
-        symbol,
-        company,
-        quantity,
-        buy_price,
-        sector,
-        last_price,
-        price_updated_at,
-        added_on
-    FROM portfolio
-    ORDER BY added_on DESC
-
-""")
-
-    rows = cursor.fetchall()
-
-    conn.close()
-
-    return [dict(row) for row in rows]
-
-
-# =====================================================
-# ADD PORTFOLIO HOLDING
-# =====================================================
-
-@app.post("/api/portfolio")
-def add_portfolio(stock: PortfolioStock):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-
-    metadata = get_stock_metadata(
-            stock.symbol
-        )
-
-
-    company = stock.company.strip() \
-        if stock.company.strip() \
-        else metadata["company"]
-
-
-    sector = metadata["sector"]
-
-
-    cursor.execute(
-        """
-        INSERT INTO portfolio(
-            symbol,
-            company,
-            quantity,
-            buy_price,
-            sector
-        )
-        VALUES (?, ?, ?, ?, ?)
-        """,
-        (
-            stock.symbol,
-            company,
-            stock.quantity,
-            stock.buy_price,
-            sector
-        )
-    )
-
-
-    conn.commit()
-
-    conn.close()
-
-
-    return {
-
-        "success": True,
-
-        "message":
-            "Holding added successfully."
-
-    }
-
-# =====================================================
-# UPDATE PORTFOLIO HOLDING
-# =====================================================
-
-@app.put("/api/portfolio/{holding_id}")
-def update_portfolio_holding(
-    holding_id: int,
-    stock: PortfolioStock
-):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        UPDATE portfolio
-        SET
-            symbol = ?,
-            company = ?,
-            quantity = ?,
-            buy_price = ?
-        WHERE id = ?
-        """,
-        (
-            stock.symbol,
-            stock.company,
-            stock.quantity,
-            stock.buy_price,
-            holding_id
-        )
-    )
-
-    updated_rows = cursor.rowcount
-
-    conn.commit()
-
-    conn.close()
-
-    if updated_rows == 0:
-
-        return {
-            "success": False,
-            "message": "Holding not found."
-        }
-
-    return {
-        "success": True,
-        "message": "Holding updated successfully."
-    }
-
-# =====================================================
-# DELETE PORTFOLIO HOLDING
-# =====================================================
-
-@app.delete("/api/portfolio/{holding_id}")
-def delete_portfolio_holding(holding_id: int):
-
-    conn = get_connection()
-
-    cursor = conn.cursor()
-
-    cursor.execute(
-        """
-        DELETE FROM portfolio
-        WHERE id = ?
-        """,
-        (holding_id,)
-    )
-
-    deleted_rows = cursor.rowcount
-
-    conn.commit()
-
-    conn.close()
-
-    if deleted_rows == 0:
-
-        return {
-            "success": False,
-            "message": "Holding not found."
-        }
-
-    return {
-        "success": True,
-        "message": "Holding removed successfully."
-    }
 
 
 @app.get("/portfolio", response_class=HTMLResponse)
@@ -1287,3 +1116,18 @@ async def get_option_chain(
     "data": strikes
 
 }
+@app.get("/paper-dashboard")
+def paper_dashboard(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="paper_dashboard.html",
+    )
+
+@app.get("/backtest")
+def backtest_page(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="backtest.html",
+    )
