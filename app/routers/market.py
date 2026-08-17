@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
-from app.services.market_service import get_market_indices
+from app.services.market_service import (
+    get_market_indices,
+    get_market_breadth,
+)
 from app.services.macro_service import get_macro_data
 from app.services.sentiment_service import get_fear_greed
 from app.services.news_service import get_stock_news
@@ -89,41 +92,7 @@ async def fear_greed():
 @router.get("/api/market-breadth")
 def breadth():
 
-    advancing = 328
-
-    declining = 172
-
-    ratio = round(
-
-        advancing / declining,
-
-        2
-
-    )
-
-    if ratio > 1.5:
-
-        health = "🟢 Strong"
-
-    elif ratio > 1:
-
-        health = "🟡 Healthy"
-
-    else:
-
-        health = "🔴 Weak"
-
-    return {
-
-        "advancing": advancing,
-
-        "declining": declining,
-
-        "ratio": ratio,
-
-        "health": health
-
-    }
+    return get_market_breadth()
 
 
 @router.get("/api/market-news")

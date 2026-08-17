@@ -1543,3 +1543,72 @@ body{
     }
 
 }
+
+/* =========================================================
+   MARKET BREADTH
+   ========================================================= */
+
+.market-breadth-section {
+    margin-top: 24px;
+    padding: 22px;
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+}
+
+.market-breadth-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.breadth-card {
+    padding: 18px;
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+}
+
+.breadth-card span {
+    display: block;
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.breadth-card strong {
+    font-size: 24px;
+    color: #f8fafc;
+}
+
+.breadth-health {
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.breadth-footer {
+    margin-top: 16px;
+    font-size: 13px;
+    color: #94a3b8;
+}
+
+.breadth-footer strong {
+    color: #f8fafc;
+}
+
+@media (max-width: 800px) {
+
+    .market-breadth-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .market-breadth-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

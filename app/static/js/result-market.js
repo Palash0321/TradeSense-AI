@@ -455,3 +455,73 @@ function renderSectorPerformance(sectors) {
 
 // Load sector performance
 loadSectorPerformance();
+
+// =========================================================
+// MARKET BREADTH
+// =========================================================
+
+async function loadMarketBreadth() {
+
+    try {
+
+        const response =
+            await fetch("/api/market-breadth");
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Market breadth request failed"
+            );
+
+        }
+
+        const data =
+            await response.json();
+
+        console.log(
+            "Market Breadth:",
+            data
+        );
+
+        document.getElementById(
+            "breadth-advancing"
+        ).textContent =
+            data.advancing;
+
+        document.getElementById(
+            "breadth-declining"
+        ).textContent =
+            data.declining;
+
+        document.getElementById(
+            "breadth-unchanged"
+        ).textContent =
+            data.unchanged;
+
+        document.getElementById(
+            "breadth-ratio"
+        ).textContent =
+            data.ratio;
+
+        document.getElementById(
+            "breadth-health"
+        ).textContent =
+            data.health;
+
+        document.getElementById(
+            "breadth-tracked"
+        ).textContent =
+            data.tracked_stocks;
+
+    } catch (error) {
+
+        console.error(
+            "Market breadth error:",
+            error
+        );
+
+    }
+
+}
+
+loadMarketBreadth();
