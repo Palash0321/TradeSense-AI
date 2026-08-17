@@ -525,3 +525,352 @@ async function loadMarketBreadth() {
 }
 
 loadMarketBreadth();
+
+// =========================================================
+// MARKET INTELLIGENCE SUMMARY
+// =========================================================
+
+async function loadMarketIntelligenceSummary() {
+
+    const container =
+        document.getElementById(
+            "market-summary-content"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    try {
+
+        const [
+            overviewResponse,
+            moversResponse,
+            sectorsResponse,
+            breadthResponse
+        ] = await Promise.all([
+
+            fetch("/api/market-overview"),
+
+            fetch("/api/market-movers?market=india"),
+
+            fetch("/api/sectors"),
+
+            fetch("/api/market-breadth")
+
+        ]);
+
+
+        if (
+            !overviewResponse.ok ||
+            !moversResponse.ok ||
+            !sectorsResponse.ok ||
+            !breadthResponse.ok
+        ) {
+
+            throw new Error(
+                "Market intelligence data request failed"
+            );
+
+        }
+
+
+        const overview =
+            await overviewResponse.json();
+
+        const movers =
+            await moversResponse.json();
+
+        const sectors =
+            await sectorsResponse.json();
+
+        const breadth =
+            await breadthResponse.json();
+
+
+        console.log(
+            "Market Intelligence Summary Data:",
+            {
+                overview,
+                movers,
+                sectors,
+                breadth
+            }
+        );
+
+
+        generateMarketSummary(
+            overview,
+            movers,
+            sectors,
+            breadth
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Market intelligence summary error:",
+            error
+        );
+
+        container.innerHTML = `
+            <div class="market-summary-error">
+                Market intelligence is temporarily unavailable.
+            </div>
+        `;
+
+    }
+
+}
+
+
+// =========================================================
+// GENERATE MARKET SUMMARY
+// =========================================================
+
+function generateMarketSummary(
+    overview,
+    movers,
+    sectors,
+    breadth
+) {
+
+    const container =
+        document.getElementById(
+            "market-summary-content"
+        );
+
+    if (!container) {
+        return;
+    }
+
+
+    const advancing =
+        Number(breadth.advancing ?? 0);
+
+    const declining =
+        Number(breadth.declining ?? 0);
+
+    const unchanged =
+        Number(breadth.unchanged ?? 0);
+
+    const ratio =
+        Number(breadth.ratio ?? 0);
+
+
+    // -----------------------------------------
+    // MARKET CONDITION
+    // -----------------------------------------
+
+    let condition;
+    let conditionClass;
+
+    if (ratio > 1.5) {
+
+        condition = "Bullish";
+        conditionClass = "market-positive";
+
+    } else if (ratio > 1) {
+
+        condition = "Moderately Bullish";
+        conditionClass = "market-positive";
+
+    } else if (ratio === 1) {
+
+        condition = "Neutral";
+        conditionClass = "";
+
+    } else {
+
+        condition = "Bearish";
+        conditionClass = "market-negative";
+
+    }
+
+
+    // -----------------------------------------
+    // BREADTH INTERPRETATION
+    // -----------------------------------------
+
+    let breadthText;
+
+    if (advancing > declining) {
+
+        breadthText =
+            `${advancing} of ${breadth.tracked_stocks} tracked stocks are advancing, indicating broader market participation.`;
+
+    } else if (declining > advancing) {
+
+        breadthText =
+            `${declining} of ${breadth.tracked_stocks} tracked stocks are declining, indicating weaker market participation.`;
+
+    } else {
+
+        breadthText =
+            `Advancing and declining stocks are currently balanced across the tracked universe.`;
+
+    }
+
+
+    // -----------------------------------------
+    // SECTOR INTERPRETATION
+    // -----------------------------------------
+
+    const positiveSectors =
+        sectors.filter(
+            sector =>
+                Number(sector.change ?? 0) > 0
+        );
+
+    const negativeSectors =
+        sectors.filter(
+            sector =>
+                Number(sector.change ?? 0) < 0
+        );
+
+
+    let sectorText;
+
+    if (
+        positiveSectors.length >
+        negativeSectors.length
+    ) {
+
+        sectorText =
+            `Sector performance is broadly positive, with ${positiveSectors.length} of ${sectors.length} tracked sectors gaining.`;
+
+    } else if (
+        negativeSectors.length >
+        positiveSectors.length
+    ) {
+
+        sectorText =
+            `Sector performance is broadly weak, with ${negativeSectors.length} of ${sectors.length} tracked sectors declining.`;
+
+    } else {
+
+        sectorText =
+            `Sector performance is mixed, with gains and declines relatively balanced.`;
+
+    }
+
+
+    // -----------------------------------------
+    // GLOBAL MARKET INTERPRETATION
+    // -----------------------------------------
+
+    const globalMarkets = [
+        overview.nifty,
+        overview.sensex,
+        overview.sp500
+    ].filter(Boolean);
+
+
+    const positiveMarkets =
+        globalMarkets.filter(
+            market =>
+                Number(market.change ?? 0) >= 0
+        );
+
+
+    let globalText;
+
+    if (
+        positiveMarkets.length >
+        globalMarkets.length / 2
+    ) {
+
+        globalText =
+            `Major tracked indices are showing generally positive movement.`;
+
+    } else if (
+        positiveMarkets.length <
+        globalMarkets.length / 2
+    ) {
+
+        globalText =
+            `Major tracked indices are showing generally negative movement.`;
+
+    } else {
+
+        globalText =
+            `Major tracked indices are showing mixed movement.`;
+
+    }
+
+
+    // -----------------------------------------
+    // FINAL SUMMARY
+    // -----------------------------------------
+
+    container.innerHTML = `
+
+        <div class="market-summary-condition">
+
+            <span>
+                Overall Market Condition
+            </span>
+
+            <strong class="${conditionClass}">
+                ${condition}
+            </strong>
+
+        </div>
+
+
+        <div class="market-summary-text">
+
+            <p>
+                ${breadthText}
+            </p>
+
+            <p>
+                ${sectorText}
+            </p>
+
+            <p>
+                ${globalText}
+            </p>
+
+        </div>
+
+
+        <div class="market-summary-metrics">
+
+            <div>
+                <span>Advancing</span>
+                <strong>
+                    ${advancing}
+                </strong>
+            </div>
+
+            <div>
+                <span>Declining</span>
+                <strong>
+                    ${declining}
+                </strong>
+            </div>
+
+            <div>
+                <span>A/D Ratio</span>
+                <strong>
+                    ${ratio.toFixed(2)}
+                </strong>
+            </div>
+
+            <div>
+                <span>Market Health</span>
+                <strong>
+                    ${breadth.health}
+                </strong>
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+loadMarketIntelligenceSummary();
