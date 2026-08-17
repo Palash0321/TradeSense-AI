@@ -339,3 +339,119 @@ function renderMovers(
     });
 
 }
+
+// =========================================================
+// SECTOR PERFORMANCE
+// =========================================================
+
+async function loadSectorPerformance() {
+
+    try {
+
+        const response =
+            await fetch("/api/sectors");
+
+        if (!response.ok) {
+            throw new Error(
+                "Sector performance request failed"
+            );
+        }
+
+        const sectors =
+            await response.json();
+
+        console.log(
+            "Sector Performance:",
+            sectors
+        );
+
+        renderSectorPerformance(sectors);
+
+    } catch (error) {
+
+        console.error(
+            "Sector performance error:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// RENDER SECTORS
+// =========================================================
+
+function renderSectorPerformance(sectors) {
+
+    const container =
+        document.getElementById(
+            "result-sector-list"
+        );
+
+    if (!container) {
+        return;
+    }
+
+    if (
+        !sectors ||
+        sectors.length === 0
+    ) {
+
+        container.innerHTML = `
+            <div class="market-loading">
+                No sector data available.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    container.innerHTML = "";
+
+    sectors.forEach(sector => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "sector-card";
+
+        const change =
+            Number(sector.change ?? 0);
+
+        const changeClass =
+            change >= 0
+                ? "market-positive"
+                : "market-negative";
+
+        const arrow =
+            change >= 0
+                ? "▲"
+                : "▼";
+
+        card.innerHTML = `
+
+            <div class="sector-name">
+                ${sector.name}
+            </div>
+
+            <div class="sector-change ${changeClass}">
+                ${arrow}
+                ${change >= 0 ? "+" : ""}
+                ${change.toFixed(2)}%
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// Load sector performance
+loadSectorPerformance();
