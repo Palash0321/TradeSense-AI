@@ -130,13 +130,13 @@ async def home():
 
 @app.get("/analyze")
 def analyze(request: Request, market: str, symbol: str):
-    if market == "india":
-        symbol = symbol.upper() + ".NS"
-    else:
-        symbol = symbol.upper()
+    symbol = symbol.upper()
+
+    if market == "india" and not symbol.endswith(".NS"):
+        symbol = symbol + ".NS"
 
     result = generate_signal(symbol)
-    print(result["risk_reward"])
+    print("Signal generated:", result.get("signal"))
     news = get_stock_news(symbol)
 
     return templates.TemplateResponse(

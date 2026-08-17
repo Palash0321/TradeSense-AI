@@ -498,6 +498,191 @@
 
 </div>
 
+<!-- ================= GLOBAL MARKET OVERVIEW ================= -->
+
+<div class="global-market-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET INTELLIGENCE
+            </span>
+
+            <h2>🌎 Global Market Overview</h2>
+
+            <p>
+                Major indices and overall market direction
+            </p>
+
+        </div>
+
+        <div id="global-market-status"
+             class="global-market-status">
+
+            Loading...
+
+        </div>
+
+    </div>
+
+
+    <div class="global-market-grid">
+
+
+        <!-- NIFTY -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇮🇳 NIFTY 50</span>
+
+                <span id="nifty-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="nifty-market-price">
+                --
+            </h3>
+
+            <p id="nifty-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+        <!-- SENSEX -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇮🇳 SENSEX</span>
+
+                <span id="sensex-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="sensex-market-price">
+                --
+            </h3>
+
+            <p id="sensex-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+        <!-- S&P 500 -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇺🇸 S&P 500</span>
+
+                <span id="sp500-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="sp500-market-price">
+                --
+            </h3>
+
+            <p id="sp500-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================= MARKET MOVERS ================= -->
+
+<div class="market-movers-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET ACTIVITY
+            </span>
+
+            <h2>🔥 Today's Market Movers</h2>
+
+            <p>
+                Strongest gainers and losers across the Indian market
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="market-movers-grid">
+
+
+        <!-- GAINERS -->
+
+        <div class="market-movers-card">
+
+            <div class="movers-title">
+
+                <h3>🚀 Top Gainers</h3>
+
+            </div>
+
+            <div id="result-gainers-list">
+
+                <div class="market-loading">
+                    Loading market data...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOSERS -->
+
+        <div class="market-movers-card">
+
+            <div class="movers-title">
+
+                <h3>🔻 Top Losers</h3>
+
+            </div>
+
+            <div id="result-losers-list">
+
+                <div class="market-loading">
+                    Loading market data...
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
     <!-- ================= BOTTOM GRID ================= -->
 
     <div class="bottom-grid">
@@ -664,7 +849,11 @@ if (gauge) {
 }
 </script>
 
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
 <script src="/static/js/chart.js"></script>
+
+<script src="/static/js/result-market.js"></script>
 
 </body>
 

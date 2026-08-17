@@ -1302,3 +1302,185 @@ body{
     font-size:14px;
 
 }
+
+/* =========================================================
+   GLOBAL MARKET INTELLIGENCE
+   ========================================================= */
+
+.global-market-section,
+.market-movers-section {
+    margin-top: 24px;
+    padding: 22px;
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 16px;
+}
+
+.market-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.market-kicker {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #60a5fa;
+    margin-bottom: 5px;
+}
+
+.market-section-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #f9fafb;
+}
+
+.market-section-header p {
+    margin: 6px 0 0;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.global-market-status {
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #1e293b;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.global-market-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.global-market-card {
+    padding: 18px;
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.global-market-card:hover {
+    transform: translateY(-2px);
+    border-color: #334155;
+}
+
+.market-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cbd5e1;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.global-market-card h3 {
+    margin: 14px 0 6px;
+    font-size: 24px;
+    color: #f8fafc;
+}
+
+.global-market-card p {
+    margin: 0;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.market-positive {
+    color: #22c55e !important;
+}
+
+.market-negative {
+    color: #ef4444 !important;
+}
+
+.market-loading {
+    color: #64748b;
+    font-size: 12px;
+    padding: 12px 0;
+}
+
+/* =========================================================
+   MARKET MOVERS
+   ========================================================= */
+
+.market-movers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.market-movers-card {
+    background: #0f172a;
+    border: 1px solid #1f2937;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.movers-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.movers-title h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #f8fafc;
+}
+
+.mover-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #1f2937;
+}
+
+.mover-row:last-child {
+    border-bottom: none;
+}
+
+.mover-symbol {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.mover-price {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 3px;
+}
+
+.mover-change {
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+
+    .global-market-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .market-movers-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .market-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
