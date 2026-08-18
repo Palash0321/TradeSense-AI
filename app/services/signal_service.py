@@ -20,6 +20,9 @@ from app.core.utils.formatter import (
 from app.core.indicators.atr import calculate_atr
 from app.services.ai_engine import AIEngine
 from app.services.stock_service import get_stock_history
+from app.services.market_health_service import (
+    calculate_market_health,
+)
 
 def generate_signal(symbol: str, period: str = "6mo"):
 
@@ -304,29 +307,14 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     score = trade_quality["score"]
 
-    # =====================================
-    # MARKET HEALTH SCORE
-    # =====================================
+   
+# =====================================
+# MARKET HEALTH SCORE
+# =====================================
 
-    market_health = score
+    market_health_data = calculate_market_health()
 
-    if rsi_status == "Oversold":
-
-        market_health += 5
-
-    elif rsi_status == "Overbought":
-
-        market_health -= 5
-
-    if macd_status == "Bullish":
-
-        market_health += 5
-
-    elif macd_status == "Bearish":
-
-        market_health -= 5
-
-    market_health = max(0, min(100, market_health))
+    market_health = market_health_data["score"]
 
     recommendation = trade_quality["recommendation"]
 
