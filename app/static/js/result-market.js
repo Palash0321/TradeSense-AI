@@ -509,9 +509,9 @@ async function loadMarketBreadth() {
             data.health;
 
         document.getElementById(
-            "breadth-tracked"
-        ).textContent =
-            data.tracked_stocks;
+    "breadth-tracked"
+).textContent =
+    `${data.analyzed_stocks} / ${data.configured_stocks}`;
 
     } catch (error) {
 

@@ -1,27 +1,16 @@
 import yfinance as yf
 
-
-# Controlled universe for live sector analysis.
-# We intentionally start small to avoid excessive Yahoo Finance requests.
-SECTOR_STOCKS = [
-    "RELIANCE.NS",
-    "TCS.NS",
-    "INFY.NS",
-    "HDFCBANK.NS",
-    "ICICIBANK.NS",
-    "SBIN.NS",
-    "ITC.NS",
-    "LT.NS",
-    "AXISBANK.NS",
-    "BHARTIARTL.NS",
-]
-
+from app.services.market_universe import (
+    get_india_market_universe,
+)
 
 def get_sector_performance():
 
+    sector_stocks = get_india_market_universe()
+
     sectors = {}
 
-    for symbol in SECTOR_STOCKS:
+    for symbol in sector_stocks:
 
         try:
 

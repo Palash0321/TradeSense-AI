@@ -1,6 +1,8 @@
-import json
-
 import yfinance as yf
+
+from app.services.market_universe import (
+    get_india_market_universe,
+)
 
 INDICES = {
     "NIFTY 50": "^NSEI",
@@ -50,16 +52,12 @@ def get_market_indices():
 
 def get_market_breadth():
 
-    with open(
-        "data/market_breadth_stocks.json",
-        "r"
-    ) as file:
-
-        symbols = json.load(file)
+    symbols = get_india_market_universe()
 
     advancing = 0
     declining = 0
     unchanged = 0
+    analyzed = 0
 
     for symbol in symbols:
 
@@ -81,6 +79,8 @@ def get_market_breadth():
 
             if len(closes) < 2:
                 continue
+
+            analyzed += 1
 
             current = float(
                 closes.iloc[-1]
@@ -147,6 +147,8 @@ def get_market_breadth():
 
         "health": health,
 
-        "tracked_stocks": len(symbols)
+        "configured_stocks": len(symbols),
+
+        "analyzed_stocks": analyzed,
 
     }
