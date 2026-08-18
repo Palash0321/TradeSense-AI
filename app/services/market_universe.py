@@ -43,7 +43,7 @@ INDIA_MARKET_UNIVERSE = [
     # Automobile
     "MARUTI.NS",
     "M&M.NS",
-    "TATAMOTORS.NS",
+    "HEROMOTOCO.NS",
 
     # Industrials
     "LT.NS",
