@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
+from app.services.market_service import get_market_indices
+from app.services.sector_service import get_sector_performance
+
 from app.services.market_service import (
-    get_market_indices,
     get_market_breadth,
 )
 from app.services.macro_service import get_macro_data
@@ -63,18 +65,7 @@ def market_sentiment():
 @router.get("/api/sectors")
 def sectors():
 
-    return [
-
-        {"name":"Information Technology","change":2.34},
-        {"name":"Banking","change":1.65},
-        {"name":"Automobile","change":0.94},
-        {"name":"FMCG","change":-0.48},
-        {"name":"Pharma","change":1.12},
-        {"name":"Real Estate","change":-1.04},
-        {"name":"Energy","change":0.73},
-        {"name":"Metal","change":-0.82}
-
-    ]
+    return get_sector_performance()
 
 
 @router.get("/api/macro")
