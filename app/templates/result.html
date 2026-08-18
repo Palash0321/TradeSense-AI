@@ -476,13 +476,15 @@
 
         <div class="intel-card">
 
-            <h4>📊 RSI</h4>
+    <h4>📊 RSI</h4>
 
-            <h3>{{ result.RSI }}</h3>
+    <h3>{{ result.RSI }}</h3>
 
-            <p>{{ result.rsi_status }}</p>
+    <p class="rsi-status {{ result.rsi_status|lower }}">
+        {{ result.rsi_status }}
+    </p>
 
-        </div>
+</div>
 
         <div class="intel-card">
 
