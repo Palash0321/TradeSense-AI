@@ -29,46 +29,149 @@ class BacktestService:
             progress=False
         )
 
-        data.dropna(inplace=True)
+        if data.empty:
+            return data
 
         if isinstance(data.columns, pd.MultiIndex):
             data.columns = data.columns.get_level_values(0)
 
+        data.dropna(inplace=True)
+
         return data
 
-    # =====================================
-    # EMA Strategy
+        # =====================================
+    # EMA Strategy V2
+    # EMA20 / EMA50 + EMA200 Regime Filter
     # =====================================
 
     def ema_strategy(self):
 
         df = self.load_data()
 
+        # -------------------------------------
+        # Calculate moving averages
+        # -------------------------------------
+
         df["EMA20"] = (
             df["Close"]
-            .ewm(span=20, adjust=False)
+            .ewm(
+                span=20,
+                adjust=False
+            )
             .mean()
         )
 
         df["EMA50"] = (
             df["Close"]
-            .ewm(span=50, adjust=False)
+            .ewm(
+                span=50,
+                adjust=False
+            )
             .mean()
         )
 
+        df["EMA200"] = (
+            df["Close"]
+            .ewm(
+                span=200,
+                adjust=False
+            )
+            .mean()
+        )
+
+        # -------------------------------------
+        # Initialize signal
+        # -------------------------------------
+
         df["Signal"] = 0
 
+        # -------------------------------------
+        # Bullish regime
+        #
+        # Price must be above EMA200
+        # AND
+        # EMA20 must be above EMA50
+        # -------------------------------------
+
+        bullish_condition = (
+
+            (df["Close"] > df["EMA200"])
+
+            &
+
+            (df["EMA20"] > df["EMA50"])
+
+        )
+
         df.loc[
-            df["EMA20"] > df["EMA50"],
+            bullish_condition,
             "Signal"
         ] = 1
 
+        # -------------------------------------
+        # Bearish / exit regime
+        #
+        # Price below EMA200
+        # OR
+        # EMA20 below EMA50
+        # -------------------------------------
+
+        bearish_condition = (
+
+            (df["Close"] < df["EMA200"])
+
+            |
+
+            (df["EMA20"] < df["EMA50"])
+
+        )
+
         df.loc[
-            df["EMA20"] < df["EMA50"],
+            bearish_condition,
             "Signal"
         ] = -1
 
+        # -------------------------------------
+        # Detect signal changes
+        # -------------------------------------
+
         df["Position"] = df["Signal"].diff()
+
+        return df
+
+            # =====================================
+    # ATR Risk Strategy V3
+    # EMA20 / EMA50 + EMA200
+    # ATR Initial Stop + Trailing Stop
+    # =====================================
+
+    def atr_risk_strategy(self):
+
+        df = self.ema_strategy()
+
+        if df.empty:
+            return df
+
+        # ---------------------------------
+        # ATR calculation
+        # ---------------------------------
+
+        previous_close = df["Close"].shift(1)
+
+        true_range = pd.concat(
+            [
+                df["High"] - df["Low"],
+                (df["High"] - previous_close).abs(),
+                (df["Low"] - previous_close).abs()
+            ],
+            axis=1
+        ).max(axis=1)
+
+        df["ATR"] = (
+            true_range
+            .rolling(14)
+            .mean()
+        )
 
         return df
 
@@ -80,13 +183,22 @@ class BacktestService:
 
         df = self.ema_strategy()
 
+        if df.empty or len(df) < 2:
+
+            return {
+                "trades": [],
+                "equity_curve": [],
+                "max_drawdown": 0,
+                "peak_capital": self.initial_capital
+            }
+
         trades = []
 
         equity_curve = []
 
-        capital = self.initial_capital
+        cash = float(self.initial_capital)
 
-        peak_capital = capital
+        peak_equity = cash
 
         max_drawdown = 0
 
@@ -98,126 +210,511 @@ class BacktestService:
 
         shares = 0
 
-        for index, row in df.iterrows():
+        buy_value = 0
+
+        buy_cost = 0
+
+        # ---------------------------------
+        # Slippage
+        # ---------------------------------
+
+        slippage_rate = (
+            self.slippage / 100
+        )
+
+        # ---------------------------------
+        # Iterate through historical bars
+        # ---------------------------------
+
+        rows = list(df.iterrows())
+
+        for i in range(len(rows)):
+
+            index, row = rows[i]
+
+            close_price = float(row["Close"])
+
+            # ---------------------------------
+            # 1. Mark existing position
+            # ---------------------------------
+
+            if in_position:
+
+                current_equity = (
+                    cash
+                    + (
+                        shares
+                        * close_price
+                    )
+                )
+
+            else:
+
+                current_equity = cash
+
+            # ---------------------------------
+            # Update peak equity
+            # ---------------------------------
+
+            if current_equity > peak_equity:
+
+                peak_equity = current_equity
+
+            # ---------------------------------
+            # Calculate drawdown
+            # ---------------------------------
+
+            if peak_equity > 0:
+
+                drawdown = (
+                    (
+                        peak_equity
+                        - current_equity
+                    )
+                    / peak_equity
+                ) * 100
+
+                if drawdown > max_drawdown:
+
+                    max_drawdown = drawdown
+
+            equity_curve.append({
+
+                "date":
+                    index.strftime("%Y-%m-%d"),
+
+                "capital":
+                    round(
+                        current_equity,
+                        2
+                    )
+
+            })
+
+            # ---------------------------------
+            # No next bar available
+            # ---------------------------------
+
+            if i >= len(rows) - 1:
+                continue
+
+            next_index, next_row = rows[i + 1]
+
+            next_open = float(
+                next_row["Open"]
+            )
 
             position = row["Position"]
 
             if pd.isna(position):
                 continue
 
+            # =================================
             # BUY
-            if position == 2 and not in_position:
+            # Signal generated on day T
+            # Execute on day T+1 OPEN
+            # =================================
 
-                buy_price = float(row["Close"])
+            if (
+                position == 2
+                and not in_position
+            ):
 
-                shares = int(capital // buy_price)
+                execution_price = (
+                    next_open
+                    * (1 + slippage_rate)
+                )
 
-                if shares == 0:
+                # Maximum affordable shares
+                shares = int(
+                    max(
+                        0,
+                        (
+                            cash
+                            - self.brokerage
+                        )
+                        // execution_price
+                    )
+                )
+
+                if shares <= 0:
                     continue
 
-                buy_date = index
+                buy_price = execution_price
+
+                buy_value = (
+                    buy_price
+                    * shares
+                )
+
+                buy_cost = self.brokerage
+
+                total_buy_cost = (
+                    buy_value
+                    + buy_cost
+                )
+
+                if total_buy_cost > cash:
+
+                    shares = int(
+                        max(
+                            0,
+                            (
+                                cash
+                                - self.brokerage
+                            )
+                            // buy_price
+                        )
+                    )
+
+                    buy_value = (
+                        buy_price
+                        * shares
+                    )
+
+                    total_buy_cost = (
+                        buy_value
+                        + self.brokerage
+                    )
+
+                if shares <= 0:
+                    continue
+
+                cash -= total_buy_cost
+
+                buy_date = next_index
 
                 in_position = True
 
+            # =================================
             # SELL
-            elif position == -2 and in_position:
+            # Signal generated on day T
+            # Execute on day T+1 OPEN
+            # =================================
 
-                sell_price = float(row["Close"])
+            elif (
+                position == -2
+                and in_position
+            ):
 
-                sell_date = index
-
-                brokerage_cost = self.brokerage * 2
-
-                slippage_cost = (
-                    buy_price
-                    * self.slippage
-                    / 100
+                execution_price = (
+                    next_open
+                    * (1 - slippage_rate)
                 )
 
-                profit_per_share = (
-                    sell_price
-                    - buy_price
-                    - brokerage_cost
-                    - slippage_cost
+                sell_date = next_index
+
+                sell_value = (
+                    execution_price
+                    * shares
                 )
 
-                profit = profit_per_share * shares
+                sell_cost = self.brokerage
 
-                capital += profit
+                net_sell_value = (
+                    sell_value
+                    - sell_cost
+                )
 
-                if capital > peak_capital:
-                    peak_capital = capital
+                # ---------------------------------
+                # Profit
+                # ---------------------------------
 
-                drawdown = (
-                    (peak_capital - capital)
-                    / peak_capital
-                ) * 100
+                profit = (
+                    net_sell_value
+                    - buy_value
+                    - buy_cost
+                )
 
-                if drawdown > max_drawdown:
-                    max_drawdown = drawdown
+                cash += net_sell_value
 
-                equity_curve.append({
+                invested_capital = (
+                    buy_value
+                    + buy_cost
+                )
 
-                    "date": sell_date.strftime("%Y-%m-%d"),
+                if invested_capital > 0:
 
-                    "capital": round(capital, 2)
+                    return_percent = (
+                        profit
+                        / invested_capital
+                    ) * 100
 
-                })
+                else:
 
-                percent = (
-                    profit
-                    /
-                    (buy_price * shares)
-                ) * 100
+                    return_percent = 0
 
                 trades.append({
 
-                    "buy_date": buy_date,
+                    "buy_date":
+                        buy_date,
 
-                    "sell_date": sell_date,
+                    "sell_date":
+                        sell_date,
 
-                    "buy_price": round(
-                        buy_price,
-                        2
-                    ),
+                    "buy_price":
+                        round(
+                            buy_price,
+                            2
+                        ),
 
-                    "sell_price": round(
-                        sell_price,
-                        2
-                    ),
+                    "sell_price":
+                        round(
+                            execution_price,
+                            2
+                        ),
 
-                    "shares": shares,
+                    "shares":
+                        shares,
 
-                    "profit": round(
-                        profit,
-                        2
-                    ),
+                    "profit":
+                        round(
+                            profit,
+                            2
+                        ),
 
-                    "return_percent": round(
-                        percent,
-                        2
-                    )
+                    "return_percent":
+                        round(
+                            return_percent,
+                            2
+                        )
 
                 })
 
                 in_position = False
 
-        return {
+                buy_price = None
 
-            "trades": trades,
+                buy_date = None
 
-            "equity_curve": equity_curve,
+                shares = 0
 
-            "max_drawdown": round(
-                max_drawdown,
-                2
-            ),
+                buy_value = 0
 
-            "peak_capital": round(
-                peak_capital,
-                2
+                buy_cost = 0
+
+        # =====================================
+        # Force-close final open position
+        # =====================================
+
+        if in_position:
+
+            final_index = df.index[-1]
+
+            final_close = float(
+                df.iloc[-1]["Close"]
             )
 
+            # Final liquidation at available close
+            sell_price = (
+                final_close
+                * (1 - slippage_rate)
+            )
+
+            sell_value = (
+                sell_price
+                * shares
+            )
+
+            sell_cost = self.brokerage
+
+            net_sell_value = (
+                sell_value
+                - sell_cost
+            )
+
+            profit = (
+                net_sell_value
+                - buy_value
+                - buy_cost
+            )
+
+            cash += net_sell_value
+
+            invested_capital = (
+                buy_value
+                + buy_cost
+            )
+
+            if invested_capital > 0:
+
+                return_percent = (
+                    profit
+                    / invested_capital
+                ) * 100
+
+            else:
+
+                return_percent = 0
+
+            trades.append({
+
+                "buy_date":
+                    buy_date,
+
+                "sell_date":
+                    final_index,
+
+                "buy_price":
+                    round(
+                        buy_price,
+                        2
+                    ),
+
+                "sell_price":
+                    round(
+                        sell_price,
+                        2
+                    ),
+
+                "shares":
+                    shares,
+
+                "profit":
+                    round(
+                        profit,
+                        2
+                    ),
+
+                "return_percent":
+                    round(
+                        return_percent,
+                        2
+                    )
+
+            })
+
+            # Final equity after liquidation
+            final_equity = cash
+
+            if final_equity > peak_equity:
+
+                peak_equity = final_equity
+
+            if peak_equity > 0:
+
+                drawdown = (
+                    (
+                        peak_equity
+                        - final_equity
+                    )
+                    / peak_equity
+                ) * 100
+
+                if drawdown > max_drawdown:
+
+                    max_drawdown = drawdown
+
+            # Avoid duplicate final date
+            if (
+                not equity_curve
+                or equity_curve[-1]["date"]
+                != final_index.strftime("%Y-%m-%d")
+            ):
+
+                equity_curve.append({
+
+                    "date":
+                        final_index.strftime(
+                            "%Y-%m-%d"
+                        ),
+
+                    "capital":
+                        round(
+                            final_equity,
+                            2
+                        )
+
+                })
+
+            else:
+
+                equity_curve[-1]["capital"] = round(
+                    final_equity,
+                    2
+                )
+
+        # =====================================
+        # Return Backtest Result
+        # =====================================
+
+        return {
+
+            "trades":
+                trades,
+
+            "equity_curve":
+                equity_curve,
+
+            "max_drawdown":
+                round(
+                    max_drawdown,
+                    2
+                ),
+
+            "peak_capital":
+                round(
+                    peak_equity,
+                    2
+                )
+
+        }
+
+        # =====================================
+    # Buy & Hold Benchmark
+    # =====================================
+
+    def buy_and_hold(self):
+        df = self.load_data()
+
+        if df.empty or len(df) < 2:
+            return {
+                "initial_capital": self.initial_capital,
+                "final_capital": self.initial_capital,
+                "total_return": 0,
+                "shares": 0,
+                "buy_price": 0,
+                "sell_price": 0
+            }
+
+        first_price = float(df.iloc[0]["Close"])
+        final_price = float(df.iloc[-1]["Close"])
+
+        # Buy as many whole shares as possible
+        shares = int(self.initial_capital // first_price)
+
+        remaining_cash = (
+            self.initial_capital
+            - (shares * first_price)
+        )
+
+        final_capital = (
+            remaining_cash
+            + (shares * final_price)
+        )
+
+        total_return = (
+            (final_capital - self.initial_capital)
+            / self.initial_capital
+        ) * 100
+
+        return {
+            "initial_capital": round(
+                self.initial_capital, 2
+            ),
+            "final_capital": round(
+                final_capital, 2
+            ),
+            "total_return": round(
+                total_return, 2
+            ),
+            "shares": shares,
+            "buy_price": round(
+                first_price, 2
+            ),
+            "sell_price": round(
+                final_price, 2
+            )
         }
 
     # =====================================
@@ -235,41 +732,44 @@ class BacktestService:
         total_trades = len(trades)
 
         winning_trades = [
-            t for t in trades
+            t
+            for t in trades
             if t["profit"] > 0
         ]
 
         losing_trades = [
-            t for t in trades
+            t
+            for t in trades
             if t["profit"] <= 0
         ]
+
+        benchmark = self.buy_and_hold()
+
+        # =====================================
+        # Profit
+        # =====================================
 
         net_profit = sum(
             t["profit"]
             for t in trades
         )
 
-        returns = [
-            t["return_percent"]
-            for t in trades
-        ]
+        # =====================================
+        # Win Rate
+        # =====================================
 
-        sharpe_ratio = 0
+        win_rate = 0
 
-        if len(returns) > 1:
+        if total_trades > 0:
 
-            returns_series = pd.Series(
-                returns
-            )
+            win_rate = (
+                len(winning_trades)
+                / total_trades
+            ) * 100
 
-            std = returns_series.std()
-
-            if std != 0:
-
-                sharpe_ratio = (
-                    returns_series.mean()
-                    / std
-                ) * (252 ** 0.5)
+        # =====================================
+        # Gross Profit / Loss
+        # =====================================
 
         gross_profit = sum(
             t["profit"]
@@ -287,42 +787,16 @@ class BacktestService:
 
         profit_factor = 0
 
-        if gross_loss != 0:
+        if gross_loss > 0:
+
             profit_factor = (
                 gross_profit
                 / gross_loss
             )
 
-        holding_days = []
-
-        for trade in trades:
-
-            days = (
-                trade["sell_date"]
-                -
-                trade["buy_date"]
-            ).days
-
-            holding_days.append(days)
-
-        average_holding = 0
-
-        if holding_days:
-
-            average_holding = (
-                sum(holding_days)
-                /
-                len(holding_days)
-            )
-
-        win_rate = 0
-
-        if total_trades > 0:
-
-            win_rate = (
-                len(winning_trades)
-                / total_trades
-            ) * 100
+        # =====================================
+        # Best / Worst Trade
+        # =====================================
 
         best_trade = 0
 
@@ -340,63 +814,293 @@ class BacktestService:
                 for t in trades
             )
 
+        # =====================================
+        # Average Holding Period
+        # =====================================
+
+        holding_days = []
+
+        for trade in trades:
+
+            days = (
+                trade["sell_date"]
+                - trade["buy_date"]
+            ).days
+
+            holding_days.append(days)
+
+        average_holding = 0
+
+        if holding_days:
+
+            average_holding = (
+                sum(holding_days)
+                / len(holding_days)
+            )
+
+        # =====================================
+        # Daily Sharpe Ratio
+        # =====================================
+
+        sharpe_ratio = 0
+
+        if len(equity_curve) > 1:
+
+            equity_series = pd.Series(
+                [
+                    x["capital"]
+                    for x in equity_curve
+                ],
+                dtype=float
+            )
+
+            daily_returns = (
+                equity_series
+                .pct_change()
+                .dropna()
+            )
+
+            if (
+                len(daily_returns) > 1
+                and daily_returns.std() != 0
+            ):
+
+                sharpe_ratio = (
+                    daily_returns.mean()
+                    / daily_returns.std()
+                ) * (
+                    252 ** 0.5
+                )
+
+        # =====================================
+        # Final Capital
+        # =====================================
+
+        final_capital = (
+            self.initial_capital
+            + net_profit
+        )
+
+        if equity_curve:
+
+            final_capital = float(
+                equity_curve[-1]["capital"]
+            )
+
+        # =====================================
+        # Total Return
+        # =====================================
+
+        total_return = 0
+
+        if self.initial_capital > 0:
+
+            total_return = (
+                (
+                    final_capital
+                    - self.initial_capital
+                )
+                / self.initial_capital
+            ) * 100
+
+        # =====================================
+        # CAGR
+        # =====================================
+
+        cagr = 0
+
+        if (
+            equity_curve
+            and final_capital > 0
+        ):
+
+            start_date = pd.to_datetime(
+                equity_curve[0]["date"]
+            )
+
+            end_date = pd.to_datetime(
+                equity_curve[-1]["date"]
+            )
+
+            years = (
+                end_date
+                - start_date
+            ).days / 365.25
+
+            if years > 0:
+
+                cagr = (
+                    (
+                        final_capital
+                        / self.initial_capital
+                    )
+                    ** (1 / years)
+                    - 1
+                ) * 100
+
+        # =====================================
+        # Average Win / Loss
+        # =====================================
+
+        average_win = 0
+
+        if winning_trades:
+
+            average_win = (
+                sum(
+                    t["profit"]
+                    for t in winning_trades
+                )
+                / len(winning_trades)
+            )
+
+        average_loss = 0
+
+        if losing_trades:
+
+            average_loss = (
+                sum(
+                    t["profit"]
+                    for t in losing_trades
+                )
+                / len(losing_trades)
+            )
+
+        # =====================================
+        # Expectancy
+        # =====================================
+
+        expectancy = 0
+
+        if total_trades > 0:
+
+            expectancy = (
+                net_profit
+                / total_trades
+            )
+
+        # =====================================
+        # Final Result
+        # =====================================
+
         return {
 
-            "total_trades": total_trades,
+            "total_trades":
+                total_trades,
 
-            "winning_trades": len(
-                winning_trades
+            "winning_trades":
+                len(winning_trades),
+
+            "losing_trades":
+                len(losing_trades),
+
+            "win_rate":
+                round(
+                    win_rate,
+                    2
+                ),
+
+            "net_profit":
+                round(
+                    net_profit,
+                    2
+                ),
+
+            "final_capital":
+                round(
+                    final_capital,
+                    2
+                ),
+
+            "total_return":
+                round(
+                    total_return,
+                    2
+                ),
+
+            "buy_hold_final_capital":
+                benchmark["final_capital"],
+
+            "buy_hold_return":
+                benchmark["total_return"],
+
+            "alpha":
+                round(
+                    total_return
+                    - benchmark["total_return"],
+                    2
             ),
 
-            "losing_trades": len(
-                losing_trades
-            ),
+            "cagr":
+                round(
+                    cagr,
+                    2
+                ),
 
-            "win_rate": round(
-                win_rate,
-                2
-            ),
+            "best_trade":
+                round(
+                    best_trade,
+                    2
+                ),
 
-            "net_profit": round(
-                net_profit,
-                2
-            ),
+            "worst_trade":
+                round(
+                    worst_trade,
+                    2
+                ),
 
-            "best_trade": round(
-                best_trade,
-                2
-            ),
+            "average_win":
+                round(
+                    average_win,
+                    2
+                ),
 
-            "worst_trade": round(
-                worst_trade,
-                2
-            ),
+            "average_loss":
+                round(
+                    average_loss,
+                    2
+                ),
 
-            "sharpe_ratio": round(
-                sharpe_ratio,
-                2
-            ),
+            "expectancy":
+                round(
+                    expectancy,
+                    2
+                ),
 
-            "profit_factor": round(
-                profit_factor,
-                2
-            ),
+            "sharpe_ratio":
+                round(
+                    float(sharpe_ratio),
+                    2
+                ),
 
-            "average_holding_days": round(
-                average_holding,
-                1
-            ),
+            "profit_factor":
+                round(
+                    profit_factor,
+                    2
+                ),
 
-            "max_drawdown": result[
-                "max_drawdown"
-            ],
+            "average_holding_days":
+                round(
+                    average_holding,
+                    2
+                ),
 
-            "peak_capital": result[
-                "peak_capital"
-            ],
+            "max_drawdown":
+                round(
+                    result["max_drawdown"],
+                    2
+                ),
 
-            "trades": trades,
+            "peak_capital":
+                round(
+                    result["peak_capital"],
+                    2
+                ),
 
-            "equity_curve": equity_curve
+            "trades":
+                trades,
+
+            "equity_curve":
+                equity_curve
 
         }
