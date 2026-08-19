@@ -93,6 +93,11 @@ class BacktestService:
         # EMA20 must be above EMA50
         # -------------------------------------
 
+        ema_gap_pct = (
+            (df["EMA20"] - df["EMA50"])
+            / df["EMA50"]
+        ) * 100
+
         bullish_condition = (
 
             (df["Close"] > df["EMA200"])
@@ -100,6 +105,10 @@ class BacktestService:
             &
 
             (df["EMA20"] > df["EMA50"])
+
+            &
+
+            (ema_gap_pct >= 0.25)
 
         )
 
@@ -170,6 +179,55 @@ class BacktestService:
         df["ATR"] = (
             true_range
             .rolling(14)
+            .mean()
+        )
+
+        # ---------------------------------
+        # ADX(14) calculation
+        # ---------------------------------
+
+        up_move = df["High"].diff()
+
+        down_move = -df["Low"].diff()
+
+        plus_dm = up_move.where(
+            (up_move > down_move)
+            & (up_move > 0),
+            0.0
+        )
+
+        minus_dm = down_move.where(
+            (down_move > up_move)
+            & (down_move > 0),
+            0.0
+        )
+
+        plus_di = (
+            100
+            * (
+                plus_dm.rolling(14).mean()
+                / df["ATR"]
+            )
+        )
+
+        minus_di = (
+            100
+            * (
+                minus_dm.rolling(14).mean()
+                / df["ATR"]
+            )
+        )
+
+        dx = (
+            100
+            * (
+                (plus_di - minus_di).abs()
+                / (plus_di + minus_di)
+            )
+        )
+
+        df["ADX"] = (
+            dx.rolling(14)
             .mean()
         )
 
@@ -660,7 +718,7 @@ class BacktestService:
 
         }
 
-        # =====================================
+    # =====================================
     # Buy & Hold Benchmark
     # =====================================
 
@@ -715,6 +773,844 @@ class BacktestService:
             "sell_price": round(
                 final_price, 2
             )
+        }
+
+        # =====================================
+    # Execute Backtest V3
+    # ATR Risk Management
+    # =====================================
+
+    def run_backtest_v3(self):
+
+        df = self.atr_risk_strategy()
+
+        if df.empty or len(df) < 2:
+
+            return {
+                "trades": [],
+                "equity_curve": [],
+                "max_drawdown": 0,
+                "peak_capital": self.initial_capital
+            }
+
+        trades = []
+
+        equity_curve = []
+
+        cash = float(self.initial_capital)
+
+        peak_equity = cash
+
+        max_drawdown = 0
+
+        in_position = False
+
+        buy_price = None
+
+        buy_date = None
+
+        shares = 0
+
+        buy_value = 0
+
+        buy_cost = 0
+
+        initial_stop = None
+
+        trailing_stop = None
+
+        highest_price = None
+
+        entry_atr = None
+
+        slippage_rate = (
+            self.slippage / 100
+        )
+
+        # =================================
+        # Iterate through historical bars
+        # =================================
+
+        rows = list(df.iterrows())
+
+        for i in range(len(rows)):
+
+            index, row = rows[i]
+
+            close_price = float(
+                row["Close"]
+            )
+
+            high_price = float(
+                row["High"]
+            )
+
+            low_price = float(
+                row["Low"]
+            )
+
+            atr = row["ATR"]
+
+            # =================================
+            # Mark-to-market equity
+            # =================================
+
+            if in_position:
+
+                current_equity = (
+                    cash
+                    + (
+                        shares
+                        * close_price
+                    )
+                )
+
+            else:
+
+                current_equity = cash
+
+            if current_equity > peak_equity:
+
+                peak_equity = current_equity
+
+            if peak_equity > 0:
+
+                drawdown = (
+                    (
+                        peak_equity
+                        - current_equity
+                    )
+                    / peak_equity
+                ) * 100
+
+                if drawdown > max_drawdown:
+
+                    max_drawdown = drawdown
+
+            equity_curve.append({
+
+                "date":
+                    index.strftime(
+                        "%Y-%m-%d"
+                    ),
+
+                "capital":
+                    round(
+                        current_equity,
+                        2
+                    )
+
+            })
+
+            # =================================
+            # Manage existing position
+            # =================================
+
+            if in_position:
+
+                # ---------------------------------
+                # Update highest price
+                # ---------------------------------
+
+                if high_price > highest_price:
+
+                    highest_price = high_price
+
+                # ---------------------------------
+                # Update trailing stop
+                # ---------------------------------
+
+                if pd.notna(atr):
+
+                    new_trailing_stop = (
+                        highest_price
+                        - (
+                            3.0
+                            * float(atr)
+                        )
+                    )
+
+                    if (
+                        trailing_stop is None
+                        or
+                        new_trailing_stop
+                        > trailing_stop
+                    ):
+
+                        trailing_stop = (
+                            new_trailing_stop
+                        )
+
+                # ---------------------------------
+                # Determine active stop
+                # ---------------------------------
+
+                active_stop = initial_stop
+
+                if trailing_stop is not None:
+
+                    active_stop = max(
+                        active_stop,
+                        trailing_stop
+                    )
+
+                # ---------------------------------
+                # Stop-loss check
+                #
+                # Conservative assumption:
+                # if the day's low touches the
+                # stop, assume stop execution.
+                # ---------------------------------
+
+                if (
+                    active_stop is not None
+                    and
+                    low_price <= active_stop
+                ):
+
+                    if i >= len(rows) - 1:
+
+                        execution_price = (
+                            close_price
+                            * (
+                                1
+                                - slippage_rate
+                            )
+                        )
+
+                    else:
+
+                        execution_price = (
+                            active_stop
+                            * (
+                                1
+                                - slippage_rate
+                            )
+                        )
+
+                    sell_date = index
+
+                    sell_value = (
+                        execution_price
+                        * shares
+                    )
+
+                    sell_cost = (
+                        self.brokerage
+                    )
+
+                    net_sell_value = (
+                        sell_value
+                        - sell_cost
+                    )
+
+                    profit = (
+                        net_sell_value
+                        - buy_value
+                        - buy_cost
+                    )
+
+                    cash += net_sell_value
+
+                    invested_capital = (
+                        buy_value
+                        + buy_cost
+                    )
+
+                    if invested_capital > 0:
+
+                        return_percent = (
+                            profit
+                            / invested_capital
+                        ) * 100
+
+                    else:
+
+                        return_percent = 0
+
+                    exit_reason = (
+                        "STOP_LOSS"
+                    )
+
+                    if (
+                        trailing_stop is not None
+                        and
+                        trailing_stop >= initial_stop
+                        and
+                        low_price <= trailing_stop
+                    ):
+
+                        exit_reason = (
+                            "TRAILING_STOP"
+                        )
+
+                    trades.append({
+
+                        "buy_date":
+                            buy_date,
+
+                        "sell_date":
+                            sell_date,
+
+                        "buy_price":
+                            round(
+                                buy_price,
+                                2
+                            ),
+
+                        "sell_price":
+                            round(
+                                execution_price,
+                                2
+                            ),
+
+                        "shares":
+                            shares,
+
+                        "profit":
+                            round(
+                                profit,
+                                2
+                            ),
+
+                        "return_percent":
+                            round(
+                                return_percent,
+                                2
+                            ),
+
+                        "exit_reason":
+                            exit_reason,
+
+                        "entry_atr":
+                            round(
+                                float(entry_atr),
+                                2
+                            )
+                            if entry_atr
+                            is not None
+                            else None,
+
+                        "initial_stop":
+                            round(
+                                float(initial_stop),
+                                2
+                            )
+                            if initial_stop
+                            is not None
+                            else None
+
+                    })
+
+                    in_position = False
+
+                    buy_price = None
+
+                    buy_date = None
+
+                    shares = 0
+
+                    buy_value = 0
+
+                    buy_cost = 0
+
+                    initial_stop = None
+
+                    trailing_stop = None
+
+                    highest_price = None
+
+                    entry_atr = None
+
+                    continue
+
+                # ---------------------------------
+                # EMA regime exit
+                # ---------------------------------
+
+                if (
+                    row["Signal"] == -1
+                    and
+                    i < len(rows) - 1
+                ):
+
+                    next_index, next_row = (
+                        rows[i + 1]
+                    )
+
+                    next_open = float(
+                        next_row["Open"]
+                    )
+
+                    execution_price = (
+                        next_open
+                        * (
+                            1
+                            - slippage_rate
+                        )
+                    )
+
+                    sell_date = next_index
+
+                    sell_value = (
+                        execution_price
+                        * shares
+                    )
+
+                    sell_cost = (
+                        self.brokerage
+                    )
+
+                    net_sell_value = (
+                        sell_value
+                        - sell_cost
+                    )
+
+                    profit = (
+                        net_sell_value
+                        - buy_value
+                        - buy_cost
+                    )
+
+                    cash += net_sell_value
+
+                    invested_capital = (
+                        buy_value
+                        + buy_cost
+                    )
+
+                    if invested_capital > 0:
+
+                        return_percent = (
+                            profit
+                            / invested_capital
+                        ) * 100
+
+                    else:
+
+                        return_percent = 0
+
+                    trades.append({
+
+                        "buy_date":
+                            buy_date,
+
+                        "sell_date":
+                            sell_date,
+
+                        "buy_price":
+                            round(
+                                buy_price,
+                                2
+                            ),
+
+                        "sell_price":
+                            round(
+                                execution_price,
+                                2
+                            ),
+
+                        "shares":
+                            shares,
+
+                        "profit":
+                            round(
+                                profit,
+                                2
+                            ),
+
+                        "return_percent":
+                            round(
+                                return_percent,
+                                2
+                            ),
+
+                        "exit_reason":
+                            "EMA_EXIT",
+
+                        "entry_atr":
+                            round(
+                                float(entry_atr),
+                                2
+                            )
+                            if entry_atr
+                            is not None
+                            else None,
+
+                        "initial_stop":
+                            round(
+                                float(initial_stop),
+                                2
+                            )
+                            if initial_stop
+                            is not None
+                            else None
+
+                    })
+
+                    in_position = False
+
+                    buy_price = None
+
+                    buy_date = None
+
+                    shares = 0
+
+                    buy_value = 0
+
+                    buy_cost = 0
+
+                    initial_stop = None
+
+                    trailing_stop = None
+
+                    highest_price = None
+
+                    entry_atr = None
+
+                    continue
+
+            # =================================
+            # Entry
+            # =================================
+
+            if (
+                not in_position
+                and
+                row["Signal"] == 1
+                and
+                pd.notna(atr)
+                and
+                pd.notna(row["ADX"])
+                and
+                row["ADX"] >= 20
+                and
+                i < len(rows) - 1
+            ):
+
+                next_index, next_row = (
+                    rows[i + 1]
+                )
+
+                next_open = float(
+                    next_row["Open"]
+                )
+
+                execution_price = (
+                    next_open
+                    * (
+                        1
+                        + slippage_rate
+                    )
+                )
+
+                entry_atr_value = float(
+                    atr
+                )
+
+                # ---------------------------------
+                # Risk per trade
+                # ---------------------------------
+
+                risk_per_share = (
+                    2.0
+                    * entry_atr_value
+                )
+
+                if risk_per_share <= 0:
+
+                    continue
+
+                risk_budget = (
+                    cash
+                    * 0.01
+                )
+
+                risk_based_shares = int(
+                    risk_budget
+                    / risk_per_share
+                )
+
+                affordable_shares = int(
+                    max(
+                        0,
+                        (
+                            cash
+                            - self.brokerage
+                        )
+                        // execution_price
+                    )
+                )
+
+                shares = min(
+                    risk_based_shares,
+                    affordable_shares
+                )
+
+                if shares <= 0:
+
+                    continue
+
+                buy_price = (
+                    execution_price
+                )
+
+                buy_value = (
+                    buy_price
+                    * shares
+                )
+
+                buy_cost = (
+                    self.brokerage
+                )
+
+                total_buy_cost = (
+                    buy_value
+                    + buy_cost
+                )
+
+                if total_buy_cost > cash:
+
+                    shares = int(
+                        max(
+                            0,
+                            (
+                                cash
+                                - self.brokerage
+                            )
+                            // buy_price
+                        )
+                    )
+
+                    buy_value = (
+                        buy_price
+                        * shares
+                    )
+
+                    total_buy_cost = (
+                        buy_value
+                        + self.brokerage
+                    )
+
+                if shares <= 0:
+
+                    continue
+
+                cash -= total_buy_cost
+
+                buy_date = next_index
+
+                entry_atr = (
+                    entry_atr_value
+                )
+
+                initial_stop = (
+                    buy_price
+                    - (
+                        2.0
+                        * entry_atr_value
+                    )
+                )
+
+                trailing_stop = (
+                    initial_stop
+                )
+
+                highest_price = (
+                    buy_price
+                )
+
+                in_position = True
+
+        # =================================
+        # Force-close final position
+        # =================================
+
+        if in_position:
+
+            final_index = df.index[-1]
+
+            final_close = float(
+                df.iloc[-1]["Close"]
+            )
+
+            sell_price = (
+                final_close
+                * (
+                    1
+                    - slippage_rate
+                )
+            )
+
+            sell_value = (
+                sell_price
+                * shares
+            )
+
+            sell_cost = (
+                self.brokerage
+            )
+
+            net_sell_value = (
+                sell_value
+                - sell_cost
+            )
+
+            profit = (
+                net_sell_value
+                - buy_value
+                - buy_cost
+            )
+
+            cash += net_sell_value
+
+            invested_capital = (
+                buy_value
+                + buy_cost
+            )
+
+            if invested_capital > 0:
+
+                return_percent = (
+                    profit
+                    / invested_capital
+                ) * 100
+
+            else:
+
+                return_percent = 0
+
+            trades.append({
+
+                "buy_date":
+                    buy_date,
+
+                "sell_date":
+                    final_index,
+
+                "buy_price":
+                    round(
+                        buy_price,
+                        2
+                    ),
+
+                "sell_price":
+                    round(
+                        sell_price,
+                        2
+                    ),
+
+                "shares":
+                    shares,
+
+                "profit":
+                    round(
+                        profit,
+                        2
+                    ),
+
+                "return_percent":
+                    round(
+                        return_percent,
+                        2
+                    ),
+
+                "exit_reason":
+                    "FINAL_LIQUIDATION",
+
+                "entry_atr":
+                    round(
+                        float(entry_atr),
+                        2
+                    )
+                    if entry_atr
+                    is not None
+                    else None,
+
+                "initial_stop":
+                    round(
+                        float(initial_stop),
+                        2
+                    )
+                    if initial_stop
+                    is not None
+                    else None
+
+            })
+
+            final_equity = cash
+
+            if final_equity > peak_equity:
+
+                peak_equity = final_equity
+
+            if peak_equity > 0:
+
+                drawdown = (
+                    (
+                        peak_equity
+                        - final_equity
+                    )
+                    / peak_equity
+                ) * 100
+
+                if drawdown > max_drawdown:
+
+                    max_drawdown = drawdown
+
+            if (
+                not equity_curve
+                or
+                equity_curve[-1]["date"]
+                != final_index.strftime(
+                    "%Y-%m-%d"
+                )
+            ):
+
+                equity_curve.append({
+
+                    "date":
+                        final_index.strftime(
+                            "%Y-%m-%d"
+                        ),
+
+                    "capital":
+                        round(
+                            final_equity,
+                            2
+                        )
+
+                })
+
+            else:
+
+                equity_curve[-1]["capital"] = (
+                    round(
+                        final_equity,
+                        2
+                    )
+                )
+
+        return {
+
+            "trades":
+                trades,
+
+            "equity_curve":
+                equity_curve,
+
+            "max_drawdown":
+                round(
+                    max_drawdown,
+                    2
+                ),
+
+            "peak_capital":
+                round(
+                    peak_equity,
+                    2
+                )
+
         }
 
     # =====================================
