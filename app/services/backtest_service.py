@@ -20,14 +20,30 @@ class BacktestService:
     # Load Historical Data
     # =====================================
 
-    def load_data(self):
+    def load_data(
+        self,
+        start_date=None,
+        end_date=None
+    ):
 
-        data = yf.download(
-            self.symbol,
-            period="5y",
-            interval="1d",
-            progress=False
-        )
+        if start_date or end_date:
+
+            data = yf.download(
+                self.symbol,
+                start=start_date,
+                end=end_date,
+                interval="1d",
+                progress=False
+            )
+
+        else:
+
+            data = yf.download(
+                self.symbol,
+                period="5y",
+                interval="1d",
+                progress=False
+            )
 
         if data.empty:
             return data
@@ -44,9 +60,18 @@ class BacktestService:
     # EMA20 / EMA50 + EMA200 Regime Filter
     # =====================================
 
-    def ema_strategy(self):
+    def ema_strategy(
+    self,
+    start_date=None,
+    end_date=None,
+    adx_min=20,
+    ema_gap_min=0.25
+):
 
-        df = self.load_data()
+        df = self.load_data(
+            start_date=start_date,
+            end_date=end_date
+        )
 
         # -------------------------------------
         # Calculate moving averages
@@ -98,6 +123,64 @@ class BacktestService:
             / df["EMA50"]
         ) * 100
 
+                # -------------------------------------
+        # ADX Trend Strength
+        # -------------------------------------
+
+        high = df["High"]
+        low = df["Low"]
+        close = df["Close"]
+
+        up = high.diff()
+        down = -low.diff()
+
+        plus_dm = up.where(
+            (up > down) & (up > 0),
+            0.0
+        )
+
+        minus_dm = down.where(
+            (down > up) & (down > 0),
+            0.0
+        )
+
+        true_range = pd.concat(
+            [
+                high - low,
+                (high - close.shift(1)).abs(),
+                (low - close.shift(1)).abs()
+            ],
+            axis=1
+        ).max(axis=1)
+
+        atr_adx = true_range.rolling(14).mean()
+
+        plus_di = (
+            100
+            * (
+                plus_dm.rolling(14).mean()
+                / atr_adx
+            )
+        )
+
+        minus_di = (
+            100
+            * (
+                minus_dm.rolling(14).mean()
+                / atr_adx
+            )
+        )
+
+        dx = (
+            100
+            * (
+                (plus_di - minus_di).abs()
+                / (plus_di + minus_di)
+            )
+        )
+
+        df["ADX"] = dx.rolling(14).mean()
+
         bullish_condition = (
 
             (df["Close"] > df["EMA200"])
@@ -108,7 +191,11 @@ class BacktestService:
 
             &
 
-            (ema_gap_pct >= 0.25)
+            (ema_gap_pct >= ema_gap_min)
+
+            &
+
+            (df["ADX"] >= adx_min)
 
         )
 
@@ -154,9 +241,20 @@ class BacktestService:
     # ATR Initial Stop + Trailing Stop
     # =====================================
 
-    def atr_risk_strategy(self):
+    def atr_risk_strategy(
+        self,
+        start_date=None,
+        end_date=None,
+        ema_gap_min=0.25,
+        adx_min=20
+    ):
 
-        df = self.ema_strategy()
+        df = self.ema_strategy(
+            start_date=start_date,
+            end_date=end_date,
+            ema_gap_min=ema_gap_min,
+            adx_min=adx_min
+        )
 
         if df.empty:
             return df
@@ -374,7 +472,7 @@ class BacktestService:
             # =================================
 
             if (
-                position == 2
+                position == 1
                 and not in_position
             ):
 
@@ -775,14 +873,26 @@ class BacktestService:
             )
         }
 
-        # =====================================
+    # =====================================
     # Execute Backtest V3
     # ATR Risk Management
     # =====================================
 
-    def run_backtest_v3(self):
+    def run_backtest_v3(
+        self,
+        start_date=None,
+        end_date=None,
+        ema_gap_min=0.25,
+        trailing_atr=4.0,
+        adx_min=20
+    ):
 
-        df = self.atr_risk_strategy()
+        df = self.atr_risk_strategy(
+            start_date=start_date,
+            end_date=end_date,
+            ema_gap_min=ema_gap_min,
+            adx_min=adx_min
+        )
 
         if df.empty or len(df) < 2:
 
@@ -818,6 +928,8 @@ class BacktestService:
         initial_stop = None
 
         trailing_stop = None
+
+        trailing_active = False
 
         highest_price = None
 
@@ -908,8 +1020,8 @@ class BacktestService:
 
             if in_position:
 
-                # ---------------------------------
-                # Update highest price
+               # ---------------------------------
+                # Store current day's high
                 # ---------------------------------
 
                 if high_price > highest_price:
@@ -917,29 +1029,11 @@ class BacktestService:
                     highest_price = high_price
 
                 # ---------------------------------
-                # Update trailing stop
+                # Keep existing trailing stop
+                # for today's stop check
                 # ---------------------------------
 
-                if pd.notna(atr):
-
-                    new_trailing_stop = (
-                        highest_price
-                        - (
-                            3.0
-                            * float(atr)
-                        )
-                    )
-
-                    if (
-                        trailing_stop is None
-                        or
-                        new_trailing_stop
-                        > trailing_stop
-                    ):
-
-                        trailing_stop = (
-                            new_trailing_stop
-                        )
+                previous_trailing_stop = trailing_stop
 
                 # ---------------------------------
                 # Determine active stop
@@ -1118,20 +1212,77 @@ class BacktestService:
 
                     trailing_stop = None
 
+                    trailing_active = False
+
                     highest_price = None
 
                     entry_atr = None
 
                     continue
 
+            # ---------------------------------
+            # Activate trailing only after
+            # price reaches +1 ATR from entry
+            # ---------------------------------
+
+            if (
+                in_position
+                and
+                not trailing_active
+                and
+                buy_price is not None
+                and
+                entry_atr is not None
+                and
+                highest_price is not None
+                and
+                highest_price >= (
+                    buy_price + entry_atr
+                )
+            ):
+
+                trailing_active = True
+
+
+            # ---------------------------------
+            # Update trailing stop only after
+            # activation
+            # ---------------------------------
+
+            if (
+                in_position
+                and
+                trailing_active
+                and
+                pd.notna(atr)
+            ):
+
+                new_trailing_stop = (
+                    highest_price
+                    - (
+                        trailing_atr
+                        * float(atr)
+                    )
+                )
+
+                if (
+                    trailing_stop is None
+                    or
+                    new_trailing_stop > trailing_stop
+                ):
+
+                    trailing_stop = (
+                        new_trailing_stop
+                    )
+
+
                 # ---------------------------------
                 # EMA regime exit
+                # Disabled for V4 experiment
                 # ---------------------------------
 
                 if (
-                    row["Signal"] == -1
-                    and
-                    i < len(rows) - 1
+                    False
                 ):
 
                     next_index, next_row = (
@@ -1264,6 +1415,8 @@ class BacktestService:
 
                     trailing_stop = None
 
+                    trailing_active = False
+
                     highest_price = None
 
                     entry_atr = None
@@ -1283,7 +1436,7 @@ class BacktestService:
                 and
                 pd.notna(row["ADX"])
                 and
-                row["ADX"] >= 20
+                row["ADX"] >= adx_min
                 and
                 i < len(rows) - 1
             ):
@@ -1412,9 +1565,8 @@ class BacktestService:
                     )
                 )
 
-                trailing_stop = (
-                    initial_stop
-                )
+                trailing_stop = None
+                trailing_active = False
 
                 highest_price = (
                     buy_price

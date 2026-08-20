@@ -101,15 +101,7 @@ from fastapi import Request
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/", response_class=HTMLResponse)
-def dashboard(request: Request):
-    return templates.TemplateResponse(
-    request=request,
-    name="dashboard.html",
-    context={
-        "request": request
-    }
-)
+
 
 initialize_database()
 
@@ -460,6 +452,17 @@ async def dashboard(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="dashboard.html"
+    )
+
+@app.get("/stock-search", response_class=HTMLResponse)
+async def stock_search(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "request": request
+        }
     )
 
 def get_market_status():
