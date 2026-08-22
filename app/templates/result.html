@@ -1,38 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+{{ result.symbol }} | Stock Analysis
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/result.css">
+{% endblock %}
 
-    <title>TradeSense AI</title>
-
-    <link rel="stylesheet" href="/static/css/result.css">
-    <link rel="stylesheet" href="/static/css/navbar.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-</head>
-
-<body>
-
-<!-- ================= NAVBAR ================= -->
-
-<nav class="navbar">
-
-    <div class="logo">
-        📈 TradeSense AI
-    </div>
-
-    <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/watchlist">Watchlist</a></li>
-    </ul>
-
-</nav>
-
-<!-- ================= MAIN CONTAINER ================= -->
+{% block content %}
 
 <div class="dashboard">
 
@@ -247,9 +223,13 @@
 
         <h2>🤖 TradeSense AI</h2>
 
-        <span class="signal {{ result.signal|lower }}">
-            {{ result.signal }}
-        </span>
+        <span class="signal {{ result.final_decision.decision|lower }}">
+    {% if result.final_decision.decision == "BUY" %}
+        🟢 BUY
+    {% else %}
+        🟡 WAIT
+    {% endif %}
+</span>
 
     </div>
 
@@ -279,15 +259,103 @@
 
 </div>
 
-    <div class="section-header">
+    <!-- ================= AI DECISION ================= -->
 
-    <h3>AI Decision</h3>
+<div class="section-header">
 
-    <span class="decision-badge">
-        {{ result.trade_quality.grade }}
-    </span>
+    <div class="decision-title">
+
+        <h3>AI Decision</h3>
+
+        <span class="decision-badge">
+            {{ result.trade_quality.grade }}
+        </span>
+
+    </div>
 
 </div>
+
+<div class="final-decision-box
+    {% if result.final_decision.decision == 'BUY' %}
+        final-buy
+    {% else %}
+        final-wait
+    {% endif %}">
+
+    <div class="final-decision-top">
+
+        <div>
+
+            <span class="final-decision-label">
+                FINAL DECISION
+            </span>
+
+            <h2>
+
+                {% if result.final_decision.decision == "BUY" %}
+
+                    🟢 BUY
+
+                {% else %}
+
+                    🟡 WAIT
+
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+        <div class="final-confidence">
+
+            <span>Confidence</span>
+
+            <strong>
+                {{ result.ai_confidence|round|int }}%
+            </strong>
+
+        </div>
+
+    </div>
+
+    <p class="final-decision-message">
+        {{ result.final_decision.message }}
+    </p>
+
+</div>
+
+
+<!-- ================= WHY WAIT ================= -->
+
+{% if result.final_decision.decision == "WAIT" %}
+
+<div class="why-wait">
+
+    <div class="why-wait-title">
+        Why WAIT?
+    </div>
+
+    <div class="why-wait-list">
+
+        {% for check in result.trade_validation.checks %}
+
+            {% if not check.passed %}
+
+                <div class="why-wait-item failed">
+
+                    ✕ {{ check.name }}
+
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endif %}
 
     <div class="ai-grid">
 
@@ -433,6 +501,563 @@
 </div>
 
 </div>
+
+<!-- ================= AI SETUP DECISION ================= -->
+
+<section class="setup-decision-section">
+
+    <div class="section-title">
+        AI Setup Decision
+    </div>
+
+    <div class="setup-decision-card">
+
+        <div class="setup-decision-main">
+
+            {% if result.opportunity.action == "BUY" %}
+
+                <span class="setup-decision-status ready">
+                    🟢 TRADE READY
+                </span>
+
+                <h2>
+                    {{ result.opportunity.message }}
+                </h2>
+
+            {% else %}
+
+                <span class="setup-decision-status wait">
+                    🟡 WAIT
+                </span>
+
+                <h2>
+                    {{ result.opportunity.message }}
+                </h2>
+
+            {% endif %}
+
+            <p>
+                {{ result.opportunity.reason }}
+            </p>
+
+        </div>
+
+        <div class="setup-decision-metrics">
+
+            <div>
+                <span>MTF Bias</span>
+                <strong>
+                    {{ result.opportunity.mtf_probability }}%
+                </strong>
+            </div>
+
+            <div>
+                <span>Breakout Score</span>
+                <strong>
+                    {{ result.opportunity.breakout_confirmation_score }}/100
+                </strong>
+            </div>
+
+            <div>
+                <span>Risk / Reward</span>
+                <strong>
+                    1 : {{ result.opportunity.risk_reward }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Breakout State</span>
+                <strong>
+                    {{ result.opportunity.breakout_state|replace("_", " ") }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= TRADE VALIDATION ================= -->
+
+<section class="trade-validation-section">
+
+    <div class="section-title">
+        Trade Validation
+    </div>
+
+    <div class="trade-validation-card">
+
+        <div class="validation-header">
+
+            <div>
+
+                {% if result.trade_validation.status == "VALID" %}
+
+                    <span class="validation-status valid">
+                        🟢 TRADE VALIDATED
+                    </span>
+
+                {% else %}
+
+                    <span class="validation-status wait">
+                        🟡 TRADE NOT VALIDATED
+                    </span>
+
+                {% endif %}
+
+                <h3>
+                    {{ result.trade_validation.message }}
+                </h3>
+
+            </div>
+
+            <div class="validation-score">
+
+                <strong>
+                    {{ result.trade_validation.passed_checks }}
+                    /
+                    {{ result.trade_validation.total_checks }}
+                </strong>
+
+                <span>
+                    Checks Passed
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="validation-checks">
+
+            {% for check in result.trade_validation.checks %}
+
+                <div class="validation-check">
+
+                    {% if check.passed %}
+
+                        <span class="check-icon pass">
+                            ✓
+                        </span>
+
+                    {% else %}
+
+                        <span class="check-icon fail">
+                            ✕
+                        </span>
+
+                    {% endif %}
+
+                    <span>
+                        {{ check.name }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= TRADE SIGNAL ================= -->
+
+<section class="entry-engine-section">
+
+    <div class="section-title">
+        🎯 Trade Signal
+    </div>
+
+    <div class="trade-signal-card">
+
+        <!-- Signal Header -->
+
+        <div class="trade-signal-header">
+
+            <div>
+
+                <span class="preferred-setup-label">
+                    PREFERRED SETUP
+                </span>
+
+                <h2>
+                    {{ result.trade_signal.preferred_setup|replace("_", " ") }}
+                </h2>
+
+            </div>
+
+            {% if result.trade_signal.decision == "BUY" %}
+
+                <span class="trade-signal-badge buy">
+                    🟢 BUY
+                </span>
+
+            {% elif result.trade_signal.preferred_setup == "NO_SETUP" %}
+
+                <span class="trade-signal-badge no-setup">
+                    ⚪ NO SETUP
+                </span>
+
+            {% else %}
+
+                <span class="trade-signal-badge wait">
+                    🟡 WAIT
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div class="trade-signal-message">
+
+            {{ result.trade_signal.message }}
+
+        </div>
+
+
+        {% if result.trade_signal.preferred_setup != "NO_SETUP" %}
+
+        <!-- ================= TRADE PRICE LEVELS ================= -->
+
+        <div class="trade-signal-grid">
+
+            <!-- Current Price -->
+
+            <div class="trade-signal-metric">
+
+                <span>Current Price</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.current_price }}
+                </strong>
+
+            </div>
+
+
+            <!-- Confirmed Entry -->
+
+            {% if result.trade_signal.entry is not none %}
+
+            <div class="trade-signal-metric highlight">
+
+                {% if result.trade_signal.preferred_setup == "WAIT_FOR_BREAKOUT" %}
+
+                    <span>Confirmed Entry</span>
+
+                {% else %}
+
+                    <span>Entry</span>
+
+                {% endif %}
+
+                <strong>
+                    ₹ {{ result.trade_signal.entry }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Pullback Entry Low -->
+
+            {% if result.trade_signal.entry_low is not none %}
+
+            <div class="trade-signal-metric">
+
+                <span>Entry Low</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.entry_low }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Pullback Entry High -->
+
+            {% if result.trade_signal.entry_high is not none %}
+
+            <div class="trade-signal-metric">
+
+                <span>Entry High</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.entry_high }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- Stop Loss -->
+
+            {% if result.trade_signal.stop_loss is not none %}
+
+            <div class="trade-signal-metric">
+
+                <span>Stop Loss</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.stop_loss }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+                <!-- ================= TRADE HORIZON ================= -->
+
+        {% if result.trade_signal.trade_horizon %}
+
+        <div class="trade-signal-horizon">
+
+            <div class="trade-horizon-header">
+
+                <span>TRADE HORIZON</span>
+
+                <strong>
+                    {{ result.trade_signal.trade_horizon.horizon }}
+                </strong>
+
+            </div>
+
+
+            <div class="trade-horizon-overall">
+
+                <span>Expected timeframe</span>
+
+                <strong>
+                    {{ result.trade_signal.trade_horizon.overall }}
+                </strong>
+
+            </div>
+
+
+            <div class="trade-horizon-targets">
+
+                <div>
+                    <span>Entry Activation</span>
+                    <strong>
+                        {{ result.trade_signal.trade_horizon.entry_activation }}
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Target 1</span>
+                    <strong>
+                        {{ result.trade_signal.trade_horizon.target1 }}
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Target 2</span>
+                    <strong>
+                        {{ result.trade_signal.trade_horizon.target2 }}
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>Target 3</span>
+                    <strong>
+                        {{ result.trade_signal.trade_horizon.target3 }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <small class="trade-horizon-note">
+
+                ⚠ Estimated timeframe only. Actual price movement may take longer or shorter.
+
+            </small>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================= WAIT / ENTRY DISTANCE ================= -->
+
+        {% if result.trade_signal.preferred_setup == "WAIT_FOR_BREAKOUT"
+              and result.trade_signal.entry is not none %}
+
+            {% set current_price = result.trade_signal.current_price|float %}
+            {% set entry_price = result.trade_signal.entry|float %}
+            {% set entry_distance = entry_price - current_price %}
+
+            {% if entry_distance > 0 %}
+
+            <div class="trade-signal-action-note">
+
+                🟡
+
+                <strong>WAIT</strong>
+
+                — Price needs to move
+
+                <strong>
+                    ₹ {{ "%.2f"|format(entry_distance) }}
+                </strong>
+
+                higher to reach the confirmed entry.
+
+            </div>
+
+            {% else %}
+
+            <div class="trade-signal-action-note confirmed">
+
+                🟢
+
+                <strong>ENTRY LEVEL REACHED</strong>
+
+                — Waiting for final validation.
+
+            </div>
+
+            {% endif %}
+
+        {% endif %}
+
+
+        <!-- Targets -->
+
+        {% if result.trade_signal.target1 is not none %}
+
+        <div class="trade-signal-targets">
+
+            <div>
+
+                <span>Target 1</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.target1 }}
+                </strong>
+
+                <small>
+                    {{ result.trade_signal.risk_reward.target1 }}R
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <span>Target 2</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.target2 }}
+                </strong>
+
+                <small>
+                    {{ result.trade_signal.risk_reward.target2 }}R
+                </small>
+
+            </div>
+
+
+            <div>
+
+                <span>Target 3</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.target3 }}
+                </strong>
+
+                <small>
+                    {{ result.trade_signal.risk_reward.target3 }}R
+                </small>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- ================= BREAKOUT INFORMATION ================= -->
+
+        {% if result.trade_signal.breakout_trigger is not none %}
+
+        <div class="trade-signal-breakout">
+
+            <div>
+
+                <span>Resistance / Trigger</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.breakout_trigger }}
+                </strong>
+
+            </div>
+
+
+            {% if result.trade_signal.breakout_level is not none %}
+
+            <div>
+
+                <span>Confirmation Level</span>
+
+                <strong>
+                    ₹ {{ result.trade_signal.breakout_level }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Validation -->
+
+        <div class="trade-signal-validation">
+
+            {% if result.trade_validation.status == "VALID" %}
+
+                <span class="validation-status valid">
+                    🟢 TRADE VALIDATED
+                </span>
+
+            {% elif result.trade_validation.status == "NOT_APPLICABLE" %}
+
+                <span class="validation-status wait">
+                    ⚪ VALIDATION NOT APPLICABLE
+                </span>
+
+            {% else %}
+
+                <span class="validation-status wait">
+                    🟡 WAITING FOR CONFIRMATION
+                </span>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
 
 <!-- ================= MARKET INTELLIGENCE ================= -->
 
@@ -888,6 +1513,10 @@
 
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+
 <script>
 
 async function addToWatchlist() {
@@ -978,12 +1607,10 @@ if (gauge) {
 }
 </script>
 
-<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
 
 <script src="/static/js/chart.js"></script>
 
 <script src="/static/js/result-market.js"></script>
 
-</body>
-
-</html>
+{% endblock %}

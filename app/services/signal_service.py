@@ -19,6 +19,9 @@ from app.core.utils.formatter import (
 )
 from app.core.indicators.atr import calculate_atr
 from app.services.ai_engine import AIEngine
+from app.services.trade_horizon_service import (
+    TradeHorizonService
+)
 from app.services.stock_service import get_stock_history
 from app.services.market_health_service import (
     calculate_market_health,
@@ -301,9 +304,51 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     multi_timeframe = ai["multi_timeframe"]
 
+    entry_engine = ai["entry_engine"]
+
     candlestick_patterns = ai["candlestick_patterns"]
 
     volume_analysis = ai["volume_analysis"]
+
+    trade_validation = ai["trade_validation"]
+
+    final_decision = ai["final_decision"]
+
+    # =====================================
+    # Trade Horizon
+    # =====================================
+
+    trade_horizon = TradeHorizonService(
+
+        preferred_setup=opportunity.get(
+            "preferred_setup",
+            "NO_SETUP"
+        ),
+
+        current_price=float(
+            latest["Close"]
+        ),
+
+        atr=float(
+            latest["ATR"]
+        ),
+
+        entry_engine=entry_engine
+
+    ).calculate()
+
+    # =====================================
+    # Trade Signal
+    # =====================================
+
+    trade_signal = ai.get(
+        "trade_signal",
+        {}
+    )
+
+    trade_signal["trade_horizon"] = (
+        trade_horizon
+    )
 
     score = trade_quality["score"]
 
@@ -350,6 +395,103 @@ def generate_signal(symbol: str, period: str = "6mo"):
         "MACD": latest["MACD"],
         "Signal": latest["Signal"]
 })
+
+    # =====================================
+    # Standardized Trade Signal
+    # =====================================
+
+    preferred_setup = final_decision.get(
+        "preferred_setup",
+        "NO_SETUP"
+    )
+
+    setup_details = final_decision.get(
+        "setup_details"
+    )
+
+    trade_signal = {
+        "decision": final_decision.get(
+            "decision",
+            "WAIT"
+        ),
+
+        "preferred_setup": preferred_setup,
+
+        "trade_horizon": trade_horizon,
+
+        "current_price": round(
+            float(latest["Close"]),
+            2
+        ),
+
+        "entry": None,
+
+        "entry_low": None,
+
+        "entry_high": None,
+
+        "stop_loss": None,
+
+        "target1": None,
+
+        "target2": None,
+
+        "target3": None,
+
+        "risk_reward": {},
+
+        "breakout_trigger": final_decision.get(
+            "breakout_trigger"
+        ),
+
+        "breakout_level": final_decision.get(
+            "breakout_level"
+        ),
+
+        "message": final_decision.get(
+            "message",
+            ""
+        )
+    }
+
+    if setup_details:
+
+        trade_signal["stop_loss"] = setup_details.get(
+            "stop_loss"
+        )
+
+        trade_signal["target1"] = setup_details.get(
+            "target1"
+        )
+
+        trade_signal["target2"] = setup_details.get(
+            "target2"
+        )
+
+        trade_signal["target3"] = setup_details.get(
+            "target3"
+        )
+
+        trade_signal["risk_reward"] = setup_details.get(
+            "risk_reward",
+            {}
+        )
+
+        if setup_details.get("type") == "BREAKOUT":
+
+            trade_signal["entry"] = setup_details.get(
+                "entry"
+            )
+
+        elif setup_details.get("type") == "PULLBACK":
+
+            trade_signal["entry_low"] = setup_details.get(
+                "entry_low"
+            )
+
+            trade_signal["entry_high"] = setup_details.get(
+                "entry_high"
+            )
 
     return {
 
@@ -469,6 +611,16 @@ def generate_signal(symbol: str, period: str = "6mo"):
         "ai_confidence": ai_confidence,
 
         "multi_timeframe": multi_timeframe,
+
+        "entry_engine": entry_engine,
+
+        "trade_validation": trade_validation,
+
+        "final_decision": final_decision,
+
+        "trade_signal": trade_signal,
+
+        "trade_horizon": trade_horizon,
 
         "candlestick_patterns": candlestick_patterns,
 

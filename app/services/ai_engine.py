@@ -7,6 +7,9 @@ from app.services.candlestick_service import CandlestickService
 from app.services.ai_confidence_service import AIConfidenceService
 from app.services.volume_service import VolumeService
 from app.services.rule_engine import RuleEngine
+from app.services.entry_engine_service import EntryEngineService
+from app.services.trade_validation_service import TradeValidationService
+from app.services.final_decision_service import FinalDecisionService
 
 class AIEngine:
 
@@ -228,11 +231,6 @@ class AIEngine:
 
         analysis["volume_analysis"] = volume
 
-
-        # =====================================
-        # Limit Score
-        # =====================================
-
         
         # =====================================
         # Trade Planner
@@ -253,6 +251,14 @@ class AIEngine:
         ).generate()
 
         # =====================================
+        # Multi Timeframe
+        # =====================================
+
+        multi_timeframe = MultiTimeframeService(
+            self.symbol
+        ).analyze()
+
+        # =====================================
         # Opportunity
         # =====================================
 
@@ -264,7 +270,85 @@ class AIEngine:
 
             self.levels["resistance"],
 
-            float(self.latest["Close"])
+            float(self.latest["Close"]),
+
+            self.risk_reward,
+
+            volume,
+
+            patterns,
+
+            multi_timeframe
+
+        ).analyze()
+
+        # =====================================
+        # Entry Engine
+        # =====================================
+
+        breakout_level = round(
+    float(self.levels["resistance"]) * 1.0025,
+    2
+)
+
+        entry_engine = EntryEngineService(
+
+            current_price=float(
+                self.latest["Close"]
+            ),
+
+            support=self.levels["support"],
+
+            resistance=self.levels["resistance"],
+
+            atr=float(
+                self.latest["ATR"]
+            ),
+
+            risk_reward=self.risk_reward,
+
+            breakout_level=breakout_level
+
+        ).generate()
+
+        # =====================================
+        # Refine Opportunity With Setup R/R
+        # =====================================
+
+        candidate_setup = opportunity.get(
+            "preferred_setup",
+            "NO_SETUP"
+        )
+
+        setup_risk_reward = {
+            "pullback": entry_engine[
+                "pullback"
+            ]["risk_reward"]["target1"],
+
+            "breakout": entry_engine[
+                "breakout"
+            ]["risk_reward"]["target1"]
+        }
+
+        opportunity = OpportunityService(
+
+            analysis,
+
+            self.levels["support"],
+
+            self.levels["resistance"],
+
+            float(self.latest["Close"]),
+
+            self.risk_reward,
+
+            volume,
+
+            patterns,
+
+            multi_timeframe,
+
+            setup_risk_reward
 
         ).analyze()
 
@@ -283,20 +367,60 @@ class AIEngine:
         ).calculate()
 
         # =====================================
-        # Multi Timeframe
-        # =====================================
-
-        multi_timeframe = MultiTimeframeService(
-            self.symbol
-        ).analyze()
-
-        # =====================================
         # Multi-Timeframe Rule
         # =====================================
 
         mtf_probability = multi_timeframe["overall_probability"]
 
+        # Build the explanation from the actual timeframe signals.
+        # This prevents the score from making claims that the individual
+        # timeframe results do not support.
+
+        frame_signals = multi_timeframe.get("frames", {})
+
+        bullish_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "BUY"
+        ]
+
+        bearish_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "SELL"
+        ]
+
+        neutral_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "HOLD"
+        ]
+
+        def format_frames(frames):
+            return ", ".join(frames)
+
         if mtf_probability >= 80:
+
+            if bullish_frames and neutral_frames:
+
+                reason = (
+                    "Strong bullish multi-timeframe alignment — "
+                    f"{format_frames(bullish_frames)} bullish; "
+                    f"{format_frames(neutral_frames)} neutral"
+                )
+
+            elif bullish_frames:
+
+                reason = (
+                    "Strong bullish multi-timeframe alignment — "
+                    f"{format_frames(bullish_frames)} bullish"
+                )
+
+            else:
+
+                reason = (
+                    "Strong bullish multi-timeframe score"
+                )
 
             rules.add(
 
@@ -306,7 +430,7 @@ class AIEngine:
 
                 direction="bullish",
 
-                reason="All major timeframes are bullish",
+                reason=reason,
 
                 confidence=95
 
@@ -314,6 +438,28 @@ class AIEngine:
 
         elif mtf_probability >= 60:
 
+            reason_parts = []
+
+            if bullish_frames:
+                reason_parts.append(
+                    f"{format_frames(bullish_frames)} bullish"
+                )
+
+            if neutral_frames:
+                reason_parts.append(
+                    f"{format_frames(neutral_frames)} neutral"
+                )
+
+            if bearish_frames:
+                reason_parts.append(
+                    f"{format_frames(bearish_frames)} bearish"
+                )
+
+            reason = (
+                "Bullish multi-timeframe bias — "
+                + "; ".join(reason_parts)
+            )
+
             rules.add(
 
                 module="Multi Timeframe",
@@ -322,13 +468,30 @@ class AIEngine:
 
                 direction="bullish",
 
-                reason="Most timeframes are bullish",
+                reason=reason,
 
                 confidence=85
 
             )
 
         elif mtf_probability <= 20:
+
+            reason_parts = []
+
+            if bearish_frames:
+                reason_parts.append(
+                    f"{format_frames(bearish_frames)} bearish"
+                )
+
+            if neutral_frames:
+                reason_parts.append(
+                    f"{format_frames(neutral_frames)} neutral"
+                )
+
+            reason = (
+                "Strong bearish multi-timeframe alignment — "
+                + "; ".join(reason_parts)
+            )
 
             rules.add(
 
@@ -338,13 +501,30 @@ class AIEngine:
 
                 direction="bearish",
 
-                reason="Most timeframes are bearish",
+                reason=reason,
 
                 confidence=95
 
             )
 
         elif mtf_probability <= 40:
+
+            reason_parts = []
+
+            if bearish_frames:
+                reason_parts.append(
+                    f"{format_frames(bearish_frames)} bearish"
+                )
+
+            if neutral_frames:
+                reason_parts.append(
+                    f"{format_frames(neutral_frames)} neutral"
+                )
+
+            reason = (
+                "Bearish multi-timeframe bias — "
+                + "; ".join(reason_parts)
+            )
 
             rules.add(
 
@@ -354,7 +534,7 @@ class AIEngine:
 
                 direction="bearish",
 
-                reason="Higher timeframes are weak",
+                reason=reason,
 
                 confidence=80
 
@@ -394,6 +574,100 @@ class AIEngine:
         
             ).calculate()
 
+        
+
+        # =====================================
+        # Setup Risk / Reward
+        # =====================================
+
+        preferred_setup = opportunity.get(
+            "preferred_setup",
+            "NO_SETUP"
+        )
+
+        # =====================================
+        # Setup Details
+        # =====================================
+
+        if preferred_setup in [
+            "BREAKOUT",
+            "WAIT_FOR_BREAKOUT"
+        ]:
+
+            setup_details = {
+                "type": "BREAKOUT",
+                **entry_engine["breakout"]
+            }
+
+        elif preferred_setup == "PULLBACK":
+
+            setup_details = {
+                "type": "PULLBACK",
+                **entry_engine["pullback"]
+            }
+
+        else:
+
+            setup_details = None
+
+        # =====================================
+        # Setup Risk / Reward
+        # =====================================
+
+        if preferred_setup in [
+            "BREAKOUT",
+            "WAIT_FOR_BREAKOUT"
+        ]:
+
+            setup_risk_reward = entry_engine[
+                "breakout"
+            ]["risk_reward"]["target1"]
+
+        elif preferred_setup == "PULLBACK":
+
+            setup_risk_reward = entry_engine[
+                "pullback"
+            ]["risk_reward"]["target1"]
+
+        else:
+
+            setup_risk_reward = None
+
+        # =====================================
+        # Trade Validation
+        # =====================================
+
+        trade_validation = TradeValidationService(
+
+            opportunity=opportunity,
+
+            entry_engine=entry_engine,
+
+            ai_confidence=ai_confidence,
+
+            setup_risk_reward=setup_risk_reward
+
+        ).validate()
+
+        # =====================================
+        # Final Decision
+        # =====================================
+
+        final_decision = FinalDecisionService(
+
+            opportunity=opportunity,
+
+            trade_validation=trade_validation,
+
+            ai_confidence=ai_confidence,
+
+            entry_engine=entry_engine,
+
+            setup_details=setup_details
+
+
+        ).decide()
+
         return {
 
             "trade_quality": analysis,
@@ -407,6 +681,12 @@ class AIEngine:
             "ai_confidence": ai_confidence,
 
             "multi_timeframe": multi_timeframe,
+
+            "entry_engine": entry_engine,
+
+            "trade_validation": trade_validation,
+
+            "final_decision": final_decision,
 
             "candlestick_patterns": patterns,
 

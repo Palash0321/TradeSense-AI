@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Search{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/stock-search.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="page">
+    <div class="container">
+
+        <section class="stock-search-header">
+
+            <p class="dashboard-eyebrow">
+                MARKET RESEARCH
+            </p>
+
+            <h1>Search the Market</h1>
+
+            <p class="dashboard-subtitle">
+                Search companies and symbols, then open their AI-powered
+                analysis from one place.
+            </p>
+
+        </section>
+
+        <section class="stock-search-panel">
+
+            <div class="market-selector">
+
+                <button
+                    type="button"
+                    class="market-button active"
+                    data-market="india">
+                    🇮🇳 Indian Market
+                </button>
+
+                <button
+                    type="button"
+                    class="market-button"
+                    data-market="us">
+                    🇺🇸 US Market
+                </button>
+
+            </div>
+
+            <label for="stock-search-input">
+                Search Stock
+            </label>
+
+            <div class="stock-search-wrapper">
+
+                <span class="stock-search-icon">🔍</span>
+
+                <input
+                    id="stock-search-input"
+                    type="text"
+                    placeholder="Search company or symbol..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+            <div id="stock-search-results">
+
+                <div class="search-empty">
+
+                    <span>🔎</span>
+
+                    <h3>Search for a stock</h3>
+
+                    <p>
+                        Try KIRIINDUS, Reliance, TCS, Infosys
+                        or another company.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="quick-search-section">
+
+            <div class="dashboard-section-heading">
+
+                <div>
+                    <p class="section-kicker">
+                        QUICK ACCESS
+                    </p>
+
+                    <h2>Popular Indian Stocks</h2>
+                </div>
+
+            </div>
+
+            <div class="quick-stock-grid">
+
+                <button data-symbol="RELIANCE">RELIANCE</button>
+                <button data-symbol="TCS">TCS</button>
+                <button data-symbol="INFY">INFY</button>
+                <button data-symbol="HDFCBANK">HDFCBANK</button>
+                <button data-symbol="SBIN">SBIN</button>
+                <button data-symbol="ICICIBANK">ICICIBANK</button>
+                <button data-symbol="ITC">ITC</button>
+                <button data-symbol="LT">LT</button>
+                <button data-symbol="KIRIINDUS">KIRIINDUS</button>
+                <button data-symbol="AXISBANK">AXISBANK</button>
+
+            </div>
+
+        </section>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+const input =
+    document.getElementById("stock-search-input");
+
+const results =
+    document.getElementById("stock-search-results");
+
+const marketButtons =
+    document.querySelectorAll(".market-button");
+
+let currentMarket = "india";
+
+
+function searchStocks(value) {
+
+    if (!value.trim()) {
+
+        results.innerHTML = `
+            <div class="search-empty">
+                <span>🔎</span>
+                <h3>Search for a stock</h3>
+                <p>Enter a company name or symbol.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+    results.innerHTML = `
+        <div class="search-loading">
+            Searching...
+        </div>
+    `;
+
+    fetch(
+        `/api/search?query=${encodeURIComponent(value)}&market=${currentMarket}`
+    )
+    .then(response => response.json())
+    .then(stocks => {
+
+        if (!stocks.length) {
+
+            results.innerHTML = `
+                <div class="search-empty">
+                    <span>🔍</span>
+                    <h3>No stocks found</h3>
+                    <p>
+                        No matching stocks were found
+                        in the selected market.
+                    </p>
+                </div>
+            `;
+
+            return;
+        }
+
+        results.innerHTML = stocks.map(stock => `
+
+            <div class="stock-result-card">
+
+                <div class="stock-result-info">
+
+                    <strong>
+                        ${stock.symbol}
+                    </strong>
+
+                    <span>
+                        ${stock.name}
+                    </span>
+
+                </div>
+
+                <div class="stock-result-actions">
+
+                    <span class="exchange-badge">
+                        ${stock.exchange}
+                    </span>
+
+                    <a href="/analyze?market=${stock.market}&symbol=${encodeURIComponent(stock.symbol)}">
+                        Analyze →
+                    </a>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+    })
+    .catch(() => {
+
+        results.innerHTML = `
+            <div class="search-empty">
+                <span>⚠️</span>
+                <h3>Search unavailable</h3>
+                <p>
+                    Please check that the application is running.
+                </p>
+            </div>
+        `;
+
+    });
+
+}
+
+
+input.addEventListener("input", () => {
+    searchStocks(input.value);
+});
+
+
+marketButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        marketButtons.forEach(
+            item => item.classList.remove("active")
+        );
+
+        button.classList.add("active");
+
+        currentMarket =
+            button.dataset.market;
+
+        if (input.value.trim()) {
+            searchStocks(input.value);
+        }
+
+    });
+
+});
+
+
+document
+    .querySelectorAll(".quick-stock-grid button")
+    .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            input.value =
+                button.dataset.symbol;
+
+            searchStocks(input.value);
+
+            input.focus();
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

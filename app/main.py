@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from app.services.news_service import get_stock_news
 from fastapi.responses import RedirectResponse, HTMLResponse
 import json
-from app.services.signal_service import get_live_price
+from app.services.market_price_service import get_live_price
 from app.services.screener_service import get_top_stocks
 from app.core.stock_universe import StockUniverse
 from app.services.ai_screener_service import get_ai_picks
@@ -459,7 +459,7 @@ async def stock_search(request: Request):
 
     return templates.TemplateResponse(
         request=request,
-        name="index.html",
+        name="stock_search.html",
         context={
             "request": request
         }
