@@ -1024,6 +1024,72 @@
 
         </div>
 
+
+        <!-- Breakout State -->
+
+        {% set breakout_state = result.opportunity.breakout_state %}
+
+        <div class="trade-signal-breakout-status">
+
+            {% if breakout_state == "BELOW_RESISTANCE" %}
+
+                <span class="breakout-state-badge below">
+                    🟡 BELOW RESISTANCE
+                </span>
+
+                <p>
+                    Current price is
+                    <strong>
+                        ₹ {{
+                            "%.2f"|format(
+                                result.trade_signal.breakout_trigger
+                                - result.trade_signal.current_price
+                            )
+                        }}
+                    </strong>
+                    below the breakout trigger.
+                </p>
+
+                <small>
+                    Price must break the trigger first, then confirm
+                    above ₹ {{ result.trade_signal.breakout_level }}.
+                </small>
+
+            {% elif breakout_state == "BREAKOUT_ATTEMPT" %}
+
+                <span class="breakout-state-badge attempt">
+                    🟠 BREAKOUT ATTEMPT
+                </span>
+
+                <p>
+                    Price has reached the breakout area.
+                </p>
+
+                <small>
+                    Confirmation is required above
+                    ₹ {{ result.trade_signal.breakout_level }}
+                    before the trade can become actionable.
+                </small>
+
+            {% elif breakout_state == "BREAKOUT_CONFIRMED" %}
+
+                <span class="breakout-state-badge confirmed">
+                    🟢 BREAKOUT CONFIRMED
+                </span>
+
+                <p>
+                    Price has crossed the confirmation level.
+                </p>
+
+                <small>
+                    Final trade validation determines whether the
+                    setup is actionable.
+                </small>
+
+            {% endif %}
+
+        </div>
+
         {% endif %}
 
 

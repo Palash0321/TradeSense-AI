@@ -2642,3 +2642,55 @@ body{
 .trade-signal-breakout > div:last-child strong {
     color: #60A5FA;
 }
+
+/* =========================================================
+   TRADE SIGNAL - BREAKOUT STATE
+   ========================================================= */
+
+.trade-signal-breakout-status {
+    margin-top: -6px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+}
+
+.breakout-state-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 7px;
+}
+
+.breakout-state-badge.below {
+    color: #F59E0B;
+}
+
+.breakout-state-badge.attempt {
+    color: #F97316;
+}
+
+.breakout-state-badge.confirmed {
+    color: #22C55E;
+}
+
+.trade-signal-breakout-status p {
+    margin: 0 0 5px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.trade-signal-breakout-status p strong {
+    font-weight: 700;
+}
+
+.trade-signal-breakout-status small {
+    display: block;
+    color: var(--text);
+    opacity: 0.68;
+    font-size: 13px;
+    line-height: 1.5;
+}
