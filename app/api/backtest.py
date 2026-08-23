@@ -13,6 +13,8 @@ def run_backtest(
 
     symbol: str,
 
+    strategy: str = "ema",
+
     brokerage: float = 20,
 
     slippage: float = 0.10,
@@ -24,6 +26,8 @@ def run_backtest(
     service = BacktestService(
 
         symbol=symbol,
+
+        strategy=strategy,
 
         brokerage=brokerage,
 

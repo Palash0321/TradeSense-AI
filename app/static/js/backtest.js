@@ -22,10 +22,15 @@ const capital =
     .getElementById("capital")
     .value;
 
+const strategy =
+    document
+    .getElementById("strategy")
+    .value;
+
     const response =
         await fetch(
 
-`/api/backtest/?symbol=${symbol}&brokerage=${brokerage}&slippage=${slippage}&capital=${capital}`
+`/api/backtest/?symbol=${symbol}&strategy=${strategy}&brokerage=${brokerage}&slippage=${slippage}&capital=${capital}`
 );
 
     const data =

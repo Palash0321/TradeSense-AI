@@ -4,20 +4,30 @@ import yfinance as yf
 
 class BacktestService:
 
+    # =====================================
+    # Historical Data Cache
+    # =====================================
+
+    _data_cache = {}
+
     def __init__(
         self,
         symbol: str,
+        strategy: str = "ema",
         brokerage: float = 20,
         slippage: float = 0.10,
         initial_capital: float = 100000
     ):
+
         self.symbol = symbol
+        self.strategy = strategy
         self.brokerage = brokerage
         self.slippage = slippage
         self.initial_capital = initial_capital
 
     # =====================================
     # Load Historical Data
+    # Cached to prevent repeated downloads
     # =====================================
 
     def load_data(
@@ -26,36 +36,370 @@ class BacktestService:
         end_date=None
     ):
 
-        if start_date or end_date:
+        cache_key = (
+            self.symbol,
+            str(start_date),
+            str(end_date)
+        )
 
-            data = yf.download(
-                self.symbol,
-                start=start_date,
-                end=end_date,
-                interval="1d",
-                progress=False
+        # ---------------------------------
+        # Return cached data if available
+        # ---------------------------------
+
+        if cache_key in BacktestService._data_cache:
+
+            cached_data = (
+                BacktestService._data_cache[
+                    cache_key
+                ]
             )
 
-        else:
+            return cached_data.copy()
 
-            data = yf.download(
-                self.symbol,
-                period="5y",
-                interval="1d",
-                progress=False
+        # ---------------------------------
+        # Download data
+        # ---------------------------------
+
+        try:
+
+            if start_date or end_date:
+
+                data = yf.download(
+
+                    self.symbol,
+
+                    start=start_date,
+
+                    end=end_date,
+
+                    interval="1d",
+
+                    progress=False,
+
+                    auto_adjust=False,
+
+                    threads=False,
+
+                    timeout=15
+
+                )
+
+            else:
+
+                data = yf.download(
+
+                    self.symbol,
+
+                    period="5y",
+
+                    interval="1d",
+
+                    progress=False,
+
+                    auto_adjust=False,
+
+                    threads=False,
+
+                    timeout=15
+
+                )
+
+        except Exception as exc:
+
+            print(
+                f"WARNING: Failed to download "
+                f"{self.symbol}: {exc}"
             )
+
+            data = pd.DataFrame()
+
+        # ---------------------------------
+        # Validate downloaded data
+        # ---------------------------------
+
+        if data is None:
+
+            data = pd.DataFrame()
 
         if data.empty:
-            return data
 
-        if isinstance(data.columns, pd.MultiIndex):
-            data.columns = data.columns.get_level_values(0)
+            print(
+                f"WARNING: No historical data "
+                f"available for {self.symbol}"
+            )
 
-        data.dropna(inplace=True)
+            # Cache empty result too.
+            # This prevents the optimizer from
+            # repeatedly requesting the same
+            # failed download.
 
-        return data
+            BacktestService._data_cache[
+                cache_key
+            ] = pd.DataFrame()
 
-        # =====================================
+            return pd.DataFrame()
+
+        # ---------------------------------
+        # Handle yfinance MultiIndex
+        # ---------------------------------
+
+        if isinstance(
+            data.columns,
+            pd.MultiIndex
+        ):
+
+            try:
+
+                data.columns = (
+                    data.columns
+                    .get_level_values(0)
+                )
+
+            except Exception:
+
+                pass
+
+        # ---------------------------------
+        # Required columns
+        # ---------------------------------
+
+        required_columns = [
+
+            "Open",
+            "High",
+            "Low",
+            "Close"
+
+        ]
+
+        missing_columns = [
+
+            column
+
+            for column in required_columns
+
+            if column not in data.columns
+
+        ]
+
+        if missing_columns:
+
+            print(
+
+                f"WARNING: {self.symbol} "
+                f"is missing columns: "
+                f"{missing_columns}"
+
+            )
+
+            BacktestService._data_cache[
+                cache_key
+            ] = pd.DataFrame()
+
+            return pd.DataFrame()
+
+        # ---------------------------------
+        # Clean data
+        # ---------------------------------
+
+        data = data.copy()
+
+        data = data.dropna(
+            subset=required_columns
+        )
+
+        # ---------------------------------
+        # Cache cleaned data
+        # ---------------------------------
+
+        BacktestService._data_cache[
+            cache_key
+        ] = data.copy()
+
+        return data.copy()
+
+    # =====================================
+    # Market Regime
+    # NIFTY 50 EMA200 Filter
+    # =====================================
+
+    def get_market_regime(
+        self,
+        start_date=None,
+        end_date=None
+    ):
+
+        cache_key = (
+            "NIFTY_REGIME",
+            str(start_date),
+            str(end_date)
+        )
+
+        if cache_key in BacktestService._data_cache:
+
+            return BacktestService._data_cache[
+                cache_key
+            ].copy()
+
+        # ---------------------------------
+        # Always request enough history
+        # for EMA200 calculation
+        # ---------------------------------
+
+        try:
+
+            if start_date or end_date:
+
+                nifty = yf.download(
+                    "^NSEI",
+
+                    start=start_date,
+
+                    end=end_date,
+
+                    interval="1d",
+
+                    progress=False,
+
+                    auto_adjust=False,
+
+                    threads=False,
+
+                    timeout=15
+                )
+
+            else:
+
+                nifty = yf.download(
+                    "^NSEI",
+
+                    period="5y",
+
+                    interval="1d",
+
+                    progress=False,
+
+                    auto_adjust=False,
+
+                    threads=False,
+
+                    timeout=15
+                )
+
+        except Exception as exc:
+
+            print(
+                f"WARNING: Failed to download "
+                f"NIFTY 50: {exc}"
+            )
+
+            return pd.DataFrame()
+
+        # ---------------------------------
+        # Validate data
+        # ---------------------------------
+
+        if nifty is None or nifty.empty:
+
+            print(
+                "WARNING: No NIFTY 50 data available"
+            )
+
+            BacktestService._data_cache[
+                cache_key
+            ] = pd.DataFrame()
+
+            return pd.DataFrame()
+
+        # ---------------------------------
+        # Handle yfinance MultiIndex
+        # ---------------------------------
+
+        if isinstance(
+            nifty.columns,
+            pd.MultiIndex
+        ):
+
+            try:
+
+                nifty.columns = (
+                    nifty.columns
+                    .get_level_values(0)
+                )
+
+            except Exception:
+
+                pass
+
+        # ---------------------------------
+        # Required column
+        # ---------------------------------
+
+        if "Close" not in nifty.columns:
+
+            print(
+                "WARNING: NIFTY 50 missing "
+                "Close column"
+            )
+
+            BacktestService._data_cache[
+                cache_key
+            ] = pd.DataFrame()
+
+            return pd.DataFrame()
+
+        # ---------------------------------
+        # Clean data
+        # ---------------------------------
+
+        nifty = nifty.copy()
+
+        nifty = nifty.dropna(
+            subset=["Close"]
+        )
+
+        # ---------------------------------
+        # Calculate NIFTY EMA200
+        # ---------------------------------
+
+        nifty["NIFTY_EMA200"] = (
+            nifty["Close"]
+            .ewm(
+                span=200,
+                adjust=False
+            )
+            .mean()
+        )
+
+        # ---------------------------------
+        # Market regime
+        # ---------------------------------
+
+        nifty["MARKET_BULLISH"] = (
+
+            nifty["Close"]
+            >
+            nifty["NIFTY_EMA200"]
+
+        )
+
+        regime = nifty[
+            [
+                "MARKET_BULLISH"
+            ]
+        ].copy()
+
+        # ---------------------------------
+        # Cache
+        # ---------------------------------
+
+        BacktestService._data_cache[
+            cache_key
+        ] = regime.copy()
+
+        return regime.copy()
+
+    # =====================================
     # EMA Strategy V2
     # EMA20 / EMA50 + EMA200 Regime Filter
     # =====================================
@@ -72,6 +416,38 @@ class BacktestService:
             start_date=start_date,
             end_date=end_date
         )
+
+        if df.empty:
+
+            return df
+
+        # -------------------------------------
+        # NIFTY 50 Market Regime
+        # -------------------------------------
+
+        market_regime = self.get_market_regime(
+            start_date=start_date,
+            end_date=end_date
+        )
+
+        if not market_regime.empty:
+
+            df = df.join(
+                market_regime,
+                how="left"
+            )
+
+            df["MARKET_BULLISH"] = (
+                df["MARKET_BULLISH"]
+                .ffill()
+                .fillna(False)
+            )
+
+        else:
+
+            # If NIFTY data is unavailable,
+            # do not block the strategy.
+            df["MARKET_BULLISH"] = True
 
         # -------------------------------------
         # Calculate moving averages
@@ -123,7 +499,7 @@ class BacktestService:
             / df["EMA50"]
         ) * 100
 
-                # -------------------------------------
+        # -------------------------------------
         # ADX Trend Strength
         # -------------------------------------
 
@@ -196,6 +572,10 @@ class BacktestService:
             &
 
             (df["ADX"] >= adx_min)
+
+            &
+
+            (df["MARKET_BULLISH"])
 
         )
 
@@ -336,6 +716,24 @@ class BacktestService:
     # =====================================
 
     def run_backtest(self):
+
+        if self.strategy == "ema":
+
+            return self._run_ema_backtest()
+
+        elif self.strategy == "ema_atr":
+
+            return self.run_backtest_v3()
+
+        else:
+
+            raise ValueError(
+                f"Unsupported backtest strategy: "
+                f"{self.strategy}"
+            )
+
+
+    def _run_ema_backtest(self):
 
         df = self.ema_strategy()
 
@@ -584,6 +982,8 @@ class BacktestService:
 
                 cash += net_sell_value
 
+
+
                 invested_capital = (
                     buy_value
                     + buy_cost
@@ -599,6 +999,8 @@ class BacktestService:
                 else:
 
                     return_percent = 0
+
+
 
                 trades.append({
 
@@ -736,7 +1138,47 @@ class BacktestService:
                     round(
                         return_percent,
                         2
+                    ),
+
+                "mae_percent":
+                    round(
+                        (
+                            (
+                                max_adverse_price
+                                - buy_price
+                            )
+                            / buy_price
+                        )
+                        * 100,
+                        2
                     )
+                    if (
+                        max_adverse_price
+                        is not None
+                        and buy_price is not None
+                        and buy_price > 0
+                    )
+                    else 0,
+
+                "mfe_percent":
+                    round(
+                        (
+                            (
+                                max_favorable_price
+                                - buy_price
+                            )
+                            / buy_price
+                        )
+                        * 100,
+                        2
+                    )
+                    if (
+                        max_favorable_price
+                        is not None
+                        and buy_price is not None
+                        and buy_price > 0
+                    )
+                    else 0
 
             })
 
@@ -884,7 +1326,8 @@ class BacktestService:
         end_date=None,
         ema_gap_min=0.25,
         trailing_atr=4.0,
-        adx_min=20
+        adx_min=20,
+        trailing_activation_atr=1.0
     ):
 
         df = self.atr_risk_strategy(
@@ -934,6 +1377,18 @@ class BacktestService:
         highest_price = None
 
         entry_atr = None
+
+        initial_risk = None
+
+        risk_per_share = None
+
+        # =================================
+        # MAE / MFE tracking
+        # =================================
+
+        max_adverse_price = None
+
+        max_favorable_price = None
 
         slippage_rate = (
             self.slippage / 100
@@ -1019,6 +1474,30 @@ class BacktestService:
             # =================================
 
             if in_position:
+
+                # ---------------------------------
+                # Update MAE / MFE
+                # ---------------------------------
+
+                if buy_price is not None:
+
+                    if (
+                        max_adverse_price is None
+                        or low_price < max_adverse_price
+                    ):
+
+                        max_adverse_price = (
+                            low_price
+                        )
+
+                    if (
+                        max_favorable_price is None
+                        or high_price > max_favorable_price
+                    ):
+
+                        max_favorable_price = (
+                            high_price
+                        )
 
                # ---------------------------------
                 # Store current day's high
@@ -1122,6 +1601,18 @@ class BacktestService:
 
                         return_percent = 0
 
+                    r_multiple = 0
+
+                    if (
+                        initial_risk is not None
+                        and initial_risk > 0
+                    ):
+
+                        r_multiple = (
+                            profit
+                            / initial_risk
+                        )
+
                     exit_reason = (
                         "STOP_LOSS"
                     )
@@ -1192,7 +1683,66 @@ class BacktestService:
                             )
                             if initial_stop
                             is not None
-                            else None
+                            else None,
+
+                        "risk_per_share":
+                            round(
+                                float(risk_per_share),
+                                2
+                            ),
+
+                        "initial_risk":
+                            round(
+                                float(initial_risk),
+                                2
+                            ),
+
+                                                "r_multiple":
+                            round(
+                                float(r_multiple),
+                                2
+                            ),
+
+                        "mae_percent":
+                            round(
+                                (
+                                    (
+                                        max_adverse_price
+                                        - buy_price
+                                    )
+                                    / buy_price
+                                )
+                                * 100,
+                                2
+                            )
+                            if (
+                                max_adverse_price
+                                is not None
+                                and buy_price
+                                is not None
+                                and buy_price > 0
+                            )
+                            else 0,
+
+                        "mfe_percent":
+                            round(
+                                (
+                                    (
+                                        max_favorable_price
+                                        - buy_price
+                                    )
+                                    / buy_price
+                                )
+                                * 100,
+                                2
+                            )
+                            if (
+                                max_favorable_price
+                                is not None
+                                and buy_price is not None
+                                and buy_price > 0
+                            )
+                            else 0
 
                     })
 
@@ -1210,6 +1760,8 @@ class BacktestService:
 
                     initial_stop = None
 
+                    initial_risk = None
+
                     trailing_stop = None
 
                     trailing_active = False
@@ -1217,6 +1769,10 @@ class BacktestService:
                     highest_price = None
 
                     entry_atr = None
+
+                    max_adverse_price = None
+
+                    max_favorable_price = None
 
                     continue
 
@@ -1237,7 +1793,11 @@ class BacktestService:
                 highest_price is not None
                 and
                 highest_price >= (
-                    buy_price + entry_atr
+                    buy_price
+                    + (
+                        trailing_activation_atr
+                        * entry_atr
+                    )
                 )
             ):
 
@@ -1388,14 +1948,54 @@ class BacktestService:
                             is not None
                             else None,
 
-                        "initial_stop":
+                                                "initial_stop":
                             round(
                                 float(initial_stop),
                                 2
                             )
                             if initial_stop
                             is not None
-                            else None
+                            else None,
+
+                        "mae_percent":
+                            round(
+                                (
+                                    (
+                                        max_adverse_price
+                                        - buy_price
+                                    )
+                                    / buy_price
+                                )
+                                * 100,
+                                2
+                            )
+                            if (
+                                max_adverse_price
+                                is not None
+                                and buy_price is not None
+                                and buy_price > 0
+                            )
+                            else 0,
+
+                        "mfe_percent":
+                            round(
+                                (
+                                    (
+                                        max_favorable_price
+                                        - buy_price
+                                    )
+                                    / buy_price
+                                )
+                                * 100,
+                                2
+                            )
+                            if (
+                                max_favorable_price
+                                is not None
+                                and buy_price is not None
+                                and buy_price > 0
+                            )
+                            else 0
 
                     })
 
@@ -1420,6 +2020,10 @@ class BacktestService:
                     highest_price = None
 
                     entry_atr = None
+
+                    max_adverse_price = None
+
+                    max_favorable_price = None
 
                     continue
 
@@ -1504,6 +2108,11 @@ class BacktestService:
 
                     continue
 
+                initial_risk = (
+                risk_per_share
+                * shares
+            )
+
                 buy_price = (
                     execution_price
                 )
@@ -1572,6 +2181,14 @@ class BacktestService:
                     buy_price
                 )
 
+                max_adverse_price = (
+                    buy_price
+                )
+
+                max_favorable_price = (
+                    buy_price
+                )
+
                 in_position = True
 
         # =================================
@@ -1627,6 +2244,18 @@ class BacktestService:
                     profit
                     / invested_capital
                 ) * 100
+
+            r_multiple = 0
+
+            if (
+                initial_risk is not None
+                and initial_risk > 0
+            ):
+
+                r_multiple = (
+                    profit
+                    / initial_risk
+                )
 
             else:
 
@@ -1686,7 +2315,60 @@ class BacktestService:
                     )
                     if initial_stop
                     is not None
-                    else None
+                    else None,
+
+                "initial_risk":
+                    round(
+                        float(initial_risk),
+                        2
+                    )
+                    if initial_risk
+                    is not None
+                    else None,
+
+                                "r_multiple":
+                    round(
+                        float(r_multiple),
+                        2
+                    ),
+
+                "mae_percent":
+                    round(
+                        (
+                            (
+                                max_adverse_price
+                                - buy_price
+                            )
+                            / buy_price
+                        )
+                        * 100,
+                        2
+                    )
+                    if (
+                        max_adverse_price is not None
+                        and buy_price is not None
+                        and buy_price > 0
+                    )
+                    else 0,
+
+                "mfe_percent":
+                    round(
+                        (
+                            (
+                                max_favorable_price
+                                - buy_price
+                            )
+                            / buy_price
+                        )
+                        * 100,
+                        2
+                    )
+                    if (
+                        max_favorable_price is not None
+                        and buy_price is not None
+                        and buy_price > 0
+                    )
+                    else 0
 
             })
 
@@ -1769,9 +2451,36 @@ class BacktestService:
     # Performance Metrics
     # =====================================
 
-    def performance_metrics(self):
+    def performance_metrics(
+        self,
+        start_date=None,
+        end_date=None,
+        ema_gap_min=0.25,
+        adx_min=20,
+        trailing_atr=4.0,
+        trailing_activation_atr=1.0
+    ):
 
-        result = self.run_backtest()
+        if self.strategy == "ema_atr":
+
+            result = self.run_backtest_v3(
+                start_date=start_date,
+                end_date=end_date,
+                ema_gap_min=ema_gap_min,
+                adx_min=adx_min,
+                trailing_atr=trailing_atr,
+                trailing_activation_atr=trailing_activation_atr
+            )
+        elif self.strategy == "ema":
+
+            result = self.run_backtest()
+
+        else:
+
+            raise ValueError(
+                f"Unsupported backtest strategy: {self.strategy}"
+            )
+
 
         trades = result["trades"]
 
