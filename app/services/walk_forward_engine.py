@@ -33,7 +33,11 @@ class WalkForwardEngine:
         adx_values=None,
         ema_gap_values=None,
         trailing_atr_values=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
     ):
 
         optimizer = StrategyOptimizer(
@@ -65,7 +69,15 @@ class WalkForwardEngine:
 
             end_date=end_date,
 
-            trailing_activation_atr=trailing_activation_atr
+            trailing_activation_atr=trailing_activation_atr,
+
+            momentum_min=momentum_min,
+
+            use_market_regime=use_market_regime,
+
+            initial_stop_atr=initial_stop_atr,
+
+            risk_per_trade=risk_per_trade
 
         )
 
@@ -91,7 +103,11 @@ class WalkForwardEngine:
         self,
         start_date,
         end_date,
-        parameters
+        parameters,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01,
+        return_trades=False
     ):
 
         service = BacktestService(
@@ -120,11 +136,19 @@ class WalkForwardEngine:
 
             trailing_atr=parameters["trailing_atr"],
 
-            trailing_activation_atr=parameters["trailing_activation_atr"]
+            trailing_activation_atr=parameters["trailing_activation_atr"],
+
+            momentum_min=parameters["momentum_min"],
+
+            use_market_regime=use_market_regime,
+
+            initial_stop_atr=initial_stop_atr,
+
+            risk_per_trade=risk_per_trade
 
         )
 
-        return {
+        result = {
 
             "total_trades":
                 metrics["total_trades"],
@@ -149,6 +173,44 @@ class WalkForwardEngine:
 
         }
 
+        if return_trades:
+
+            backtest = service.run_backtest_v3(
+
+                start_date=start_date,
+
+                end_date=end_date,
+
+                adx_min=parameters["adx_min"],
+
+                ema_gap_min=parameters["ema_gap_min"],
+
+                trailing_atr=parameters["trailing_atr"],
+
+                trailing_activation_atr=(
+                    parameters[
+                        "trailing_activation_atr"
+                    ]
+                ),
+
+                momentum_min=parameters[
+                    "momentum_min"
+                ],
+
+                use_market_regime=use_market_regime,
+
+                initial_stop_atr=initial_stop_atr,
+
+                risk_per_trade=risk_per_trade
+
+            )
+
+            result["trades"] = (
+                backtest.get("trades", [])
+            )
+
+        return result
+
     # =====================================
     # Single Walk-Forward Window
     # =====================================
@@ -162,7 +224,11 @@ class WalkForwardEngine:
         adx_values=None,
         ema_gap_values=None,
         trailing_atr_values=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
     ):
 
         training_results = (
@@ -178,7 +244,15 @@ class WalkForwardEngine:
 
                 trailing_atr_values=trailing_atr_values,
 
-                trailing_activation_atr=trailing_activation_atr
+                trailing_activation_atr=trailing_activation_atr,
+
+                momentum_min=momentum_min,
+
+                use_market_regime=use_market_regime,
+
+                initial_stop_atr=initial_stop_atr,
+
+                risk_per_trade=risk_per_trade
 
             )
         )
@@ -206,7 +280,13 @@ class WalkForwardEngine:
                     None,
 
                 "testing":
-                    None
+                    None,
+
+                "status":
+                    "EXCLUDED",
+
+                "exclusion_reason":
+                    "MINIMUM_TRADE_REQUIREMENT_NOT_MET"
 
             }
 
@@ -224,7 +304,10 @@ class WalkForwardEngine:
                 best["trailing_atr"],
 
             "trailing_activation_atr":
-                trailing_activation_atr
+                trailing_activation_atr,
+
+            "momentum_min":
+                best["momentum_min"]
 
         }
 
@@ -234,7 +317,13 @@ class WalkForwardEngine:
 
             end_date=test_end,
 
-            parameters=parameters
+            parameters=parameters,
+
+            use_market_regime=use_market_regime,
+
+            initial_stop_atr=initial_stop_atr,
+
+            risk_per_trade=risk_per_trade
 
         )
 
@@ -289,7 +378,11 @@ class WalkForwardEngine:
         adx_values=None,
         ema_gap_values=None,
         trailing_atr_values=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
     ):
 
         if windows is None:
@@ -373,7 +466,19 @@ class WalkForwardEngine:
                 trailing_atr_values=
                     trailing_atr_values,
 
-                trailing_activation_atr=trailing_activation_atr
+                trailing_activation_atr=trailing_activation_atr,
+
+                momentum_min=
+                    momentum_min,
+
+                use_market_regime=
+                    use_market_regime,
+
+                initial_stop_atr=
+                    initial_stop_atr,
+
+                risk_per_trade=
+                    risk_per_trade
 
             )
 

@@ -409,7 +409,8 @@ class BacktestService:
     start_date=None,
     end_date=None,
     adx_min=20,
-    ema_gap_min=0.25
+    ema_gap_min=0.25,
+    use_market_regime=True
 ):
 
         df = self.load_data(
@@ -494,10 +495,12 @@ class BacktestService:
         # EMA20 must be above EMA50
         # -------------------------------------
 
-        ema_gap_pct = (
+        df["EMA_GAP_PCT"] = (
             (df["EMA20"] - df["EMA50"])
             / df["EMA50"]
         ) * 100
+
+        ema_gap_pct = df["EMA_GAP_PCT"]
 
         # -------------------------------------
         # ADX Trend Strength
@@ -575,9 +578,13 @@ class BacktestService:
 
             &
 
-            (df["MARKET_BULLISH"])
+            (
+                df["MARKET_BULLISH"]
+                if use_market_regime
+                else True
+            )
 
-        )
+            )
 
         df.loc[
             bullish_condition,
@@ -626,14 +633,17 @@ class BacktestService:
         start_date=None,
         end_date=None,
         ema_gap_min=0.25,
-        adx_min=20
+        adx_min=20,
+        momentum_min=None,
+        use_market_regime=True
     ):
 
         df = self.ema_strategy(
             start_date=start_date,
             end_date=end_date,
             ema_gap_min=ema_gap_min,
-            adx_min=adx_min
+            adx_min=adx_min,
+            use_market_regime=use_market_regime
         )
 
         if df.empty:
@@ -659,6 +669,17 @@ class BacktestService:
             .rolling(14)
             .mean()
         )
+
+        # ---------------------------------
+        # 20-Day Momentum
+        # ---------------------------------
+
+        df["MOM20"] = (
+            (
+                df["Close"]
+                / df["Close"].shift(20)
+            ) - 1
+        ) * 100
 
         # ---------------------------------
         # ADX(14) calculation
@@ -1327,14 +1348,23 @@ class BacktestService:
         ema_gap_min=0.25,
         trailing_atr=4.0,
         adx_min=20,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        profit_lock_activation_pct=None,
+        profit_lock_pct=0.0,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
+
     ):
 
         df = self.atr_risk_strategy(
             start_date=start_date,
             end_date=end_date,
             ema_gap_min=ema_gap_min,
-            adx_min=adx_min
+            adx_min=adx_min,
+            momentum_min=momentum_min,
+            use_market_regime=use_market_regime
         )
 
         if df.empty or len(df) < 2:
@@ -1377,6 +1407,16 @@ class BacktestService:
         highest_price = None
 
         entry_atr = None
+
+        entry_market_bullish = None
+
+        entry_adx = None
+
+        entry_ema_gap = None
+
+        entry_momentum = None
+
+        profit_lock_active = False
 
         initial_risk = None
 
@@ -1528,6 +1568,33 @@ class BacktestService:
                     )
 
                 # ---------------------------------
+                # Profit-lock floor
+                # ---------------------------------
+
+                if (
+                    profit_lock_active
+                    and
+                    buy_price is not None
+                ):
+
+                    profit_lock_stop = (
+                        buy_price
+                        * (
+                            1
+                            +
+                            (
+                                profit_lock_pct
+                                / 100
+                            )
+                        )
+                    )
+
+                    active_stop = max(
+                        active_stop,
+                        profit_lock_stop
+                    )
+
+                # ---------------------------------
                 # Stop-loss check
                 #
                 # Conservative assumption:
@@ -1676,6 +1743,33 @@ class BacktestService:
                             is not None
                             else None,
 
+                        "market_bullish_at_entry":
+                            entry_market_bullish,
+
+                        "adx_at_entry":
+                            round(
+                                float(entry_adx),
+                                2
+                            )
+                            if entry_adx is not None
+                            else None,
+
+                        "ema_gap_at_entry":
+                            round(
+                                float(entry_ema_gap),
+                                2
+                            )
+                            if entry_ema_gap is not None
+                            else None,
+
+                        "momentum_at_entry":
+                            round(
+                                float(entry_momentum),
+                                2
+                            )
+                            if entry_momentum is not None
+                            else None,
+
                         "initial_stop":
                             round(
                                 float(initial_stop),
@@ -1770,11 +1864,55 @@ class BacktestService:
 
                     entry_atr = None
 
+                    entry_market_bullish = None
+                    entry_adx = None
+                    entry_ema_gap = None
+                    entry_momentum = None
+
+                    profit_lock_active = False
+
                     max_adverse_price = None
 
                     max_favorable_price = None
 
                     continue
+
+                        # ---------------------------------
+            # Profit-lock activation
+            #
+            # Disabled when activation is None.
+            # Once price reaches the configured
+            # percentage profit, protect the
+            # configured percentage profit.
+            # ---------------------------------
+
+            if (
+                in_position
+                and
+                not profit_lock_active
+                and
+                profit_lock_activation_pct is not None
+                and
+                profit_lock_activation_pct > 0
+                and
+                profit_lock_pct >= 0
+                and
+                buy_price is not None
+                and
+                high_price >= (
+                    buy_price
+                    * (
+                        1
+                        +
+                        (
+                            profit_lock_activation_pct
+                            / 100
+                        )
+                    )
+                )
+            ):
+
+                profit_lock_active = True
 
             # ---------------------------------
             # Activate trailing only after
@@ -1948,7 +2086,34 @@ class BacktestService:
                             is not None
                             else None,
 
-                                                "initial_stop":
+                        "market_bullish_at_entry":
+                            entry_market_bullish,
+
+                        "adx_at_entry":
+                            round(
+                                float(entry_adx),
+                                2
+                            )
+                            if entry_adx is not None
+                            else None,
+
+                        "ema_gap_at_entry":
+                            round(
+                                float(entry_ema_gap),
+                                2
+                            )
+                            if entry_ema_gap is not None
+                            else None,
+
+                        "momentum_at_entry":
+                            round(
+                                float(entry_momentum),
+                                2
+                            )
+                            if entry_momentum is not None
+                            else None,
+
+                        "initial_stop":
                             round(
                                 float(initial_stop),
                                 2
@@ -2021,6 +2186,14 @@ class BacktestService:
 
                     entry_atr = None
 
+                    entry_market_bullish = None
+
+                    entry_adx = None
+
+                    entry_ema_gap = None
+
+                    entry_momentum = None
+
                     max_adverse_price = None
 
                     max_favorable_price = None
@@ -2041,6 +2214,16 @@ class BacktestService:
                 pd.notna(row["ADX"])
                 and
                 row["ADX"] >= adx_min
+                and
+                (
+                momentum_min is None
+                or
+                (
+                    pd.notna(row["MOM20"])
+                    and
+                    row["MOM20"] >= momentum_min
+                )
+            )
                 and
                 i < len(rows) - 1
             ):
@@ -2070,7 +2253,7 @@ class BacktestService:
                 # ---------------------------------
 
                 risk_per_share = (
-                    2.0
+                    initial_stop_atr
                     * entry_atr_value
                 )
 
@@ -2080,7 +2263,7 @@ class BacktestService:
 
                 risk_budget = (
                     cash
-                    * 0.01
+                    * risk_per_trade
                 )
 
                 risk_based_shares = int(
@@ -2166,10 +2349,28 @@ class BacktestService:
                     entry_atr_value
                 )
 
+                entry_market_bullish = bool(
+                    row["MARKET_BULLISH"]
+                )
+
+                entry_adx = float(
+                    row["ADX"]
+                )
+
+                entry_ema_gap = float(
+                    row["EMA_GAP_PCT"]
+                )
+
+                entry_momentum = (
+                    float(row["MOM20"])
+                    if pd.notna(row["MOM20"])
+                    else None
+                )
+
                 initial_stop = (
                     buy_price
                     - (
-                        2.0
+                        initial_stop_atr
                         * entry_atr_value
                     )
                 )
@@ -2306,6 +2507,33 @@ class BacktestService:
                     )
                     if entry_atr
                     is not None
+                    else None,
+
+                "market_bullish_at_entry":
+                    entry_market_bullish,
+
+                "adx_at_entry":
+                    round(
+                        float(entry_adx),
+                        2
+                    )
+                    if entry_adx is not None
+                    else None,
+
+                "ema_gap_at_entry":
+                    round(
+                        float(entry_ema_gap),
+                        2
+                    )
+                    if entry_ema_gap is not None
+                    else None,
+
+                "momentum_at_entry":
+                    round(
+                        float(entry_momentum),
+                        2
+                    )
+                    if entry_momentum is not None
                     else None,
 
                 "initial_stop":
@@ -2458,7 +2686,13 @@ class BacktestService:
         ema_gap_min=0.25,
         adx_min=20,
         trailing_atr=4.0,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        profit_lock_activation_pct=None,
+        profit_lock_pct=0.0,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
     ):
 
         if self.strategy == "ema_atr":
@@ -2469,7 +2703,17 @@ class BacktestService:
                 ema_gap_min=ema_gap_min,
                 adx_min=adx_min,
                 trailing_atr=trailing_atr,
-                trailing_activation_atr=trailing_activation_atr
+                trailing_activation_atr=trailing_activation_atr,
+                momentum_min=momentum_min,
+                use_market_regime=use_market_regime,
+                initial_stop_atr=initial_stop_atr,
+                risk_per_trade=risk_per_trade,
+                profit_lock_activation_pct=(
+                    profit_lock_activation_pct
+                ),
+                profit_lock_pct=(
+                    profit_lock_pct
+                )
             )
         elif self.strategy == "ema":
 
@@ -2550,6 +2794,8 @@ class BacktestService:
                 gross_profit
                 / gross_loss
             )
+        elif gross_profit > 0:
+            profit_factor = float("inf")
 
         # =====================================
         # Best / Worst Trade

@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TradeSense AI</title>
+
+    <link rel="stylesheet" href="/static/css/result.css">
+    <link rel="stylesheet" href="/static/css/navbar.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        📈 TradeSense AI
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/watchlist">Watchlist</a></li>
+    </ul>
+
+</nav>
+
+<!-- ================= MAIN CONTAINER ================= -->
+
+<div class="dashboard">
+
+    <!-- Company Header -->
+
+    <div class="company-header">
+
+        <div>
+
+            <h1>{{ result.symbol }}</h1>
+
+            <h3>{{ result.company }}</h3>
+
+            <p>{{ result.sector }} • {{ result.industry }}</p>
+
+        </div>
+
+        <div>
+
+            {% if result.market_status=="OPEN" %}
+
+            <span class="market-open">
+                🟢 Market Open
+            </span>
+
+            {% else %}
+
+            <span class="market-closed">
+                🔴 Market Closed
+            </span>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- ================= SUMMARY CARDS ================= -->
+
+<div class="summary-grid">
+
+    <!-- PRICE -->
+
+    <div class="summary-card">
+
+        <h4>💰 Current Price</h4>
+
+        <h1>₹ {{ result.price }}</h1>
+
+        {% if result.is_positive %}
+
+        <p class="positive">
+            ▲ ₹ {{ result.price_change }}
+            ({{ result.price_change_percent }}%)
+        </p>
+
+        {% else %}
+
+        <p class="negative">
+            ▼ ₹ {{ result.price_change }}
+            ({{ result.price_change_percent }}%)
+        </p>
+
+        {% endif %}
+
+        <div class="mini-grid">
+
+            <div>
+                <span>Open</span>
+                <strong>₹ {{ result.open }}</strong>
+            </div>
+
+            <div>
+                <span>High</span>
+                <strong>₹ {{ result.high }}</strong>
+            </div>
+
+            <div>
+                <span>Low</span>
+                <strong>₹ {{ result.low }}</strong>
+            </div>
+
+            <div>
+                <span>Prev</span>
+                <strong>₹ {{ result.previous_close }}</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- AI -->
+
+    <div class="summary-card">
+
+        <h4>🤖 AI Recommendation</h4>
+
+        <h1>{{ result.signal }}</h1>
+
+        <p>Confidence</p>
+
+        <div class="confidence-bar">
+
+            <div
+                class="confidence-fill"
+                data-width="{{ result.ai_confidence }}">
+            </div>
+
+        </div>
+
+        <h3>{{ result.ai_confidence }}%</h3>
+
+        <button
+            class="watchlist-btn"
+            onclick="addToWatchlist()">
+
+            ⭐ Add to Watchlist
+
+        </button>
+
+    </div>
+
+    <!-- MARKET -->
+
+    <div class="summary-card">
+
+        <h4>📊 Market Statistics</h4>
+
+        <div class="mini-grid">
+
+            <div>
+
+                <span>Volume</span>
+
+                <strong>{{ result.volume }}</strong>
+
+            </div>
+
+            <div>
+
+                <span>Market Cap</span>
+
+                <strong>{{ result.market_cap }}</strong>
+
+            </div>
+
+            <div>
+
+                <span>P/E</span>
+
+                <strong>{{ result.pe_ratio }}</strong>
+
+            </div>
+
+            <div>
+
+                <span>Risk</span>
+
+                <strong>{{ result.risk }}</strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SCORE -->
+
+    <div class="summary-card">
+
+        <h4>⭐ AI Score</h4>
+
+        <h1>{{ result.ai_score }}/100</h1>
+
+        <p>{{ result.trade_quality.grade }}</p>
+
+        <br>
+
+        <p>
+
+            Probability
+
+            <strong>{{ result.probability }}%</strong>
+
+        </p>
+
+    </div>
+
+</div>
+
+    <!-- Chart + AI -->
+
+    <!-- ================= MAIN GRID ================= -->
+
+<div class="main-grid">
+
+    <!-- LEFT -->
+
+    <div class="chart-card">
+
+        <h2>📈 Live Market Chart</h2>
+
+        <div id="tradingview_chart"></div>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="ai-card">
+
+    <div class="ai-header">
+
+        <h2>🤖 TradeSense AI</h2>
+
+        <span class="signal {{ result.signal|lower }}">
+            {{ result.signal }}
+        </span>
+
+    </div>
+
+    <div class="gauge-section">
+
+    <div
+        class="gauge-circle"
+        data-percent="{{ result.ai_confidence }}">
+
+        <div class="gauge-inner">
+
+            <h2 id="confidenceValue">
+
+    {{ result.ai_confidence|round|int }}
+
+</h2>
+
+<p>
+
+    Confidence
+
+</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <div class="section-header">
+
+    <h3>AI Decision</h3>
+
+    <span class="decision-badge">
+        {{ result.trade_quality.grade }}
+    </span>
+
+</div>
+
+    <div class="ai-grid">
+
+        <div>
+
+    <span>AI Score</span>
+
+    <div class="metric-value">
+
+        <strong>{{ result.ai_score }}/100</strong>
+
+        <span class="score-badge">
+
+            {{ result.trade_quality.grade }}
+
+        </span>
+
+    </div>
+
+</div>  
+
+
+    <div class="probability-card">
+
+    <div class="probability-header">
+
+        <span>Trade Probability</span>
+
+        <strong>{{ result.probability }}%</strong>
+
+    </div>
+
+    <div class="probability-bar">
+
+        <div
+            class="probability-fill"
+            data-width="{{ result.probability }}">
+        </div>
+
+    </div>
+
+</div>
+
+        <div>
+
+    <span>Trade Grade</span>
+
+    <span class="grade grade-{{ result.trade_quality.grade|lower }}">
+
+        {{ result.trade_quality.grade }}
+
+    </span>
+
+</div>
+
+        <div>
+
+    <span>🟢 Bullish Signals</span>
+
+    <strong style="color:#22C55E">
+
+        {{ result.bullish_signals }}
+
+    </strong>
+
+</div>
+
+<div>
+
+    <span>🔴 Bearish Signals</span>
+
+    <strong style="color:#EF4444">
+
+        {{ result.bearish_signals }}
+
+    </strong>
+
+</div>
+
+    </div>
+
+    <div class="section-title">
+        Price Levels
+    </div>
+
+    <div class="section-title">
+    Risk Analysis
+</div>
+
+<div class="ai-grid">
+
+    <div>
+        <span>Risk Level</span>
+
+        <span class="risk-badge risk-{{ result.risk|lower }}">
+            {{ result.risk }}
+        </span>
+    </div>
+
+    <div>
+        <span>Risk / Reward</span>
+
+        <strong>
+            1 : {{ result.risk_reward.ratio }}
+        </strong>
+    </div>
+
+    <div>
+        <span>Win Probability</span>
+
+        <strong>
+            {{ result.probability }}%
+        </strong>
+    </div>
+
+</div>
+
+    <div class="ai-grid">
+
+        <div>
+            <span>Support</span>
+            <strong>₹ {{ result.support }}</strong>
+        </div>
+
+        <div>
+            <span>Resistance</span>
+            <strong>₹ {{ result.resistance }}</strong>
+        </div>
+
+        <div>
+            <span>Target</span>
+            <strong>₹ {{ result.prediction.target }}</strong>
+        </div>
+
+        <div>
+            <span>Stop Loss</span>
+            <strong>₹ {{ result.prediction.stoploss }}</strong>
+        </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+<!-- ================= MARKET INTELLIGENCE ================= -->
+
+<div class="market-intelligence">
+
+    <h2>📊 Market Intelligence</h2>
+
+    <div class="intelligence-grid">
+
+        <div class="intel-card">
+
+            <h4>📈 Trend</h4>
+
+            <h3>{{ result.trend_strength }}</h3>
+
+        </div>
+
+        <div class="intel-card">
+
+            <h4>❤️ Market Health</h4>
+
+            <h3>{{ result.market_health }}/100</h3>
+
+        </div>
+
+        <div class="intel-card">
+
+            <h4>⚡ Momentum</h4>
+
+            <h3>{{ result.momentum_score }}/100</h3>
+
+        </div>
+
+        <div class="intel-card">
+
+            <h4>🌡 Volatility</h4>
+
+            <h3>{{ result.volatility }}</h3>
+
+        </div>
+
+        <div class="intel-card">
+
+    <h4>📊 RSI</h4>
+
+    <h3>{{ result.RSI }}</h3>
+
+    <p class="rsi-status {{ result.rsi_status|lower }}">
+        {{ result.rsi_status }}
+    </p>
+
+</div>
+
+        <div class="intel-card">
+
+            <h4>📉 MACD</h4>
+
+            <h3>{{ result.macd_status }}</h3>
+
+            <p>{{ result.MACD }}</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= GLOBAL MARKET OVERVIEW ================= -->
+
+<div class="global-market-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET INTELLIGENCE
+            </span>
+
+            <h2>🌎 Global Market Overview</h2>
+
+            <p>
+                Major indices and overall market direction
+            </p>
+
+        </div>
+
+        <div id="global-market-status"
+             class="global-market-status">
+
+            Loading...
+
+        </div>
+
+    </div>
+
+
+    <div class="global-market-grid">
+
+
+        <!-- NIFTY -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇮🇳 NIFTY 50</span>
+
+                <span id="nifty-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="nifty-market-price">
+                --
+            </h3>
+
+            <p id="nifty-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+        <!-- SENSEX -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇮🇳 SENSEX</span>
+
+                <span id="sensex-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="sensex-market-price">
+                --
+            </h3>
+
+            <p id="sensex-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+        <!-- S&P 500 -->
+
+        <div class="global-market-card">
+
+            <div class="market-card-top">
+
+                <span>🇺🇸 S&P 500</span>
+
+                <span id="sp500-market-indicator">
+                    —
+                </span>
+
+            </div>
+
+            <h3 id="sp500-market-price">
+                --
+            </h3>
+
+            <p id="sp500-market-change">
+                Loading...
+            </p>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- ================= MARKET MOVERS ================= -->
+
+<div class="market-movers-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET ACTIVITY
+            </span>
+
+            <h2>🔥 Today's Market Movers</h2>
+
+            <p>
+                Strongest gainers and losers across the Indian market
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="market-movers-grid">
+
+
+        <!-- GAINERS -->
+
+        <div class="market-movers-card">
+
+            <div class="movers-title">
+
+                <h3>🚀 Top Gainers</h3>
+
+            </div>
+
+            <div id="result-gainers-list">
+
+                <div class="market-loading">
+                    Loading market data...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LOSERS -->
+
+        <div class="market-movers-card">
+
+            <div class="movers-title">
+
+                <h3>🔻 Top Losers</h3>
+
+            </div>
+
+            <div id="result-losers-list">
+
+                <div class="market-loading">
+                    Loading market data...
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- ================= SECTOR PERFORMANCE ================= -->
+
+<div class="sector-performance-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET ROTATION
+            </span>
+
+            <h2>📈 Sector Performance</h2>
+
+            <p>
+                Performance across major market sectors
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="result-sector-list"
+        class="sector-performance-grid">
+
+        <div class="market-loading">
+            Loading sector performance...
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= MARKET BREADTH ================= -->
+
+<div class="market-breadth-section">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                MARKET HEALTH
+            </span>
+
+            <h2>📊 Market Breadth</h2>
+
+            <p>
+                Advance and decline strength across tracked stocks
+            </p>
+
+        </div>
+
+        <div id="breadth-health" class="breadth-health">
+            Loading...
+        </div>
+
+    </div>
+
+
+    <div class="market-breadth-grid">
+
+        <div class="breadth-card">
+            <span>Advancing</span>
+            <strong id="breadth-advancing">--</strong>
+        </div>
+
+        <div class="breadth-card">
+            <span>Declining</span>
+            <strong id="breadth-declining">--</strong>
+        </div>
+
+        <div class="breadth-card">
+            <span>Unchanged</span>
+            <strong id="breadth-unchanged">--</strong>
+        </div>
+
+        <div class="breadth-card">
+            <span>A/D Ratio</span>
+            <strong id="breadth-ratio">--</strong>
+        </div>
+
+    </div>
+
+    <div class="breadth-footer">
+        Tracking
+        <strong id="breadth-tracked">--</strong>
+        stocks
+    </div>
+
+</div>
+
+<!-- ================= MARKET INTELLIGENCE SUMMARY ================= -->
+
+<div class="market-intelligence-summary">
+
+    <div class="market-section-header">
+
+        <div>
+
+            <span class="market-kicker">
+                TRADESENSE AI
+            </span>
+
+            <h2>🧠 Market Intelligence Summary</h2>
+
+            <p>
+                AI-generated interpretation of current market conditions
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="market-summary-content"
+        class="market-summary-content">
+
+        <div class="market-loading">
+            Generating market intelligence...
+        </div>
+
+    </div>
+
+</div>
+    <!-- ================= BOTTOM GRID ================= -->
+
+    <div class="bottom-grid">
+
+        <!-- WHY THIS DECISION -->
+
+        <div class="bottom-card">
+
+            <h2>🧠 Why this Decision?</h2>
+
+            <ul class="reason-list">
+
+                {% for reason in result.reasons %}
+
+                <li>{{ reason }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- AI EXPLANATION -->
+
+        <div class="bottom-card">
+
+            <h2>💡 AI Explanation</h2>
+
+            <ul class="reason-list">
+
+                {% for item in result.ai_explanation %}
+
+                <li>{{ item }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+    <!-- ================= NEWS ================= -->
+
+    <div class="news-section">
+
+        <h2>📰 Latest Market News</h2>
+
+        <div class="news-grid">
+
+            {% for item in news %}
+
+            <div class="news-card">
+
+                <h3>{{ item.title }}</h3>
+
+                <small>{{ item.published }}</small>
+
+                <br><br>
+
+                <a href="{{ item.link }}" target="_blank">
+
+                    Read Full Article →
+
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+async function addToWatchlist() {
+
+    const response = await fetch("/api/watchlist", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            symbol: "{{ result.symbol }}",
+
+            company: "{{ result.company }}"
+
+        })
+
+    });
+
+    const data = await response.json();
+
+    alert(data.message);
+
+}
+
+</script>
+
+<script>
+
+window.stockData = {
+
+    symbol: "{{ result.symbol }}",
+
+    market: "{{ market }}"
+
+}
+
+</script>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script>
+document.querySelectorAll(".confidence-fill").forEach(bar => {
+    bar.style.width = bar.dataset.width + "%";
+});
+</script>
+
+<script>
+
+document.querySelectorAll(".progress-fill, .probability-fill").forEach(bar => {
+
+    bar.style.width = bar.dataset.width + "%";
+
+});
+
+const gauge = document.querySelector(".gauge-circle");
+
+if (gauge) {
+
+    const percent = parseFloat(gauge.dataset.percent);
+
+    const degree = percent * 3.6;
+
+    let gaugeColor = "#22C55E";
+
+    if (percent < 40) {
+
+        gaugeColor = "#EF4444";
+
+    } else if (percent < 70) {
+
+        gaugeColor = "#F59E0B";
+
+    }
+
+    gauge.style.background = `
+        conic-gradient(
+            ${gaugeColor} 0deg,
+            ${gaugeColor} ${degree}deg,
+            #1E293B ${degree}deg,
+            #1E293B 360deg
+        )
+    `;
+
+}
+</script>
+
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+<script src="/static/js/chart.js"></script>
+
+<script src="/static/js/result-market.js"></script>
+
+</body>
+
+</html>

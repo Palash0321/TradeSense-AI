@@ -34,7 +34,11 @@ class StrategyOptimizer:
         trailing_atr_values=None,
         start_date=None,
         end_date=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None,
+        use_market_regime=True,
+        initial_stop_atr=2.0,
+        risk_per_trade=0.01
     ):
 
         if adx_values is None:
@@ -60,8 +64,11 @@ class StrategyOptimizer:
         if trailing_atr_values is None:
 
             trailing_atr_values = [
+                1.5,
                 2.0,
+                2.5,
                 3.0,
+                3.5,
                 4.0,
                 5.0
             ]
@@ -106,7 +113,15 @@ class StrategyOptimizer:
 
                 trailing_atr=trailing_atr,
 
-                trailing_activation_atr=trailing_activation_atr
+                trailing_activation_atr=trailing_activation_atr,
+
+                momentum_min=momentum_min,
+
+                use_market_regime=use_market_regime,
+
+                initial_stop_atr=initial_stop_atr,
+
+                risk_per_trade=risk_per_trade
 
             )
 
@@ -123,6 +138,9 @@ class StrategyOptimizer:
 
                 "trailing_activation_atr":
                     trailing_activation_atr,
+
+                "momentum_min":
+                    momentum_min,
 
                 "total_trades":
                     metrics["total_trades"],
@@ -246,7 +264,8 @@ class StrategyOptimizer:
         min_trades=10,
         start_date=None,
         end_date=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None
     ):
 
         results = self.optimize(
@@ -261,7 +280,9 @@ class StrategyOptimizer:
 
             end_date=end_date,
 
-            trailing_activation_atr=trailing_activation_atr
+            trailing_activation_atr=trailing_activation_atr,
+
+            momentum_min=momentum_min
 
 
         )

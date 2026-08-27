@@ -31,7 +31,8 @@ class WalkForwardRobustness:
         adx_values=None,
         ema_gap_values=None,
         trailing_atr_values=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None
     ):
 
         engine = WalkForwardEngine(
@@ -54,7 +55,9 @@ class WalkForwardRobustness:
 
             trailing_atr_values=trailing_atr_values,
 
-            trailing_activation_atr=trailing_activation_atr
+            trailing_activation_atr=trailing_activation_atr,
+
+            momentum_min=momentum_min
 
         )
 
@@ -69,7 +72,8 @@ class WalkForwardRobustness:
         adx_values=None,
         ema_gap_values=None,
         trailing_atr_values=None,
-        trailing_activation_atr=1.0
+        trailing_activation_atr=1.0,
+        momentum_min=None
     ):
 
         results = []
@@ -86,7 +90,9 @@ class WalkForwardRobustness:
 
                 trailing_atr_values=trailing_atr_values,
 
-                trailing_activation_atr=trailing_activation_atr
+                trailing_activation_atr=trailing_activation_atr,
+
+                momentum_min=momentum_min
 
             )
 

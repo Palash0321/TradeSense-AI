@@ -29,7 +29,11 @@ class StrategyRobustness:
         self,
         adx_min,
         ema_gap_min,
-        trailing_atr
+        trailing_atr,
+        trailing_activation_atr=1.0,
+        initial_stop_atr=2.0,
+        momentum_min=None,
+        use_market_regime=True
     ):
 
         results = []
@@ -56,7 +60,19 @@ class StrategyRobustness:
 
                 ema_gap_min=ema_gap_min,
 
-                trailing_atr=trailing_atr
+                trailing_atr=trailing_atr,
+
+                trailing_activation_atr=
+                    trailing_activation_atr,
+
+                initial_stop_atr=
+                    initial_stop_atr,
+
+                momentum_min=
+                    momentum_min,
+
+                use_market_regime=
+                    use_market_regime
 
             )
 
