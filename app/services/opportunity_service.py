@@ -115,7 +115,46 @@ class OpportunityService:
                     resistance_distance,
                     2
                 ),
-                "risk_reward": rr_ratio
+                "risk_reward": rr_ratio,
+
+                "setup_risk_reward": {
+                    "breakout": breakout_setup_rr,
+                    "pullback": pullback_setup_rr
+                },
+
+                "mtf_probability": round(
+                    float(
+                        self.multi_timeframe.get(
+                            "overall_probability",
+                            0
+                        ) or 0
+                    ),
+                    1
+                ),
+
+                "breakout_confirmation_score": 0,
+
+                "breakout_state": "NO_BREAKOUT",
+
+                "breakout_level": round(
+                    breakout_trigger,
+                    2
+                ),
+
+                "current_price": round(
+                    self.price,
+                    2
+                ),
+
+                "volume_ratio": round(
+                    float(
+                        self.volume.get(
+                            "ratio",
+                            0
+                        ) or 0
+                    ),
+                    2
+                )
             }
 
         # ----------------------------------
