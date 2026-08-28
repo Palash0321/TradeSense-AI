@@ -283,6 +283,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     market_structure = ai["market_structure"]
 
+    liquidity = ai["liquidity"]
+
     trade_plan = ai["trade_plan"]
 
     opportunity = ai["opportunity"]
@@ -651,6 +653,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
         "trade_plan": trade_plan,
 
         "market_structure": market_structure,
+
+        "liquidity": liquidity,
 
         "opportunity": opportunity,
 

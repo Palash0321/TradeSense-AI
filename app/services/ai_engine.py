@@ -11,6 +11,7 @@ from app.services.entry_engine_service import EntryEngineService
 from app.services.trade_validation_service import TradeValidationService
 from app.services.final_decision_service import FinalDecisionService
 from app.core.levels.market_structure import calculate_market_structure
+from app.core.liquidity.liquidity import calculate_liquidity
 
 class AIEngine:
 
@@ -37,6 +38,15 @@ class AIEngine:
 
         market_structure = calculate_market_structure(
             self.history
+        )
+
+        # =====================================
+        # Liquidity
+        # =====================================
+
+        liquidity = calculate_liquidity(
+            self.history,
+            market_structure
         )
 
         # =====================================
@@ -289,7 +299,8 @@ class AIEngine:
 
             multi_timeframe,
 
-            market_structure=market_structure
+            market_structure=market_structure,
+            liquidity=liquidity
 
         ).analyze()
 
@@ -361,7 +372,8 @@ class AIEngine:
 
             setup_risk_reward,
 
-            market_structure=market_structure
+            market_structure=market_structure,
+            liquidity=liquidity
 
         ).analyze()
 
@@ -694,6 +706,8 @@ class AIEngine:
             "trade_plan": trade_plan,
 
             "market_structure": market_structure,
+
+            "liquidity": liquidity,
 
             "opportunity": opportunity,
 

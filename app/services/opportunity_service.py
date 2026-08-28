@@ -11,7 +11,8 @@ class OpportunityService:
         patterns=None,
         multi_timeframe=None,
         setup_risk_reward=None,
-        market_structure=None
+        market_structure=None,
+        liquidity=None
     ):
 
         self.analysis = analysis
@@ -25,6 +26,7 @@ class OpportunityService:
         self.multi_timeframe = multi_timeframe or {}
         self.setup_risk_reward = setup_risk_reward or {}
         self.market_structure = market_structure or {}
+        self.liquidity = liquidity or {}
 
     def analyze(self):
 
@@ -146,11 +148,108 @@ class OpportunityService:
 
                     structure_score -= 20
 
+            # ----------------------------------
+            # Liquidity Confirmation
+            # ----------------------------------
+
+            liquidity_score = 0
+
+            nearest_liquidity = self.liquidity.get(
+                "nearest_liquidity",
+                {}
+            )
+
+            sweep = self.liquidity.get(
+                "sweep",
+                {}
+            )
+
+            nearest_above = nearest_liquidity.get(
+                "above"
+            )
+
+            nearest_below = nearest_liquidity.get(
+                "below"
+            )
+
+            # ----------------------------------
+            # Liquidity location
+            # ----------------------------------
+
+            structure_bias = self.market_structure.get(
+                "bias",
+                "NEUTRAL"
+            )
+
+            if structure_bias == "BULLISH":
+
+                if nearest_below is not None:
+
+                    liquidity_score += 5
+
+            elif structure_bias == "BEARISH":
+
+                if nearest_above is not None:
+
+                    liquidity_score += 5
+
+            # ----------------------------------
+            # Liquidity sweep
+            # ----------------------------------
+
+            if sweep.get("detected"):
+
+                sweep_direction = sweep.get(
+                    "direction"
+                )
+
+                if (
+                    structure_bias == "BULLISH"
+                    and
+                    sweep_direction == "SELL_SIDE"
+                ):
+
+                    liquidity_score += 10
+
+                elif (
+                    structure_bias == "BEARISH"
+                    and
+                    sweep_direction == "BUY_SIDE"
+                ):
+
+                    liquidity_score += 10
+
+                elif (
+                    structure_bias == "BULLISH"
+                    and
+                    sweep_direction == "BUY_SIDE"
+                ):
+
+                    liquidity_score -= 10
+
+                elif (
+                    structure_bias == "BEARISH"
+                    and
+                    sweep_direction == "SELL_SIDE"
+                ):
+
+                    liquidity_score -= 10
+
+            liquidity_score = max(
+                -15,
+                min(
+                    15,
+                    liquidity_score
+                )
+            )
+
             structure_adjusted_score = max(
                 0,
                 min(
                     100,
-                    30 + structure_score
+                    30
+                    + structure_score
+                    + liquidity_score
                 )
             )
 
@@ -170,7 +269,11 @@ class OpportunityService:
 
                 "market_structure": self.market_structure,
 
+                "liquidity": self.liquidity,
+
                 "structure_score": structure_score,
+
+                "liquidity_score": liquidity_score,
 
                 "structure_bias": self.market_structure.get(
                     "bias",
@@ -342,6 +445,123 @@ class OpportunityService:
                 )
 
         score += structure_score
+
+
+        # ----------------------------------
+        # Liquidity Confirmation
+        # ----------------------------------
+
+        liquidity_score = 0
+
+        nearest_liquidity = self.liquidity.get(
+            "nearest_liquidity",
+            {}
+        )
+
+        sweep = self.liquidity.get(
+            "sweep",
+            {}
+        )
+
+        nearest_above = nearest_liquidity.get(
+            "above"
+        )
+
+        nearest_below = nearest_liquidity.get(
+            "below"
+        )
+
+        # ----------------------------------
+        # Liquidity location
+        # ----------------------------------
+
+        if structure_bias == "BULLISH":
+
+            if nearest_below is not None:
+
+                liquidity_score += 5
+
+                reasons.append(
+                    "Sell-side liquidity is available below price."
+                )
+
+        elif structure_bias == "BEARISH":
+
+            if nearest_above is not None:
+
+                liquidity_score += 5
+
+                reasons.append(
+                    "Buy-side liquidity is available above price."
+                )
+
+        # ----------------------------------
+        # Liquidity sweep
+        # ----------------------------------
+
+        if sweep.get("detected"):
+
+            sweep_direction = sweep.get(
+                "direction"
+            )
+
+            if (
+                structure_bias == "BULLISH"
+                and
+                sweep_direction == "SELL_SIDE"
+            ):
+
+                liquidity_score += 10
+
+                reasons.append(
+                    "Sell-side liquidity sweep supports the bullish structure."
+                )
+
+            elif (
+                structure_bias == "BEARISH"
+                and
+                sweep_direction == "BUY_SIDE"
+            ):
+
+                liquidity_score += 10
+
+                reasons.append(
+                    "Buy-side liquidity sweep supports the bearish structure."
+                )
+
+            elif (
+                structure_bias == "BULLISH"
+                and
+                sweep_direction == "BUY_SIDE"
+            ):
+
+                liquidity_score -= 10
+
+                reasons.append(
+                    "Buy-side liquidity sweep conflicts with the bullish structure."
+                )
+
+            elif (
+                structure_bias == "BEARISH"
+                and
+                sweep_direction == "SELL_SIDE"
+            ):
+
+                liquidity_score -= 10
+
+                reasons.append(
+                    "Sell-side liquidity sweep conflicts with the bearish structure."
+                )
+
+        liquidity_score = max(
+            -15,
+            min(
+                15,
+                liquidity_score
+            )
+        )
+
+        score += liquidity_score
 
 
         # ----------------------------------
@@ -726,7 +946,11 @@ class OpportunityService:
 
             "market_structure": self.market_structure,
 
+            "liquidity": self.liquidity,
+
             "structure_score": structure_score,
+
+            "liquidity_score": liquidity_score,
 
             "trigger_price": trigger_price,
 
