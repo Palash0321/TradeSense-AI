@@ -10,6 +10,7 @@ from app.services.rule_engine import RuleEngine
 from app.services.entry_engine_service import EntryEngineService
 from app.services.trade_validation_service import TradeValidationService
 from app.services.final_decision_service import FinalDecisionService
+from app.core.levels.market_structure import calculate_market_structure
 
 class AIEngine:
 
@@ -29,6 +30,14 @@ class AIEngine:
         self.risk_reward = risk_reward
 
     def analyze(self):
+
+        # =====================================
+        # Market Structure
+        # =====================================
+
+        market_structure = calculate_market_structure(
+            self.history
+        )
 
         # =====================================
         # Trade Quality
@@ -278,7 +287,9 @@ class AIEngine:
 
             patterns,
 
-            multi_timeframe
+            multi_timeframe,
+
+            market_structure=market_structure
 
         ).analyze()
 
@@ -348,7 +359,9 @@ class AIEngine:
 
             multi_timeframe,
 
-            setup_risk_reward
+            setup_risk_reward,
+
+            market_structure=market_structure
 
         ).analyze()
 
@@ -679,6 +692,8 @@ class AIEngine:
             "trade_quality": analysis,
 
             "trade_plan": trade_plan,
+
+            "market_structure": market_structure,
 
             "opportunity": opportunity,
 

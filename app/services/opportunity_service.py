@@ -10,7 +10,8 @@ class OpportunityService:
         volume=None,
         patterns=None,
         multi_timeframe=None,
-        setup_risk_reward=None
+        setup_risk_reward=None,
+        market_structure=None
     ):
 
         self.analysis = analysis
@@ -23,6 +24,7 @@ class OpportunityService:
         self.patterns = patterns or []
         self.multi_timeframe = multi_timeframe or {}
         self.setup_risk_reward = setup_risk_reward or {}
+        self.market_structure = market_structure or {}
 
     def analyze(self):
 
@@ -92,20 +94,109 @@ class OpportunityService:
             "ACCUMULATE"
         ]:
 
+            structure = self.market_structure.get(
+                "structure",
+                "NEUTRAL"
+            )
+
+            break_direction = self.market_structure.get(
+                "break_direction"
+            )
+
+            break_confirmed = self.market_structure.get(
+                "break_confirmed",
+                False
+            )
+
+            # ----------------------------------
+            # Base market structure
+            # ----------------------------------
+
+            if structure == "HH_HL":
+
+                structure_score = 15
+
+            elif structure == "PARTIAL_BULLISH":
+
+                structure_score = 8
+
+            elif structure == "LH_LL":
+
+                structure_score = -15
+
+            elif structure == "PARTIAL_BEARISH":
+
+                structure_score = -8
+
+            else:
+
+                structure_score = 0
+
+            # ----------------------------------
+            # Confirmed structural event
+            # ----------------------------------
+
+            if break_confirmed:
+
+                if break_direction == "BULLISH":
+
+                    structure_score += 20
+
+                elif break_direction == "BEARISH":
+
+                    structure_score -= 20
+
+            structure_adjusted_score = max(
+                0,
+                min(
+                    100,
+                    30 + structure_score
+                )
+            )
+
             return {
                 "status": "WAIT",
+
                 "action": "WAIT",
-                "score": 30,
+
+                "score": structure_adjusted_score,
+
                 "message": "No immediate bullish setup.",
+
                 "reason": (
                     "Wait for a stronger bullish setup "
                     "near support or a confirmed breakout."
                 ),
 
+                "market_structure": self.market_structure,
+
+                "structure_score": structure_score,
+
+                "structure_bias": self.market_structure.get(
+                    "bias",
+                    "NEUTRAL"
+                ),
+
+                "structure": self.market_structure.get(
+                    "structure",
+                    "NEUTRAL"
+                ),
+
+                "structure_strength": self.market_structure.get(
+                    "strength",
+                    0
+                ),
+
+                "structure_break_direction": break_direction,
+
+                "structure_break_confirmed": break_confirmed,
+
                 "preferred_setup": "NO_SETUP",
 
                 "trigger_price": pullback_trigger,
+
                 "pullback_trigger": pullback_trigger,
+
                 "breakout_trigger": breakout_trigger,
                 "support_distance": round(
                     support_distance,
@@ -163,6 +254,95 @@ class OpportunityService:
 
         score = 100
         reasons = []
+
+        # ----------------------------------
+        # Market Structure Confirmation
+        # ----------------------------------
+
+        structure = self.market_structure.get(
+            "structure",
+            "NEUTRAL"
+        )
+
+        structure_bias = self.market_structure.get(
+            "bias",
+            "NEUTRAL"
+        )
+
+        break_direction = self.market_structure.get(
+            "break_direction"
+        )
+
+        break_confirmed = self.market_structure.get(
+            "break_confirmed",
+            False
+        )
+
+        structure_score = 0
+
+        # ----------------------------------
+        # Base market structure
+        # ----------------------------------
+
+        if structure == "HH_HL":
+
+            structure_score = 15
+
+            reasons.append(
+                "Bullish market structure confirmed by HH/HL."
+            )
+
+        elif structure == "PARTIAL_BULLISH":
+
+            structure_score = 8
+
+            reasons.append(
+                "Market structure has a partial bullish bias."
+            )
+
+        elif structure == "LH_LL":
+
+            structure_score = -15
+
+            reasons.append(
+                "Bearish market structure confirmed by LH/LL."
+            )
+
+        elif structure == "PARTIAL_BEARISH":
+
+            structure_score = -8
+
+            reasons.append(
+                "Market structure has a partial bearish bias."
+            )
+
+        # ----------------------------------
+        # Structural event
+        #
+        # Confirmed structural events have
+        # priority over background structure.
+        # ----------------------------------
+
+        if break_confirmed:
+
+            if break_direction == "BULLISH":
+
+                structure_score += 20
+
+                reasons.append(
+                    "Confirmed bullish structural break detected."
+                )
+
+            elif break_direction == "BEARISH":
+
+                structure_score -= 20
+
+                reasons.append(
+                    "Confirmed bearish structural break detected."
+                )
+
+        score += structure_score
+
 
         # ----------------------------------
         # Breakout confirmation evidence
@@ -543,6 +723,10 @@ class OpportunityService:
             "score": score,
             "message": message,
             "reason": " ".join(reasons),
+
+            "market_structure": self.market_structure,
+
+            "structure_score": structure_score,
 
             "trigger_price": trigger_price,
 
