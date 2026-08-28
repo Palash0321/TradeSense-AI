@@ -608,7 +608,13 @@ class AIEngine:
 
         else:
 
-            setup_details = None
+            setup_details = {
+                "type": "NONE",
+
+                "pullback": entry_engine["pullback"],
+
+                "breakout": entry_engine["breakout"]
+            }
 
         # =====================================
         # Setup Risk / Reward

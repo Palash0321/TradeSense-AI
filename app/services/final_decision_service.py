@@ -32,7 +32,7 @@ class FinalDecisionService:
             "WAIT"
         )
 
-        setup_details = None
+        setup_details = self.setup_details
 
         current_price = float(
             self.opportunity.get(
@@ -134,8 +134,6 @@ class FinalDecisionService:
                 "No high-quality trade setup "
                 "is currently confirmed."
             )
-
-            setup_details = None
 
         if preferred_setup in [
     "BREAKOUT",

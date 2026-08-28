@@ -440,6 +440,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
         "risk_reward": {},
 
+        "candidate_setups": {},
+
         "breakout_trigger": final_decision.get(
             "breakout_trigger"
         ),
@@ -456,34 +458,38 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     if setup_details:
 
-        trade_signal["stop_loss"] = setup_details.get(
-            "stop_loss"
+        setup_type = setup_details.get(
+            "type"
         )
 
-        trade_signal["target1"] = setup_details.get(
-            "target1"
-        )
-
-        trade_signal["target2"] = setup_details.get(
-            "target2"
-        )
-
-        trade_signal["target3"] = setup_details.get(
-            "target3"
-        )
-
-        trade_signal["risk_reward"] = setup_details.get(
-            "risk_reward",
-            {}
-        )
-
-        if setup_details.get("type") == "BREAKOUT":
+        if setup_type == "BREAKOUT":
 
             trade_signal["entry"] = setup_details.get(
                 "entry"
             )
 
-        elif setup_details.get("type") == "PULLBACK":
+            trade_signal["stop_loss"] = setup_details.get(
+                "stop_loss"
+            )
+
+            trade_signal["target1"] = setup_details.get(
+                "target1"
+            )
+
+            trade_signal["target2"] = setup_details.get(
+                "target2"
+            )
+
+            trade_signal["target3"] = setup_details.get(
+                "target3"
+            )
+
+            trade_signal["risk_reward"] = setup_details.get(
+                "risk_reward",
+                {}
+            )
+
+        elif setup_type == "PULLBACK":
 
             trade_signal["entry_low"] = setup_details.get(
                 "entry_low"
@@ -492,6 +498,44 @@ def generate_signal(symbol: str, period: str = "6mo"):
             trade_signal["entry_high"] = setup_details.get(
                 "entry_high"
             )
+
+            trade_signal["stop_loss"] = setup_details.get(
+                "stop_loss"
+            )
+
+            trade_signal["target1"] = setup_details.get(
+                "target1"
+            )
+
+            trade_signal["target2"] = setup_details.get(
+                "target2"
+            )
+
+            trade_signal["target3"] = setup_details.get(
+                "target3"
+            )
+
+            trade_signal["risk_reward"] = setup_details.get(
+                "risk_reward",
+                {}
+            )
+
+        elif setup_type == "NONE":
+
+            # Candidate setups are intentionally preserved
+            # without presenting them as an active trade.
+
+            trade_signal["candidate_setups"] = {
+                "pullback": setup_details.get(
+                    "pullback",
+                    {}
+                ),
+
+                "breakout": setup_details.get(
+                    "breakout",
+                    {}
+                )
+            }
 
     return {
 
