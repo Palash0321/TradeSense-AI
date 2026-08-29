@@ -89,6 +89,26 @@ class OpportunityService:
         )
 
         # ----------------------------------
+        # Structural Setup
+        # ----------------------------------
+
+        setup_type = self.setup.get(
+            "setup",
+            "WAIT"
+        )
+
+        setup_direction = self.setup.get(
+            "direction"
+        )
+
+        setup_confidence = float(
+            self.setup.get(
+                "confidence",
+                0
+            ) or 0
+        )
+
+        # ----------------------------------
         # Non-bullish setup
         # ----------------------------------
 
@@ -296,7 +316,15 @@ class OpportunityService:
 
                 "structure_break_confirmed": break_confirmed,
 
-                "preferred_setup": "NO_SETUP",
+                "preferred_setup": setup_type,
+
+                "setup": self.setup,
+
+                "setup_type": setup_type,
+
+                "setup_direction": setup_direction,
+
+                "setup_confidence": setup_confidence,
 
                 "trigger_price": pullback_trigger,
 
@@ -893,7 +921,23 @@ class OpportunityService:
         # Preferred Setup
         # ----------------------------------
 
-        if (
+        if setup_type in [
+            "LONG_CONTINUATION",
+            "LONG_REVERSAL",
+            "SHORT_CONTINUATION",
+            "SHORT_REVERSAL"
+        ]:
+
+            preferred_setup = setup_type
+
+            setup_message = (
+                self.setup.get(
+                    "reason",
+                    "Structural setup detected."
+                )
+            )
+
+        elif (
             action == "BUY"
             and
             breakout_confirmation_score >= 70
@@ -953,6 +997,14 @@ class OpportunityService:
             "structure_score": structure_score,
 
             "liquidity_score": liquidity_score,
+
+            "setup": self.setup,
+
+            "setup_type": setup_type,
+
+            "setup_direction": setup_direction,
+
+            "setup_confidence": setup_confidence,
 
             "trigger_price": trigger_price,
 

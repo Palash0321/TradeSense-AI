@@ -7,7 +7,8 @@ class EntryEngineService:
         resistance,
         atr,
         risk_reward=None,
-        breakout_level=None
+        breakout_level=None,
+        setup=None
     ):
 
         self.price = float(current_price)
@@ -23,21 +24,33 @@ class EntryEngineService:
             else resistance
         )
 
+        self.setup = setup or {}
+
     def calculate_rr(
         self,
         entry,
         stop_loss,
-        target
+        target,
+        direction="LONG"
     ):
 
         risk = abs(
             entry - stop_loss
         )
 
-        reward = max(
-            0,
-            target - entry
-        )
+        if direction == "SHORT":
+
+            reward = max(
+                0,
+                entry - target
+            )
+
+        else:
+
+            reward = max(
+                0,
+                target - entry
+            )
 
         if risk <= 0:
 
@@ -50,122 +63,255 @@ class EntryEngineService:
 
     def generate(self):
 
-        # ----------------------------------
+        direction = self.setup.get(
+            "direction"
+        )
+
+        # ==================================
         # Pullback setup
-        # ----------------------------------
+        # ==================================
 
-        pullback_low = round(
-            self.support + self.atr * 0.25,
-            2
-        )
+        if direction == "SHORT":
 
-        pullback_high = round(
-            self.support + self.atr * 0.75,
-            2
-        )
+            pullback_high = round(
+                self.resistance - self.atr * 0.25,
+                2
+            )
 
-        pullback_stop = round(
-            self.support - self.atr,
-            2
-        )
+            pullback_low = round(
+                self.resistance - self.atr * 0.75,
+                2
+            )
 
-        pullback_risk = max(
-            0.01,
-            pullback_low - pullback_stop
-        )
+            pullback_stop = round(
+                self.resistance + self.atr,
+                2
+            )
 
-        pullback_target1 = round(
-            pullback_low + pullback_risk * 1.5,
-            2
-        )
+            pullback_risk = max(
+                0.01,
+                pullback_stop - pullback_high
+            )
 
-        pullback_target2 = round(
-            pullback_low + pullback_risk * 2.0,
-            2
-        )
+            pullback_target1 = round(
+                pullback_high - pullback_risk * 1.5,
+                2
+            )
 
-        pullback_target3 = round(
-            pullback_low + pullback_risk * 3.0,
-            2
-        )
+            pullback_target2 = round(
+                pullback_high - pullback_risk * 2.0,
+                2
+            )
 
-        pullback_rr1 = self.calculate_rr(
-            pullback_low,
-            pullback_stop,
-            pullback_target1
-        )
+            pullback_target3 = round(
+                pullback_high - pullback_risk * 3.0,
+                2
+            )
 
-        pullback_rr2 = self.calculate_rr(
-            pullback_low,
-            pullback_stop,
-            pullback_target2
-        )
+            pullback_rr1 = self.calculate_rr(
+                pullback_high,
+                pullback_stop,
+                pullback_target1,
+                "SHORT"
+            )
 
-        pullback_rr3 = self.calculate_rr(
-            pullback_low,
-            pullback_stop,
-            pullback_target3
-        )
+            pullback_rr2 = self.calculate_rr(
+                pullback_high,
+                pullback_stop,
+                pullback_target2,
+                "SHORT"
+            )
 
-        # ----------------------------------
+            pullback_rr3 = self.calculate_rr(
+                pullback_high,
+                pullback_stop,
+                pullback_target3,
+                "SHORT"
+            )
+
+            pullback_entry_low = pullback_low
+            pullback_entry_high = pullback_high
+
+        else:
+
+            pullback_low = round(
+                self.support + self.atr * 0.25,
+                2
+            )
+
+            pullback_high = round(
+                self.support + self.atr * 0.75,
+                2
+            )
+
+            pullback_stop = round(
+                self.support - self.atr,
+                2
+            )
+
+            pullback_risk = max(
+                0.01,
+                pullback_low - pullback_stop
+            )
+
+            pullback_target1 = round(
+                pullback_low + pullback_risk * 1.5,
+                2
+            )
+
+            pullback_target2 = round(
+                pullback_low + pullback_risk * 2.0,
+                2
+            )
+
+            pullback_target3 = round(
+                pullback_low + pullback_risk * 3.0,
+                2
+            )
+
+            pullback_rr1 = self.calculate_rr(
+                pullback_low,
+                pullback_stop,
+                pullback_target1,
+                "LONG"
+            )
+
+            pullback_rr2 = self.calculate_rr(
+                pullback_low,
+                pullback_stop,
+                pullback_target2,
+                "LONG"
+            )
+
+            pullback_rr3 = self.calculate_rr(
+                pullback_low,
+                pullback_stop,
+                pullback_target3,
+                "LONG"
+            )
+
+            pullback_entry_low = pullback_low
+            pullback_entry_high = pullback_high
+
+        # ==================================
         # Breakout setup
-        # ----------------------------------
+        # ==================================
 
-        breakout_entry = round(
-            self.breakout_level,
-            2
-        )
+        if direction == "SHORT":
 
-        breakout_stop = round(
-            self.resistance - self.atr,
-            2
-        )
+            breakout_entry = round(
+                self.support,
+                2
+            )
 
-        breakout_risk = max(
-            0.01,
-            breakout_entry - breakout_stop
-        )
+            breakout_stop = round(
+                self.support + self.atr,
+                2
+            )
 
-        breakout_target1 = round(
-            breakout_entry + breakout_risk * 1.5,
-            2
-        )
+            breakout_risk = max(
+                0.01,
+                breakout_stop - breakout_entry
+            )
 
-        breakout_target2 = round(
-            breakout_entry + breakout_risk * 2.0,
-            2
-        )
+            breakout_target1 = round(
+                breakout_entry - breakout_risk * 1.5,
+                2
+            )
 
-        breakout_target3 = round(
-            breakout_entry + breakout_risk * 3.0,
-            2
-        )
+            breakout_target2 = round(
+                breakout_entry - breakout_risk * 2.0,
+                2
+            )
 
-        breakout_rr1 = self.calculate_rr(
-            breakout_entry,
-            breakout_stop,
-            breakout_target1
-        )
+            breakout_target3 = round(
+                breakout_entry - breakout_risk * 3.0,
+                2
+            )
 
-        breakout_rr2 = self.calculate_rr(
-            breakout_entry,
-            breakout_stop,
-            breakout_target2
-        )
+            breakout_rr1 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target1,
+                "SHORT"
+            )
 
-        breakout_rr3 = self.calculate_rr(
-            breakout_entry,
-            breakout_stop,
-            breakout_target3
-        )
+            breakout_rr2 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target2,
+                "SHORT"
+            )
+
+            breakout_rr3 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target3,
+                "SHORT"
+            )
+
+        else:
+
+            breakout_entry = round(
+                self.breakout_level,
+                2
+            )
+
+            breakout_stop = round(
+                self.resistance - self.atr,
+                2
+            )
+
+            breakout_risk = max(
+                0.01,
+                breakout_entry - breakout_stop
+            )
+
+            breakout_target1 = round(
+                breakout_entry + breakout_risk * 1.5,
+                2
+            )
+
+            breakout_target2 = round(
+                breakout_entry + breakout_risk * 2.0,
+                2
+            )
+
+            breakout_target3 = round(
+                breakout_entry + breakout_risk * 3.0,
+                2
+            )
+
+            breakout_rr1 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target1,
+                "LONG"
+            )
+
+            breakout_rr2 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target2,
+                "LONG"
+            )
+
+            breakout_rr3 = self.calculate_rr(
+                breakout_entry,
+                breakout_stop,
+                breakout_target3,
+                "LONG"
+            )
 
         return {
 
+            "direction": direction,
+
             "pullback": {
 
-                "entry_low": pullback_low,
+                "entry_low": pullback_entry_low,
 
-                "entry_high": pullback_high,
+                "entry_high": pullback_entry_high,
 
                 "stop_loss": pullback_stop,
 

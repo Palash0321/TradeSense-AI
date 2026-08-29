@@ -313,7 +313,9 @@ class AIEngine:
             multi_timeframe,
 
             market_structure=market_structure,
-            liquidity=liquidity
+            liquidity=liquidity,
+
+            setup=setup
 
         ).analyze()
 
@@ -342,7 +344,9 @@ class AIEngine:
 
             risk_reward=self.risk_reward,
 
-            breakout_level=breakout_level
+            breakout_level=breakout_level,
+
+            setup=setup
 
         ).generate()
 
