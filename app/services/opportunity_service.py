@@ -282,12 +282,25 @@ class OpportunityService:
 
                 "score": structure_adjusted_score,
 
-                "message": "No immediate bullish setup.",
+                "message": (
+                    "Bearish setup detected, but no immediate short entry is confirmed."
+                    if setup_direction == "SHORT"
+                    else
+                    "No immediate bullish setup."
+                ),
 
                 "reason": (
+    (
+                    "Wait for stronger bearish confirmation "
+                    "before considering a short entry."
+                )
+                if setup_direction == "SHORT"
+                else
+                (
                     "Wait for a stronger bullish setup "
                     "near support or a confirmed breakout."
-                ),
+                )
+            ),
 
                 "market_structure": self.market_structure,
 
