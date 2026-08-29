@@ -12,7 +12,8 @@ class OpportunityService:
         multi_timeframe=None,
         setup_risk_reward=None,
         market_structure=None,
-        liquidity=None
+        liquidity=None,
+        setup=None
     ):
 
         self.analysis = analysis
@@ -27,6 +28,7 @@ class OpportunityService:
         self.setup_risk_reward = setup_risk_reward or {}
         self.market_structure = market_structure or {}
         self.liquidity = liquidity or {}
+        self.setup = setup or {}
 
     def analyze(self):
 

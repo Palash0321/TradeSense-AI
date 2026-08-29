@@ -12,6 +12,7 @@ from app.services.trade_validation_service import TradeValidationService
 from app.services.final_decision_service import FinalDecisionService
 from app.core.levels.market_structure import calculate_market_structure
 from app.core.liquidity.liquidity import calculate_liquidity
+from app.core.setup.setup_engine import calculate_setup
 
 class AIEngine:
 
@@ -47,6 +48,18 @@ class AIEngine:
         liquidity = calculate_liquidity(
             self.history,
             market_structure
+        )
+
+        # =====================================
+        # Setup Engine
+        # =====================================
+
+        setup = calculate_setup(
+            market_structure=market_structure,
+            liquidity=liquidity,
+            current_price=float(
+                self.latest["Close"]
+            )
         )
 
         # =====================================
@@ -373,7 +386,8 @@ class AIEngine:
             setup_risk_reward,
 
             market_structure=market_structure,
-            liquidity=liquidity
+            liquidity=liquidity,
+            setup=setup
 
         ).analyze()
 
@@ -708,6 +722,8 @@ class AIEngine:
             "market_structure": market_structure,
 
             "liquidity": liquidity,
+
+            "setup": setup,
 
             "opportunity": opportunity,
 
