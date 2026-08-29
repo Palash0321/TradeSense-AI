@@ -32,6 +32,10 @@ class FinalDecisionService:
             "WAIT"
         )
 
+        setup_direction = self.opportunity.get(
+            "setup_direction"
+)
+
         setup_details = self.setup_details
 
         current_price = float(
@@ -48,56 +52,62 @@ class FinalDecisionService:
             ) or 0
         )
 
-        breakout_confirmed = (
-            breakout_level > 0
-            and current_price >= breakout_level
-        )
+        if setup_direction == "SHORT":
+
+            breakout_confirmed = (
+                breakout_level > 0
+                and
+                current_price <= breakout_level
+            )
+
+        else:
+
+            breakout_confirmed = (
+                breakout_level > 0
+                and
+                current_price >= breakout_level
+            )
 
         
 
         # ----------------------------------
-        # Validated BUY
+        # Validated directional setup
         # ----------------------------------
 
+        expected_action = (
+            "SELL"
+            if setup_direction == "SHORT"
+            else "BUY"
+        )
+
         if (
-            action == "BUY"
+            action == expected_action
             and
             validation_status == "VALID"
         ):
 
-            decision = "BUY"
+            decision = expected_action
 
             message = (
-    "Trade setup is validated and "
-    "currently actionable."
-)
+                "Trade setup is validated and "
+                "currently actionable."
+            )
 
         # ----------------------------------
-        # Strong setup but not confirmed
+        # Breakout setup not yet confirmed
         # ----------------------------------
 
         elif preferred_setup == "WAIT_FOR_BREAKOUT":
 
             if (
-                breakout_confirmed
-                and
-                validation_status == "VALID"
+                setup_direction == "SHORT"
             ):
-
-                decision = "BUY"
-
-                message = (
-                    "Breakout confirmed and "
-                    "trade setup is validated."
-                )
-
-            elif breakout_confirmed:
 
                 decision = "WAIT"
 
                 message = (
-                    "Breakout level crossed, but "
-                    "trade validation is still pending."
+                    "Bearish setup detected. "
+                    "Wait for downside breakout confirmation."
                 )
 
             else:
@@ -117,10 +127,44 @@ class FinalDecisionService:
 
             decision = "WAIT"
 
-            message = (
-                "Wait for the preferred pullback "
-                "entry near support."
-            )
+            if setup_direction == "SHORT":
+
+                message = (
+                    "Wait for the preferred bearish "
+                    "pullback entry near resistance."
+                )
+
+            else:
+
+                message = (
+                    "Wait for the preferred pullback "
+                    "entry near support."
+                )
+
+        # ----------------------------------
+        # Structural reversal / continuation
+        # ----------------------------------
+
+        elif setup_direction in [
+            "LONG",
+            "SHORT"
+        ]:
+
+            decision = "WAIT"
+
+            if setup_direction == "SHORT":
+
+                message = (
+                    "Bearish trade setup detected, "
+                    "but validation is still pending."
+                )
+
+            else:
+
+                message = (
+                    "Bullish trade setup detected, "
+                    "but validation is still pending."
+                )
 
         # ----------------------------------
         # Everything else

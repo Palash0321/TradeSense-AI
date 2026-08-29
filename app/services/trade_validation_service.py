@@ -25,6 +25,42 @@ class TradeValidationService:
             "WAIT"
         )
 
+        setup_direction = self.opportunity.get(
+            "setup_direction"
+        )
+
+        setup_type = self.opportunity.get(
+            "setup_type",
+            preferred
+        )
+
+        setup_confidence = float(
+            self.opportunity.get(
+                "setup_confidence",
+                0
+            ) or 0
+        )
+
+        is_long_setup = setup_type in [
+            "LONG_CONTINUATION",
+            "LONG_REVERSAL"
+        ]
+
+        is_short_setup = setup_type in [
+            "SHORT_CONTINUATION",
+            "SHORT_REVERSAL"
+        ]
+
+        is_continuation = setup_type in [
+            "LONG_CONTINUATION",
+            "SHORT_CONTINUATION"
+        ]
+
+        is_reversal = setup_type in [
+            "LONG_REVERSAL",
+            "SHORT_REVERSAL"
+        ]
+
         if preferred in ["NO_SETUP", "WAIT"]:
 
             return {
@@ -97,7 +133,7 @@ class TradeValidationService:
         })
 
         # ----------------------------------
-        # Breakout Confirmation
+        # Directional Confirmation
         # ----------------------------------
 
         current_price = float(
@@ -123,23 +159,61 @@ class TradeValidationService:
             breakout_score >= 70
         )
 
-        breakout_confirmed = (
-            breakout_state == "BREAKOUT_CONFIRMED"
-            and
-            breakout_level > 0
-            and
-            current_price >= breakout_level
-        )
+        # ----------------------------------
+        # Setup-specific confirmation
+        # ----------------------------------
 
-        checks.append({
-            "name": "Breakout Evidence",
-            "passed": breakout_evidence_ok
-        })
+        if is_reversal:
 
-        checks.append({
-            "name": "Breakout Confirmed",
-            "passed": breakout_confirmed
-        })
+            directional_confirmation_ok = (
+                setup_direction in [
+                    "LONG",
+                    "SHORT"
+                ]
+                and
+                setup_confidence >= 60
+            )
+
+        elif setup_direction == "SHORT":
+
+            directional_confirmation_ok = (
+                breakout_level > 0
+                and
+                current_price <= breakout_level
+            )
+
+        else:
+
+            directional_confirmation_ok = (
+                breakout_state == "BREAKOUT_CONFIRMED"
+                and
+                breakout_level > 0
+                and
+                current_price >= breakout_level
+            )
+
+        # ----------------------------------
+        # Setup-specific validation checks
+        # ----------------------------------
+
+        if is_reversal:
+
+            checks.append({
+                "name": "Directional Confirmation",
+                "passed": directional_confirmation_ok
+            })
+
+        else:
+
+            checks.append({
+                "name": "Breakout Evidence",
+                "passed": breakout_evidence_ok
+            })
+
+            checks.append({
+                "name": "Directional Confirmation",
+                "passed": directional_confirmation_ok
+            })
 
         passed = sum(
             1
@@ -153,13 +227,32 @@ class TradeValidationService:
         # Final validation
         # ----------------------------------
 
+        expected_action = (
+            "SELL"
+            if setup_direction == "SHORT"
+            else "BUY"
+        )
+
+        confirmation_ok = (
+            directional_confirmation_ok
+            if is_reversal
+            else (
+                breakout_evidence_ok
+                and
+                directional_confirmation_ok
+            )
+        )
+
         if (
-            action == "BUY"
-            and rr_ok
-            and mtf_ok
-            and confidence_ok
-            and breakout_evidence_ok
-            and breakout_confirmed
+            action == expected_action
+            and
+            rr_ok
+            and
+            mtf_ok
+            and
+            confidence_ok
+            and
+            confirmation_ok
         ):
 
             status = "VALID"
@@ -184,7 +277,7 @@ class TradeValidationService:
                 and
                 breakout_evidence_ok
                 and
-                not breakout_confirmed
+                not directional_confirmation_ok
             ):
 
                 message = (
@@ -218,6 +311,18 @@ class TradeValidationService:
             "checks": checks,
 
             "preferred_setup": preferred,
+
+            "setup_type": setup_type,
+
+            "setup_direction": setup_direction,
+
+            "setup_confidence": setup_confidence,
+
+            "confirmation_type": (
+                "REVERSAL"
+                if is_reversal
+                else "BREAKOUT"
+            ),
 
             "risk_reward": rr
 
