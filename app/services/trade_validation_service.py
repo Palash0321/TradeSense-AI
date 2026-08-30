@@ -103,7 +103,19 @@ class TradeValidationService:
         # AI Confidence
         # ----------------------------------
 
-        confidence_ok = self.ai_confidence >= 70
+        if is_reversal:
+
+            confidence_ok = (
+                self.ai_confidence >= 60
+                and
+                setup_confidence >= 60
+            )
+
+        else:
+
+            confidence_ok = (
+                self.ai_confidence >= 70
+            )
 
         checks.append({
             "name": "AI Confidence",

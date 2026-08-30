@@ -275,7 +275,13 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
         levels,
 
-        risk_reward
+        risk_reward,
+
+        trend_strength=trend_strength,
+
+        macd_status=macd_status,
+
+        rsi_status=rsi_status
 
     ).analyze()
 
@@ -293,20 +299,7 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
     probability = ai["probability"]
 
-    base_confidence = ai["ai_confidence"]
-
-    confidence_bonus = 0
-
-    if trend_strength == "Strong Bullish":
-        confidence_bonus += 5
-
-    if macd_status == "Bullish":
-        confidence_bonus += 3
-
-    if rsi_status == "Neutral":
-        confidence_bonus += 2
-
-    ai_confidence = min(base_confidence + confidence_bonus, 100)
+    ai_confidence = ai["ai_confidence"]
 
     multi_timeframe = ai["multi_timeframe"]
 

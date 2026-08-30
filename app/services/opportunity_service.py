@@ -109,13 +109,12 @@ class OpportunityService:
         )
 
         # ----------------------------------
-        # Non-bullish setup
+        # No directional setup
         # ----------------------------------
 
-        if recommendation not in [
-            "BUY",
-            "STRONG BUY",
-            "ACCUMULATE"
+        if setup_direction not in [
+            "LONG",
+            "SHORT"
         ]:
 
             structure = self.market_structure.get(
@@ -608,11 +607,21 @@ class OpportunityService:
 
 
         # ----------------------------------
-        # Breakout confirmation evidence
+        # Directional confirmation evidence
         # ----------------------------------
 
         volume_ratio = float(
-            self.volume.get("ratio", 0) or 0
+            self.volume.get(
+                "ratio",
+                0
+            ) or 0
+        )
+
+        mtf_probability = float(
+            self.multi_timeframe.get(
+                "overall_probability",
+                0
+            ) or 0
         )
 
         bullish_patterns = [
@@ -635,88 +644,206 @@ class OpportunityService:
             for pattern in self.patterns
         )
 
-        breakout_confirmation_score = 0
-
         # ----------------------------------
         # Multi-Timeframe confirmation
         # ----------------------------------
 
-        mtf_probability = float(
-            self.multi_timeframe.get(
-                "overall_probability",
-                0
-            ) or 0
+        frame_signals = self.multi_timeframe.get(
+            "frames",
+            {}
         )
 
-        if mtf_probability >= 80:
+        bullish_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "BUY"
+        ]
+
+        bearish_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "SELL"
+        ]
+
+        neutral_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "HOLD"
+        ]
+
+        bullish_count = len(
+            bullish_frames
+        )
+
+        bearish_count = len(
+            bearish_frames
+        )
+
+        total_directional_frames = (
+            bullish_count
+            +
+            bearish_count
+        )
+
+        # ----------------------------------
+        # Directional confirmation score
+        # ----------------------------------
+
+        breakout_confirmation_score = 0
+
+        if setup_direction == "SHORT":
+
+            if bearish_count >= 4:
+
+                breakout_confirmation_score += 30
+
+                reasons.append(
+                    "Strong bearish multi-timeframe alignment."
+                )
+
+            elif bearish_count >= 3:
+
+                breakout_confirmation_score += 25
+
+                reasons.append(
+                    "Most major timeframes support the bearish setup."
+                )
+
+            elif bearish_count >= 2:
+
+                breakout_confirmation_score += 15
+
+                reasons.append(
+                    "Some timeframes support the bearish setup."
+                )
+
+            elif bullish_count >= 3:
+
+                breakout_confirmation_score -= 20
+
+                reasons.append(
+                    "Multi-timeframe alignment conflicts with the bearish setup."
+                )
+
+            else:
+
+                reasons.append(
+                    "Multi-timeframe bearish confirmation is limited."
+                )
+
+        else:
+
+            if bullish_count >= 4:
+
+                breakout_confirmation_score += 30
+
+                reasons.append(
+                    "Strong bullish multi-timeframe alignment."
+                )
+
+            elif bullish_count >= 3:
+
+                breakout_confirmation_score += 25
+
+                reasons.append(
+                    "Most major timeframes support the bullish setup."
+                )
+
+            elif bullish_count >= 2:
+
+                breakout_confirmation_score += 15
+
+                reasons.append(
+                    "Some timeframes support the bullish setup."
+                )
+
+            elif bearish_count >= 3:
+
+                breakout_confirmation_score -= 20
+
+                reasons.append(
+                    "Multi-timeframe alignment conflicts with the bullish setup."
+                )
+
+            else:
+
+                reasons.append(
+                    "Multi-timeframe bullish confirmation is limited."
+                )
+
+        # ----------------------------------
+        # Volume confirmation
+        # ----------------------------------
+
+        if volume_ratio >= 2.0:
 
             breakout_confirmation_score += 30
 
             reasons.append(
-                "Strong multi-timeframe bullish alignment."
-            )
-
-        elif mtf_probability >= 60:
-
-            breakout_confirmation_score += 20
-
-            reasons.append(
-                "Most major timeframes support the bullish setup."
-            )
-
-        elif mtf_probability <= 40:
-
-            breakout_confirmation_score -= 20
-
-            reasons.append(
-                "Multi-timeframe alignment is weak."
-            )
-
-        if volume_ratio >= 2.0:
-
-            breakout_confirmation_score += 40
-
-            reasons.append(
-                "Very high volume supports a potential breakout."
+                "Very high volume supports directional confirmation."
             )
 
         elif volume_ratio >= 1.5:
 
-            breakout_confirmation_score += 30
+            breakout_confirmation_score += 20
 
             reasons.append(
-                "High volume supports a potential breakout."
+                "High volume supports directional confirmation."
             )
 
         elif volume_ratio >= 1.0:
 
-            breakout_confirmation_score += 15
+            breakout_confirmation_score += 10
 
             reasons.append(
-                "Normal volume provides limited breakout confirmation."
+                "Normal volume provides limited directional confirmation."
             )
 
         else:
 
             reasons.append(
-                "Low volume does not confirm a breakout."
+                "Low volume does not strongly confirm the setup."
             )
 
-        if bullish_candle:
+        # ----------------------------------
+        # Candlestick confirmation
+        # ----------------------------------
 
-            breakout_confirmation_score += 30
+        if setup_direction == "SHORT":
 
-            reasons.append(
-                "Bullish candlestick confirmation detected."
-            )
+            if bearish_candle:
 
-        if bearish_candle:
+                breakout_confirmation_score += 30
 
-            breakout_confirmation_score -= 30
+                reasons.append(
+                    "Bearish candlestick confirmation detected."
+                )
 
-            reasons.append(
-                "Bearish candlestick pattern weakens breakout confirmation."
-            )
+            elif bullish_candle:
+
+                breakout_confirmation_score -= 20
+
+                reasons.append(
+                    "Bullish candlestick pattern conflicts with the bearish setup."
+                )
+
+        else:
+
+            if bullish_candle:
+
+                breakout_confirmation_score += 30
+
+                reasons.append(
+                    "Bullish candlestick confirmation detected."
+                )
+
+            elif bearish_candle:
+
+                breakout_confirmation_score -= 20
+
+                reasons.append(
+                    "Bearish candlestick pattern conflicts with the bullish setup."
+                )
 
         breakout_confirmation_score = max(
             0,
@@ -726,84 +853,125 @@ class OpportunityService:
             )
         )
 
-         # ----------------------------------
-         # Breakout State
-         # ----------------------------------
-        
+        # ----------------------------------
+        # Directional Breakout State
+        # ----------------------------------
+
         breakout_buffer = self.resistance * 0.0025
-        
-        breakout_level = (
-            self.resistance
-            + breakout_buffer
-        )
-        
-        if self.price < self.resistance:
-        
-            breakout_state = "BELOW_RESISTANCE"
-        
-        elif self.price < breakout_level:
-        
-            breakout_state = "BREAKOUT_ATTEMPT"
-        
-        else:
-        
-                    # Price has moved above resistance.
-                    # Confirmation still requires sufficient
-                    # risk/reward and confirmation evidence.
-        
-            if (
-                breakout_confirmation_score >= 70
-                and breakout_setup_rr >= 1.5
-            ):
-        
-                breakout_state = "BREAKOUT_CONFIRMED"
-        
+
+        breakdown_buffer = self.support * 0.0025
+
+        if setup_direction == "SHORT":
+
+            breakdown_level = (
+                self.support
+                - breakdown_buffer
+            )
+
+            breakout_level = breakdown_level
+
+            if self.price > self.support:
+
+                breakout_state = "ABOVE_SUPPORT"
+
+            elif self.price > breakdown_level:
+
+                breakout_state = "BREAKDOWN_ATTEMPT"
+
             else:
-        
+
+                if (
+                    breakout_confirmation_score >= 70
+                    and
+                    pullback_setup_rr >= 1.5
+                ):
+
+                    breakout_state = "BREAKDOWN_CONFIRMED"
+
+                else:
+
+                    breakout_state = "BREAKDOWN_ATTEMPT"
+
+        else:
+
+            breakout_level = (
+                self.resistance
+                + breakout_buffer
+            )
+
+            if self.price < self.resistance:
+
+                breakout_state = "BELOW_RESISTANCE"
+
+            elif self.price < breakout_level:
+
                 breakout_state = "BREAKOUT_ATTEMPT"
+
+            else:
+
+                if (
+                    breakout_confirmation_score >= 70
+                    and
+                    breakout_setup_rr >= 1.5
+                ):
+
+                    breakout_state = "BREAKOUT_CONFIRMED"
+
+                else:
+
+                    breakout_state = "BREAKOUT_ATTEMPT"
         
+
 
         # ----------------------------------
         # Risk / Reward
         # ----------------------------------
 
-        if breakout_setup_rr >= 1.5:
+        if setup_direction == "SHORT":
 
-            reasons.append(
-                "Breakout setup risk/reward is acceptable."
+            effective_rr = max(
+                rr_ratio,
+                pullback_setup_rr,
+                breakout_setup_rr
             )
 
         else:
 
-            if rr_ratio < 1.0:
+            effective_rr = max(
+                rr_ratio,
+                pullback_setup_rr,
+                breakout_setup_rr
+            )
 
-                score -= 35
+        if effective_rr >= 2.0:
 
-                reasons.append(
-                    "Risk/reward is below 1.0."
-                )
+            reasons.append(
+                "Risk/reward is favorable."
+            )
 
-            elif rr_ratio < 1.5:
+        elif effective_rr >= 1.5:
 
-                score -= 20
+            score -= 10
 
-                reasons.append(
-                    "Risk/reward is below the preferred 1.5 level."
-                )
+            reasons.append(
+                "Risk/reward is acceptable but below 2.0."
+            )
 
-            elif rr_ratio < 2.0:
+        elif effective_rr >= 1.0:
 
-                score -= 10
+            score -= 25
 
-                reasons.append(
-                    "Risk/reward is acceptable but below 2.0."
-                )
+            reasons.append(
+                "Risk/reward is weak and below the preferred 1.5 level."
+            )
 
-            else:
+        else:
 
-                reasons.append(
-                    "Risk/reward is favorable."
-                )
+            score -= 40
+
+            reasons.append(
+                "Risk/reward is below 1.0."
+            )
 
         # ----------------------------------
         # Resistance proximity
@@ -866,69 +1034,172 @@ class OpportunityService:
         # Actionability
         # ----------------------------------
 
-        if (
-    score >= 70
-    and
-    (
-        (
-            breakout_confirmed
-            and
-            breakout_setup_rr >= 1.5
+        is_short_setup = (
+            setup_direction == "SHORT"
         )
-        or
-        (
-            not breakout_confirmed
-            and
-            rr_ratio >= 1.5
-            and
-            resistance_distance > 2
+
+        is_long_setup = (
+            setup_direction == "LONG"
         )
-    )
-):
 
-            status = "READY"
-            action = "BUY"
+        if is_short_setup:
 
-            message = (
-                "Trade setup is currently actionable."
+            short_rr_ok = (
+                pullback_setup_rr >= 1.5
+                or
+                breakout_setup_rr >= 1.5
+                or
+                rr_ratio >= 1.5
             )
 
-            trigger_price = round(
-                self.price,
-                2
+            short_confirmation_ok = (
+
+                (
+                    break_direction == "BEARISH"
+                    and
+                    break_confirmed
+                )
+
+                or
+
+                breakout_state == "BREAKDOWN_CONFIRMED"
+
+                or
+
+                breakout_confirmation_score >= 70
+
             )
+
+            if (
+                score >= 70
+                and
+                short_rr_ok
+                and
+                short_confirmation_ok
+            ):
+
+                status = "READY"
+
+                action = "SELL"
+
+                message = (
+                    "Bearish trade setup is currently actionable."
+                )
+
+                trigger_price = round(
+                    self.price,
+                    2
+                )
+
+            else:
+
+                status = "WAIT"
+
+                action = "WAIT"
+
+                if setup_type in [
+                    "SHORT_CONTINUATION",
+                    "SHORT_REVERSAL"
+                ]:
+
+                    message = (
+                        "Bearish setup detected, but "
+                        "short-entry conditions are not "
+                        "fully confirmed."
+                    )
+
+                    trigger_price = pullback_trigger
+
+                else:
+
+                    message = (
+                        "No immediate bearish setup."
+                    )
+
+                    trigger_price = pullback_trigger
+
+        elif is_long_setup:
+
+            long_rr_ok = (
+                breakout_setup_rr >= 1.5
+                or
+                pullback_setup_rr >= 1.5
+            )
+
+            long_confirmation_ok = (
+                breakout_confirmed
+                or
+                setup_type in [
+                    "LONG_CONTINUATION",
+                    "LONG_REVERSAL"
+                ]
+            )
+
+            if (
+                score >= 70
+                and
+                long_rr_ok
+                and
+                long_confirmation_ok
+            ):
+
+                status = "READY"
+
+                action = "BUY"
+
+                message = (
+                    "Bullish trade setup is currently actionable."
+                )
+
+                trigger_price = round(
+                    self.price,
+                    2
+                )
+
+            else:
+
+                status = "WAIT"
+
+                action = "WAIT"
+
+                if resistance_distance <= 2:
+
+                    message = (
+                        "Bullish setup exists, but price is "
+                        "too close to resistance."
+                    )
+
+                    trigger_price = breakout_trigger
+
+                elif rr_ratio < 1.5:
+
+                    message = (
+                        "Bullish setup exists, but the "
+                        "current risk/reward is not attractive."
+                    )
+
+                    trigger_price = pullback_trigger
+
+                else:
+
+                    message = (
+                        "Bullish setup exists, but the "
+                        "entry is not currently optimal."
+                    )
+
+                    trigger_price = pullback_trigger
 
         else:
 
             status = "WAIT"
+
             action = "WAIT"
 
-            if resistance_distance <= 2:
+            message = (
+                "No directional trade setup is currently confirmed."
+            )
 
-                message = (
-                    "Bullish setup exists, but price is "
-                    "too close to resistance."
-                )
-
-                trigger_price = breakout_trigger
-
-            elif rr_ratio < 1.5:
-
-                message = (
-                    "Bullish setup exists, but the "
-                    "current risk/reward is not attractive."
-                )
-
-                trigger_price = pullback_trigger
-
-            else:
-
-                message = (
-                    "Bullish setup exists, but the "
-                    "entry is not currently optimal."
-                )
-
-                trigger_price = pullback_trigger
+            trigger_price = pullback_trigger
 
         # ----------------------------------
         # Preferred Setup

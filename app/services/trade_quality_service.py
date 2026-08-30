@@ -3,9 +3,15 @@ import pandas as pd
 
 class TradeQualityService:
 
-    def __init__(self, dataframe):
+    def __init__(
+        self,
+        dataframe,
+        setup_direction=None
+    ):
 
         self.df = dataframe
+
+        self.setup_direction = setup_direction
 
     # ==========================
     # Trend Score (0-25)
@@ -13,9 +19,19 @@ class TradeQualityService:
 
     def trend_score(self):
 
-            latest = self.df.iloc[-1]
+        latest = self.df.iloc[-1]
 
-            score = 0
+        score = 0
+
+        if self.setup_direction == "SHORT":
+
+            if latest["MA20"] < latest["MA50"]:
+                score += 15
+
+            if latest["Close"] < latest["MA20"]:
+                score += 10
+
+        else:
 
             if latest["MA20"] > latest["MA50"]:
                 score += 15
@@ -23,7 +39,7 @@ class TradeQualityService:
             if latest["Close"] > latest["MA20"]:
                 score += 10
 
-            return score
+        return score
 
     # ==========================
     # Momentum Score (0-20)
@@ -35,11 +51,21 @@ class TradeQualityService:
 
         score = 0
 
-        if 50 <= latest["RSI"] <= 70:
-            score += 10
+        if self.setup_direction == "SHORT":
 
-        if latest["MACD"] > latest["Signal"]:
-            score += 10
+            if 30 <= latest["RSI"] <= 50:
+                score += 10
+
+            if latest["MACD"] < latest["Signal"]:
+                score += 10
+
+        else:
+
+            if 50 <= latest["RSI"] <= 70:
+                score += 10
+
+            if latest["MACD"] > latest["Signal"]:
+                score += 10
 
         return score
 
@@ -67,7 +93,7 @@ class TradeQualityService:
 
         return 5
 
-        # ==========================
+    # ==========================
     # Overall Trade Score (0-100)
     # ==========================
 
@@ -108,7 +134,7 @@ class TradeQualityService:
 
         }
 
-        # ==========================
+    # ==========================
     # Trade Grade
     # ==========================
 
@@ -142,7 +168,7 @@ class TradeQualityService:
 
             return "★ Avoid"
 
-            # ==========================
+    # ==========================
     # AI Confidence
     # ==========================
 
@@ -172,7 +198,7 @@ class TradeQualityService:
 
         )
 
-        # ==========================
+    # ==========================
     # Recommendation
     # ==========================
 
@@ -180,23 +206,42 @@ class TradeQualityService:
 
         score = self.overall_score()["total_score"]
 
-        if score >= 90:
-            return "STRONG BUY"
+        if self.setup_direction == "SHORT":
 
-        elif score >= 75:
-            return "BUY"
+            if score >= 90:
+                return "STRONG SELL"
 
-        elif score >= 60:
-            return "ACCUMULATE"
+            elif score >= 75:
+                return "SELL"
 
-        elif score >= 40:
-            return "HOLD"
+            elif score >= 60:
+                return "DISTRIBUTE"
+
+            elif score >= 40:
+                return "HOLD"
+
+            else:
+                return "AVOID"
 
         else:
-            return "AVOID"
+
+            if score >= 90:
+                return "STRONG BUY"
+
+            elif score >= 75:
+                return "BUY"
+
+            elif score >= 60:
+                return "ACCUMULATE"
+
+            elif score >= 40:
+                return "HOLD"
+
+            else:
+                return "AVOID"
 
 
-        # ==========================
+    # ==========================
     # Risk Rating
     # ==========================
 
@@ -220,7 +265,7 @@ class TradeQualityService:
             return "Very High"
 
 
-        # ==========================
+    # ==========================
     # Complete Analysis
     # ==========================
 

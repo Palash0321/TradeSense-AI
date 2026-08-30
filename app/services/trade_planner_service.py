@@ -12,7 +12,9 @@ class TradePlannerService:
 
         resistance,
 
-        risk_reward
+        risk_reward,
+
+        setup_direction=None
 
     ):
 
@@ -26,6 +28,8 @@ class TradePlannerService:
 
         self.rr = risk_reward
 
+        self.setup_direction = setup_direction
+
     # ==========================
     # Generate Trade Plan
     # ==========================
@@ -38,73 +42,126 @@ class TradePlannerService:
 
         atr = self.analysis["atr"]
 
-        if recommendation in [
+        # ----------------------------------
+        # Determine trade direction
+        # ----------------------------------
+
+        if self.setup_direction in [
+            "LONG",
+            "SHORT"
+        ]:
+
+            direction = self.setup_direction
+
+        elif recommendation in [
 
             "BUY",
-
             "STRONG BUY",
-
             "ACCUMULATE"
 
         ]:
 
+            direction = "LONG"
+
+        elif recommendation in [
+
+            "SELL",
+            "STRONG SELL",
+            "DISTRIBUTE"
+
+        ]:
+
+            direction = "SHORT"
+
+        else:
+
+            direction = None
+
+        # ----------------------------------
+        # LONG setup
+        # ----------------------------------
+
+        if direction == "LONG":
+
             entry_low = round(
-
                 self.support +
-
                 atr * 0.25,
-
                 2
-
             )
 
             entry_high = round(
-
                 self.support +
-
                 atr * 0.75,
-
                 2
-
             )
 
             stop_loss = round(
-
                 self.support -
-
                 atr,
-
                 2
-
             )
 
             target1 = round(
-
                 self.resistance,
-
                 2
-
             )
 
             target2 = round(
-
                 self.resistance +
-
                 atr,
-
                 2
-
             )
 
             target3 = round(
-
                 self.resistance +
-
                 atr * 2,
-
                 2
-
             )
+
+        # ----------------------------------
+        # SHORT setup
+        # ----------------------------------
+
+        elif direction == "SHORT":
+
+            entry_low = round(
+                self.resistance -
+                atr * 0.75,
+                2
+            )
+
+            entry_high = round(
+                self.resistance -
+                atr * 0.25,
+                2
+            )
+
+            stop_loss = round(
+                self.resistance +
+                atr,
+                2
+            )
+
+            target1 = round(
+                self.support,
+                2
+            )
+
+            target2 = round(
+                self.support -
+                atr,
+                2
+            )
+
+            target3 = round(
+                self.support -
+                atr * 2,
+                2
+            )
+
+        # ----------------------------------
+        # No directional setup
+        # ----------------------------------
 
         else:
 
@@ -123,6 +180,8 @@ class TradePlannerService:
         return {
 
             "recommendation": recommendation,
+
+            "direction": direction,
 
             "confidence": confidence,
 

@@ -22,7 +22,11 @@ class AIEngine:
         history,
         latest,
         levels,
-        risk_reward
+        risk_reward,
+        setup_direction=None,
+        trend_strength=None,
+        macd_status=None,
+        rsi_status=None
     ):
 
         self.symbol = symbol
@@ -30,6 +34,10 @@ class AIEngine:
         self.latest = latest
         self.levels = levels
         self.risk_reward = risk_reward
+        self.setup_direction = setup_direction
+        self.trend_strength = trend_strength
+        self.macd_status = macd_status
+        self.rsi_status = rsi_status
 
     def analyze(self):
 
@@ -67,7 +75,10 @@ class AIEngine:
         # =====================================
 
         trade_quality = TradeQualityService(
-            self.history
+            self.history,
+            setup_direction=setup.get(
+                "direction"
+            )
         )
 
         analysis = trade_quality.analyze()
@@ -278,7 +289,11 @@ class AIEngine:
 
             self.levels["resistance"],
 
-            self.risk_reward
+            self.risk_reward,
+
+            setup_direction=setup.get(
+                "direction"
+            )
 
         ).generate()
 
@@ -287,7 +302,10 @@ class AIEngine:
         # =====================================
 
         multi_timeframe = MultiTimeframeService(
-            self.symbol
+            self.symbol,
+            setup_direction=setup.get(
+                "direction"
+            )
         ).analyze()
 
         # =====================================
@@ -617,6 +635,29 @@ class AIEngine:
         
             ).calculate()
 
+        # =====================================
+        # Confidence Adjustment
+        # =====================================
+
+        confidence_bonus = 0
+
+        if self.trend_strength == "Strong Bullish":
+
+            confidence_bonus += 5
+
+        if self.macd_status == "Bullish":
+
+            confidence_bonus += 3
+
+        if self.rsi_status == "Neutral":
+
+            confidence_bonus += 2
+
+        ai_confidence = min(
+            ai_confidence + confidence_bonus,
+            100
+        )
+
         
 
         # =====================================
@@ -665,12 +706,27 @@ class AIEngine:
 
         if preferred_setup in [
             "BREAKOUT",
-            "WAIT_FOR_BREAKOUT"
+            "WAIT_FOR_BREAKOUT",
+            "LONG_CONTINUATION",
+            "LONG_REVERSAL",
+            "SHORT_CONTINUATION",
+            "SHORT_REVERSAL"
         ]:
 
-            setup_risk_reward = entry_engine[
-                "breakout"
-            ]["risk_reward"]["target1"]
+            if preferred_setup in [
+                "SHORT_CONTINUATION",
+                "SHORT_REVERSAL"
+            ]:
+
+                setup_risk_reward = entry_engine[
+                    "pullback"
+                ]["risk_reward"]["target1"]
+
+            else:
+
+                setup_risk_reward = entry_engine[
+                    "breakout"
+                ]["risk_reward"]["target1"]
 
         elif preferred_setup == "PULLBACK":
 

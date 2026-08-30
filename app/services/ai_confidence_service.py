@@ -54,7 +54,7 @@ class AIConfidenceService:
         # Opportunity
         # --------------------------
 
-        if self.opportunity["status"] == "BUY":
+        if self.opportunity["status"] == "READY":
 
             score += 10
 
@@ -66,7 +66,16 @@ class AIConfidenceService:
         # Trade Plan
         # --------------------------
 
-        if self.trade_plan["recommendation"] == "BUY":
+        if self.trade_plan["recommendation"] in [
+
+            "BUY",
+            "STRONG BUY",
+            "ACCUMULATE",
+            "SELL",
+            "STRONG SELL",
+            "DISTRIBUTE"
+
+        ]:
 
             score += 10
 

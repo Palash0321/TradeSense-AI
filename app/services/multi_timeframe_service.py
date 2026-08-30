@@ -4,9 +4,15 @@ import pandas as pd
 
 class MultiTimeframeService:
 
-    def __init__(self, symbol):
+    def __init__(
+        self,
+        symbol,
+        setup_direction=None
+    ):
 
         self.symbol = symbol
+
+        self.setup_direction = setup_direction
 
     def _download(self, interval, period):
 
@@ -233,15 +239,76 @@ class MultiTimeframeService:
 
         total += four_hour_result["score"]
 
-        probability = round(
-            (total / 10) * 100,
+        bullish_count = sum(
+            1
+            for result in results.values()
+            if result["signal"] == "BUY"
+        )
+
+        bearish_count = sum(
+            1
+            for result in results.values()
+            if result["signal"] == "SELL"
+        )
+
+        neutral_count = sum(
+            1
+            for result in results.values()
+            if result["signal"] == "HOLD"
+        )
+
+        total_frames = len(results)
+
+        bullish_probability = round(
+            (
+                bullish_count
+                / total_frames
+            ) * 100,
             1
         )
+
+        bearish_probability = round(
+            (
+                bearish_count
+                / total_frames
+            ) * 100,
+            1
+        )
+
+        neutral_probability = round(
+            (
+                neutral_count
+                / total_frames
+            ) * 100,
+            1
+        )
+
+        # ----------------------------------
+        # Direction-aware probability
+        # ----------------------------------
+
+        if self.setup_direction == "SHORT":
+
+            overall_probability = bearish_probability
+
+        elif self.setup_direction == "LONG":
+
+            overall_probability = bullish_probability
+
+        else:
+
+            overall_probability = bullish_probability
 
         return {
 
             "frames": results,
 
-            "overall_probability": probability
+            "overall_probability": overall_probability,
+
+            "bullish_probability": bullish_probability,
+
+            "bearish_probability": bearish_probability,
+
+            "neutral_probability": neutral_probability
 
         }
