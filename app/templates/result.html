@@ -223,9 +223,11 @@
 
         <h2>🤖 TradeSense AI</h2>
 
-        <span class="signal {{ result.final_decision.decision|lower }}">
+<span class="signal {{ result.final_decision.decision|lower }}">
     {% if result.final_decision.decision == "BUY" %}
         🟢 BUY
+    {% elif result.final_decision.decision == "SELL" %}
+        🔴 SELL
     {% else %}
         🟡 WAIT
     {% endif %}
@@ -278,6 +280,8 @@
 <div class="final-decision-box
     {% if result.final_decision.decision == 'BUY' %}
         final-buy
+    {% elif result.final_decision.decision == 'SELL' %}
+        final-sell
     {% else %}
         final-wait
     {% endif %}">
@@ -292,15 +296,19 @@
 
             <h2>
 
-                {% if result.final_decision.decision == "BUY" %}
+        {% if result.final_decision.decision == "BUY" %}
 
-                    🟢 BUY
+            🟢 BUY
 
-                {% else %}
+        {% elif result.final_decision.decision == "SELL" %}
 
-                    🟡 WAIT
+            🔴 SELL
 
-                {% endif %}
+        {% else %}
+
+            🟡 WAIT
+
+        {% endif %}
 
             </h2>
 
@@ -514,10 +522,16 @@
 
         <div class="setup-decision-main">
 
-            {% if result.opportunity.action == "BUY" %}
+            {% if result.opportunity.status == "READY" %}
 
                 <span class="setup-decision-status ready">
-                    🟢 TRADE READY
+                    {% if result.opportunity.action == "BUY" %}
+                        🟢 BUY READY
+                    {% elif result.opportunity.action == "SELL" %}
+                        🔴 SELL READY
+                    {% else %}
+                        🟢 TRADE READY
+                    {% endif %}
                 </span>
 
                 <h2>

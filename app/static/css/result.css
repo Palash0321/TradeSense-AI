@@ -2195,6 +2195,11 @@ body{
     border-color: rgba(34, 197, 94, 0.30);
 }
 
+.final-decision-box.final-sell {
+    background: rgba(239, 68, 68, 0.05);
+    border-color: rgba(239, 68, 68, 0.30);
+}
+
 .final-decision-top {
     display: flex;
     align-items: center;
@@ -2222,6 +2227,10 @@ body{
 
 .final-buy h2 {
     color: #22C55E;
+}
+
+.final-sell h2 {
+    color: #EF4444;
 }
 
 .final-confidence {
