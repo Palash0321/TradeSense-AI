@@ -2335,6 +2335,11 @@ body{
     color: #166534;
 }
 
+.trade-signal-badge.sell {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
 .trade-signal-badge.wait {
     background: #fef3c7;
     color: #92400e;

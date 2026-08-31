@@ -524,15 +524,15 @@
 
             {% if result.opportunity.status == "READY" %}
 
-                <span class="setup-decision-status ready">
-                    {% if result.opportunity.action == "BUY" %}
-                        🟢 BUY READY
-                    {% elif result.opportunity.action == "SELL" %}
-                        🔴 SELL READY
-                    {% else %}
-                        🟢 TRADE READY
-                    {% endif %}
-                </span>
+            <span class="setup-decision-status ready">
+                {% if result.opportunity.action == "BUY" %}
+                    🟢 BUY READY
+                {% elif result.opportunity.action == "SELL" %}
+                    🔴 SELL READY
+                {% else %}
+                    🟢 TRADE READY
+                {% endif %}
+            </span>
 
                 <h2>
                     {{ result.opportunity.message }}
@@ -707,6 +707,12 @@
 
                 <span class="trade-signal-badge buy">
                     🟢 BUY
+                </span>
+
+            {% elif result.trade_signal.decision == "SELL" %}
+
+                <span class="trade-signal-badge sell">
+                    🔴 SELL
                 </span>
 
             {% elif result.trade_signal.preferred_setup == "NO_SETUP" %}

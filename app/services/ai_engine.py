@@ -100,15 +100,25 @@ class AIEngine:
 
         if analysis["trend"] >= 20:
 
+            if setup.get("direction") == "SHORT":
+
+                trend_direction = "bearish"
+                trend_reason = "Strong bearish trend"
+
+            else:
+
+                trend_direction = "bullish"
+                trend_reason = "Strong bullish trend"
+
             rules.add(
 
                 module="Trend",
 
                 weight=20,
 
-                direction="bullish",
+                direction=trend_direction,
 
-                reason="Strong bullish trend",
+                reason=trend_reason,
 
                 confidence=90
 
@@ -122,13 +132,14 @@ class AIEngine:
 
                 weight=20,
 
-                direction="bearish",
+                direction="neutral",
 
-                reason="Weak trend",
+                reason="Trend confirmation is weak",
 
                 confidence=90
 
             )
+
 
         # -------------------------
         # Momentum
@@ -136,15 +147,25 @@ class AIEngine:
 
         if analysis["momentum"] >= 20:
 
+            if setup.get("direction") == "SHORT":
+
+                momentum_direction = "bearish"
+                momentum_reason = "Strong bearish momentum"
+
+            else:
+
+                momentum_direction = "bullish"
+                momentum_reason = "Strong bullish momentum"
+
             rules.add(
 
                 module="Momentum",
 
                 weight=15,
 
-                direction="bullish",
+                direction=momentum_direction,
 
-                reason="Momentum is strong",
+                reason=momentum_reason,
 
                 confidence=85
 
@@ -158,9 +179,9 @@ class AIEngine:
 
                 weight=15,
 
-                direction="bearish",
+                direction="neutral",
 
-                reason="Momentum is weak",
+                reason="Momentum confirmation is weak",
 
                 confidence=85
 
@@ -242,15 +263,27 @@ class AIEngine:
 
         ]:
 
+            volume_direction = (
+                "bearish"
+                if setup.get("direction") == "SHORT"
+                else "bullish"
+            )
+
+            volume_reason = (
+                "High trading volume supports the bearish setup."
+                if setup.get("direction") == "SHORT"
+                else "High trading volume supports the bullish setup."
+            )
+
             rules.add(
 
                 module="Volume",
 
                 weight=10,
 
-                direction="bullish",
+                direction=volume_direction,
 
-                reason="High trading volume",
+                reason=volume_reason,
 
                 confidence=80
 
@@ -262,11 +295,11 @@ class AIEngine:
 
                 module="Volume",
 
-                weight=10,
+                weight=0,
 
-                direction="bearish",
+                direction="neutral",
 
-                reason="Low trading volume",
+                reason="Low trading volume does not strongly confirm the setup.",
 
                 confidence=80
 
@@ -426,7 +459,6 @@ class AIEngine:
             opportunity
 
         ).calculate()
-
         # =====================================
         # Multi-Timeframe Rule
         # =====================================
@@ -434,10 +466,13 @@ class AIEngine:
         mtf_probability = multi_timeframe["overall_probability"]
 
         # Build the explanation from the actual timeframe signals.
-        # This prevents the score from making claims that the individual
-        # timeframe results do not support.
+        # The probability is already direction-aware because
+        # MultiTimeframeService uses setup_direction.
 
-        frame_signals = multi_timeframe.get("frames", {})
+        frame_signals = multi_timeframe.get(
+            "frames",
+            {}
+        )
 
         bullish_frames = [
             name
@@ -457,149 +492,271 @@ class AIEngine:
             if data.get("signal") == "HOLD"
         ]
 
+        unknown_frames = [
+            name
+            for name, data in frame_signals.items()
+            if data.get("signal") == "UNKNOWN"
+        ]
+
+
         def format_frames(frames):
+
             return ", ".join(frames)
 
-        if mtf_probability >= 80:
 
-            if bullish_frames and neutral_frames:
+        # -------------------------------------
+        # Direction-aware MTF interpretation
+        # -------------------------------------
+
+        if setup.get("direction") == "SHORT":
+
+            if mtf_probability >= 80:
+
+                reason_parts = []
+
+                if bearish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bearish_frames)} bearish"
+                    )
+
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
 
                 reason = (
-                    "Strong bullish multi-timeframe alignment — "
-                    f"{format_frames(bullish_frames)} bullish; "
-                    f"{format_frames(neutral_frames)} neutral"
+                    "Strong bearish multi-timeframe alignment — "
+                    + "; ".join(reason_parts)
                 )
 
-            elif bullish_frames:
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=20,
+
+                    direction="bearish",
+
+                    reason=reason,
+
+                    confidence=95
+
+                )
+
+            elif mtf_probability >= 60:
+
+                reason_parts = []
+
+                if bearish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bearish_frames)} bearish"
+                    )
+
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
+
+                if bullish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bullish_frames)} bullish"
+                    )
 
                 reason = (
-                    "Strong bullish multi-timeframe alignment — "
-                    f"{format_frames(bullish_frames)} bullish"
+                    "Bearish multi-timeframe bias — "
+                    + "; ".join(reason_parts)
+                )
+
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=10,
+
+                    direction="bearish",
+
+                    reason=reason,
+
+                    confidence=85
+
+                )
+
+            elif mtf_probability <= 40:
+
+                reason_parts = []
+
+                if bullish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bullish_frames)} bullish"
+                    )
+
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
+
+                if bearish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bearish_frames)} bearish"
+                    )
+
+                reason = (
+                    "Weak bearish multi-timeframe alignment — "
+                    + "; ".join(reason_parts)
+                )
+
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=10,
+
+                    direction="bullish",
+
+                    reason=reason,
+
+                    confidence=80
+
                 )
 
             else:
 
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=0,
+
+                    direction="neutral",
+
+                    reason="Mixed multi-timeframe signals.",
+
+                    confidence=80
+
+                )
+
+
+        else:
+
+            if mtf_probability >= 80:
+
+                reason_parts = []
+
+                if bullish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bullish_frames)} bullish"
+                    )
+
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
+
                 reason = (
-                    "Strong bullish multi-timeframe score"
+                    "Strong bullish multi-timeframe alignment — "
+                    + "; ".join(reason_parts)
                 )
 
-            rules.add(
+                rules.add(
 
-                module="Multi Timeframe",
+                    module="Multi Timeframe",
 
-                weight=20,
+                    weight=20,
 
-                direction="bullish",
+                    direction="bullish",
 
-                reason=reason,
+                    reason=reason,
 
-                confidence=95
+                    confidence=95
 
-            )
-
-        elif mtf_probability >= 60:
-
-            reason_parts = []
-
-            if bullish_frames:
-                reason_parts.append(
-                    f"{format_frames(bullish_frames)} bullish"
                 )
 
-            if neutral_frames:
-                reason_parts.append(
-                    f"{format_frames(neutral_frames)} neutral"
+            elif mtf_probability >= 60:
+
+                reason_parts = []
+
+                if bullish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bullish_frames)} bullish"
+                    )
+
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
+
+                if bearish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bearish_frames)} bearish"
+                    )
+
+                reason = (
+                    "Bullish multi-timeframe bias — "
+                    + "; ".join(reason_parts)
                 )
 
-            if bearish_frames:
-                reason_parts.append(
-                    f"{format_frames(bearish_frames)} bearish"
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=10,
+
+                    direction="bullish",
+
+                    reason=reason,
+
+                    confidence=85
+
                 )
 
-            reason = (
-                "Bullish multi-timeframe bias — "
-                + "; ".join(reason_parts)
-            )
+            elif mtf_probability <= 40:
 
-            rules.add(
+                reason_parts = []
 
-                module="Multi Timeframe",
+                if bearish_frames:
+                    reason_parts.append(
+                        f"{format_frames(bearish_frames)} bearish"
+                    )
 
-                weight=10,
+                if neutral_frames:
+                    reason_parts.append(
+                        f"{format_frames(neutral_frames)} neutral"
+                    )
 
-                direction="bullish",
-
-                reason=reason,
-
-                confidence=85
-
-            )
-
-        elif mtf_probability <= 20:
-
-            reason_parts = []
-
-            if bearish_frames:
-                reason_parts.append(
-                    f"{format_frames(bearish_frames)} bearish"
+                reason = (
+                    "Weak bullish multi-timeframe alignment — "
+                    + "; ".join(reason_parts)
                 )
 
-            if neutral_frames:
-                reason_parts.append(
-                    f"{format_frames(neutral_frames)} neutral"
+                rules.add(
+
+                    module="Multi Timeframe",
+
+                    weight=10,
+
+                    direction="bearish",
+
+                    reason=reason,
+
+                    confidence=80
+
                 )
 
-            reason = (
-                "Strong bearish multi-timeframe alignment — "
-                + "; ".join(reason_parts)
-            )
+            else:
 
-            rules.add(
+                rules.add(
 
-                module="Multi Timeframe",
+                    module="Multi Timeframe",
 
-                weight=20,
+                    weight=0,
 
-                direction="bearish",
+                    direction="neutral",
 
-                reason=reason,
+                    reason="Mixed multi-timeframe signals.",
 
-                confidence=95
+                    confidence=80
 
-            )
-
-        elif mtf_probability <= 40:
-
-            reason_parts = []
-
-            if bearish_frames:
-                reason_parts.append(
-                    f"{format_frames(bearish_frames)} bearish"
                 )
-
-            if neutral_frames:
-                reason_parts.append(
-                    f"{format_frames(neutral_frames)} neutral"
-                )
-
-            reason = (
-                "Bearish multi-timeframe bias — "
-                + "; ".join(reason_parts)
-            )
-
-            rules.add(
-
-                module="Multi Timeframe",
-
-                weight=10,
-
-                direction="bearish",
-
-                reason=reason,
-
-                confidence=80
-
-            )
 
         result = rules.final_score()
         
@@ -683,7 +840,13 @@ class AIEngine:
                 **entry_engine["breakout"]
             }
 
-        elif preferred_setup == "PULLBACK":
+        elif preferred_setup in [
+            "PULLBACK",
+            "LONG_CONTINUATION",
+            "LONG_REVERSAL",
+            "SHORT_CONTINUATION",
+            "SHORT_REVERSAL"
+        ]:
 
             setup_details = {
                 "type": "PULLBACK",

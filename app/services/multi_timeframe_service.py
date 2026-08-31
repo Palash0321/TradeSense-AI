@@ -239,55 +239,118 @@ class MultiTimeframeService:
 
         total += four_hour_result["score"]
 
+        # ----------------------------------
+        # Valid timeframe signals
+        # ----------------------------------
+
+        valid_results = {
+
+            name: result
+
+            for name, result in results.items()
+
+            if result["signal"] in [
+                "BUY",
+                "SELL",
+                "HOLD"
+            ]
+
+        }
+
+        unknown_frames = [
+
+            name
+
+            for name, result in results.items()
+
+            if result["signal"] == "UNKNOWN"
+
+        ]
+
         bullish_count = sum(
+
             1
-            for result in results.values()
+
+            for result in valid_results.values()
+
             if result["signal"] == "BUY"
+
         )
 
         bearish_count = sum(
+
             1
-            for result in results.values()
+
+            for result in valid_results.values()
+
             if result["signal"] == "SELL"
+
         )
 
         neutral_count = sum(
+
             1
-            for result in results.values()
+
+            for result in valid_results.values()
+
             if result["signal"] == "HOLD"
+
         )
 
-        total_frames = len(results)
+        valid_frames = len(valid_results)
 
-        bullish_probability = round(
-            (
-                bullish_count
-                / total_frames
-            ) * 100,
-            1
-        )
+        if valid_frames > 0:
 
-        bearish_probability = round(
-            (
-                bearish_count
-                / total_frames
-            ) * 100,
-            1
-        )
+            bullish_probability = round(
 
-        neutral_probability = round(
-            (
-                neutral_count
-                / total_frames
-            ) * 100,
-            1
-        )
+                (
+                    bullish_count
+                    / valid_frames
+                ) * 100,
+
+                1
+
+            )
+
+            bearish_probability = round(
+
+                (
+                    bearish_count
+                    / valid_frames
+                ) * 100,
+
+                1
+
+            )
+
+            neutral_probability = round(
+
+                (
+                    neutral_count
+                    / valid_frames
+                ) * 100,
+
+                1
+
+            )
+
+        else:
+
+            bullish_probability = 0.0
+
+            bearish_probability = 0.0
+
+            neutral_probability = 0.0
 
         # ----------------------------------
         # Direction-aware probability
         # ----------------------------------
 
-        if self.setup_direction == "SHORT":
+        if valid_frames == 0:
+
+            overall_probability = 0.0
+
+        elif self.setup_direction == "SHORT":
 
             overall_probability = bearish_probability
 
@@ -309,6 +372,16 @@ class MultiTimeframeService:
 
             "bearish_probability": bearish_probability,
 
-            "neutral_probability": neutral_probability
+            "neutral_probability": neutral_probability,
+
+            "valid_frames": valid_frames,
+
+            "unknown_frames": unknown_frames,
+
+            "valid_frame_count": valid_frames,
+
+            "unknown_frame_count": len(
+                unknown_frames
+            )
 
         }
