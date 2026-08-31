@@ -2676,6 +2676,983 @@ class BacktestService:
         }
 
     # =====================================
+    # Directional Backtest Engine
+    # LONG + SHORT
+    # =====================================
+
+    def run_directional_backtest(
+        self,
+        df,
+        signal_column="Signal",
+        initial_stop_atr=2.0,
+        target_r=2.0,
+        risk_per_trade=0.01
+    ):
+
+        if df is None or df.empty:
+
+            return {
+                "trades": [],
+                "equity_curve": [],
+                "max_drawdown": 0,
+                "peak_capital": self.initial_capital
+            }
+
+        required_columns = [
+            "Open",
+            "High",
+            "Low",
+            "Close",
+            signal_column,
+            "ATR"
+        ]
+
+        missing = [
+            column
+            for column in required_columns
+            if column not in df.columns
+        ]
+
+        if missing:
+
+            raise ValueError(
+                f"Directional backtest requires "
+                f"columns: {missing}"
+            )
+
+        trades = []
+
+        equity_curve = []
+
+        cash = float(
+            self.initial_capital
+        )
+
+        peak_equity = cash
+
+        max_drawdown = 0
+
+        in_position = False
+
+        direction = None
+
+        shares = 0
+
+        entry_price = None
+
+        entry_date = None
+
+        stop_loss = None
+
+        target_price = None
+
+        initial_risk = None
+
+        entry_atr = None
+
+        entry_value = 0
+
+        entry_cost = 0
+
+        max_adverse_price = None
+
+        max_favorable_price = None
+
+        slippage_rate = (
+            self.slippage / 100
+        )
+
+        rows = list(
+            df.iterrows()
+        )
+
+        for i in range(
+            len(rows)
+        ):
+
+            index, row = rows[i]
+
+            open_price = float(
+                row["Open"]
+            )
+
+            high_price = float(
+                row["High"]
+            )
+
+            low_price = float(
+                row["Low"]
+            )
+
+            close_price = float(
+                row["Close"]
+            )
+
+            signal = row[
+                signal_column
+            ]
+
+            # =================================
+            # Mark-to-market equity
+            # =================================
+
+            if in_position:
+
+                if direction == "LONG":
+
+                    current_equity = (
+                        cash
+                        + (
+                            shares
+                            * close_price
+                        )
+                    )
+
+                elif direction == "SHORT":
+
+                    unrealized_pnl = (
+                        (
+                            entry_price
+                            - close_price
+                        )
+                        * shares
+                    )
+
+                    current_equity = (
+                        cash
+                        + unrealized_pnl
+                    )
+
+                else:
+
+                    current_equity = cash
+
+            else:
+
+                current_equity = cash
+
+            current_equity = float(
+                current_equity
+            )
+
+            # =================================
+            # Peak equity
+            # =================================
+
+            peak_equity = max(
+                peak_equity,
+                current_equity
+            )
+
+            # =================================
+            # Drawdown
+            # =================================
+
+            if peak_equity > 0:
+
+                drawdown = (
+                    (
+                        peak_equity
+                        - current_equity
+                    )
+                    / peak_equity
+                ) * 100
+
+                max_drawdown = max(
+                    max_drawdown,
+                    drawdown
+                )
+
+            # =================================
+            # Equity curve
+            # =================================
+
+            equity_curve.append({
+
+                "date":
+                    index.strftime(
+                        "%Y-%m-%d"
+                    ),
+
+                "capital":
+                    round(
+                        current_equity,
+                        2
+                    )
+
+            })
+
+            # =================================
+            # Manage existing position
+            # =================================
+
+            if in_position:
+
+                exit_price = None
+
+                exit_reason = None
+
+                # ---------------------------------
+                # LONG position
+                # ---------------------------------
+
+                if direction == "LONG":
+
+                    if (
+                        low_price
+                        <= stop_loss
+                    ):
+
+                        exit_price = (
+                            stop_loss
+                            * (
+                                1
+                                - slippage_rate
+                            )
+                        )
+
+                        exit_reason = (
+                            "STOP_LOSS"
+                        )
+
+                    elif (
+                        high_price
+                        >= target_price
+                    ):
+
+                        exit_price = (
+                            target_price
+                            * (
+                                1
+                                - slippage_rate
+                            )
+                        )
+
+                        exit_reason = (
+                            "TARGET"
+                        )
+
+                # ---------------------------------
+                # SHORT position
+                # ---------------------------------
+
+                elif direction == "SHORT":
+
+                    if (
+                        high_price
+                        >= stop_loss
+                    ):
+
+                        exit_price = (
+                            stop_loss
+                            * (
+                                1
+                                + slippage_rate
+                            )
+                        )
+
+                        exit_reason = (
+                            "STOP_LOSS"
+                        )
+
+                    elif (
+                        low_price
+                        <= target_price
+                    ):
+
+                        exit_price = (
+                            target_price
+                            * (
+                                1
+                                + slippage_rate
+                            )
+                        )
+
+                        exit_reason = (
+                            "TARGET"
+                        )
+
+                # ---------------------------------
+                # Track MAE / MFE
+                # ---------------------------------
+
+                if direction == "LONG":
+
+                    max_adverse_price = min(
+                        max_adverse_price,
+                        low_price
+                    )
+
+                    max_favorable_price = max(
+                        max_favorable_price,
+                        high_price
+                    )
+
+                else:
+
+                    max_adverse_price = max(
+                        max_adverse_price,
+                        high_price
+                    )
+
+                    max_favorable_price = min(
+                        max_favorable_price,
+                        low_price
+                    )
+
+                # ---------------------------------
+                # Exit
+                # ---------------------------------
+
+                if exit_price is not None:
+
+                    if direction == "LONG":
+
+                        exit_value = (
+                            exit_price
+                            * shares
+                        )
+
+                        exit_cost = (
+                            self.brokerage
+                        )
+
+                        profit = (
+                            exit_value
+                            - exit_cost
+                            - entry_value
+                            - entry_cost
+                        )
+
+                    else:
+
+                        # Short P&L:
+                        # entry sell value
+                        # minus buyback value
+
+                        exit_value = (
+                            exit_price
+                            * shares
+                        )
+
+                        exit_cost = (
+                            self.brokerage
+                        )
+
+                        profit = (
+                            entry_value
+                            - exit_value
+                            - entry_cost
+                            - exit_cost
+                        )
+
+                    if direction == "LONG":
+
+                        cash += (
+                            exit_value
+                            - exit_cost
+                        )
+
+                    else:
+
+                        cash += profit
+
+                    invested_capital = (
+                        entry_value
+                        + entry_cost
+                    )
+
+                    if invested_capital > 0:
+
+                        return_percent = (
+                            profit
+                            / invested_capital
+                        ) * 100
+
+                    else:
+
+                        return_percent = 0
+
+                    if (
+                        initial_risk is not None
+                        and initial_risk > 0
+                    ):
+
+                        r_multiple = (
+                            profit
+                            / initial_risk
+                        )
+
+                    else:
+
+                        r_multiple = 0
+
+                    if direction == "LONG":
+
+                        mae_percent = (
+                            (
+                                (
+                                    max_adverse_price
+                                    - entry_price
+                                )
+                                / entry_price
+                            )
+                            * 100
+                        )
+
+                        mfe_percent = (
+                            (
+                                (
+                                    max_favorable_price
+                                    - entry_price
+                                )
+                                / entry_price
+                            )
+                            * 100
+                        )
+
+                    else:
+
+                        mae_percent = (
+                            (
+                                (
+                                    max_adverse_price
+                                    - entry_price
+                                )
+                                / entry_price
+                            )
+                            * 100
+                        )
+
+                        mfe_percent = (
+                            (
+                                (
+                                    entry_price
+                                    - max_favorable_price
+                                )
+                                / entry_price
+                            )
+                            * 100
+                        )
+
+                    trades.append({
+
+                        "direction":
+                            direction,
+
+                        "entry_date":
+                            entry_date,
+
+                        "exit_date":
+                            index,
+
+                        "entry_price":
+                            round(
+                                entry_price,
+                                2
+                            ),
+
+                        "exit_price":
+                            round(
+                                exit_price,
+                                2
+                            ),
+
+                        "shares":
+                            shares,
+
+                        "profit":
+                            round(
+                                profit,
+                                2
+                            ),
+
+                        "return_percent":
+                            round(
+                                return_percent,
+                                2
+                            ),
+
+                        "exit_reason":
+                            exit_reason,
+
+                        "entry_atr":
+                            round(
+                                float(entry_atr),
+                                2
+                            ),
+
+                        "initial_stop":
+                            round(
+                                float(stop_loss),
+                                2
+                            ),
+
+                        "initial_risk":
+                            round(
+                                float(initial_risk),
+                                2
+                            ),
+
+                        "r_multiple":
+                            round(
+                                float(r_multiple),
+                                2
+                            ),
+
+                        "mae_percent":
+                            round(
+                                float(mae_percent),
+                                2
+                            ),
+
+                        "mfe_percent":
+                            round(
+                                float(mfe_percent),
+                                2
+                            )
+
+                    })
+
+                    in_position = False
+
+                    direction = None
+
+                    shares = 0
+
+                    entry_price = None
+
+                    entry_date = None
+
+                    stop_loss = None
+
+                    target_price = None
+
+                    initial_risk = None
+
+                    entry_atr = None
+
+                    entry_value = 0
+
+                    entry_cost = 0
+
+                    max_adverse_price = None
+
+                    max_favorable_price = None
+
+                    continue
+
+            # =================================
+            # New Entry
+            # =================================
+
+            if in_position:
+
+                continue
+
+            if i >= len(rows) - 1:
+
+                continue
+
+            if pd.isna(signal):
+
+                continue
+
+            signal = int(
+                signal
+            )
+
+            if signal not in [
+                1,
+                -1
+            ]:
+
+                continue
+
+            next_index, next_row = (
+                rows[i + 1]
+            )
+
+            next_open = float(
+                next_row["Open"]
+            )
+
+            atr = row["ATR"]
+
+            if pd.isna(atr):
+
+                continue
+
+            atr = float(atr)
+
+            if atr <= 0:
+
+                continue
+
+            # =================================
+            # Determine direction
+            # =================================
+
+            if signal == 1:
+
+                direction = "LONG"
+
+                execution_price = (
+                    next_open
+                    * (
+                        1
+                        + slippage_rate
+                    )
+                )
+
+                risk_per_share = (
+                    initial_stop_atr
+                    * atr
+                )
+
+                stop_loss = (
+                    execution_price
+                    - risk_per_share
+                )
+
+                target_price = (
+                    execution_price
+                    + (
+                        risk_per_share
+                        * target_r
+                    )
+                )
+
+            else:
+
+                direction = "SHORT"
+
+                execution_price = (
+                    next_open
+                    * (
+                        1
+                        - slippage_rate
+                    )
+                )
+
+                risk_per_share = (
+                    initial_stop_atr
+                    * atr
+                )
+
+                stop_loss = (
+                    execution_price
+                    + risk_per_share
+                )
+
+                target_price = (
+                    execution_price
+                    - (
+                        risk_per_share
+                        * target_r
+                    )
+                )
+
+            # =================================
+            # Risk-based position sizing
+            # =================================
+
+            risk_capital = (
+                cash
+                * risk_per_trade
+            )
+
+            shares = int(
+                risk_capital
+                / risk_per_share
+            )
+
+            if shares <= 0:
+
+                direction = None
+
+                continue
+
+            entry_value = (
+                execution_price
+                * shares
+            )
+
+            entry_cost = (
+                self.brokerage
+            )
+
+            if (
+                entry_value
+                + entry_cost
+                > cash
+            ):
+
+                shares = int(
+                    max(
+                        0,
+                        (
+                            cash
+                            - self.brokerage
+                        )
+                        // execution_price
+                    )
+                )
+
+                entry_value = (
+                    execution_price
+                    * shares
+                )
+
+            if shares <= 0:
+
+                direction = None
+
+                continue
+
+            # =================================
+            # Initialize position
+            # =================================
+
+            if direction == "LONG":
+
+                cash -= (
+                    entry_value
+                    + entry_cost
+                )
+
+            else:
+
+                # Short proceeds are retained
+                # as capital while the position
+                # is open. P&L is settled on exit.
+
+                cash -= entry_cost
+
+            entry_price = (
+                execution_price
+            )
+
+            entry_date = (
+                next_index
+            )
+
+            initial_risk = (
+                risk_per_share
+                * shares
+            )
+
+            entry_atr = atr
+
+            max_adverse_price = (
+                entry_price
+            )
+
+            max_favorable_price = (
+                entry_price
+            )
+
+            in_position = True
+
+        # =================================
+        # Force close final position
+        # =================================
+
+        if in_position:
+
+            final_index = df.index[-1]
+
+            final_close = float(
+                df.iloc[-1]["Close"]
+            )
+
+            if direction == "LONG":
+
+                exit_price = (
+                    final_close
+                    * (
+                        1
+                        - slippage_rate
+                    )
+                )
+
+                exit_value = (
+                    exit_price
+                    * shares
+                )
+
+                profit = (
+                    exit_value
+                    - self.brokerage
+                    - entry_value
+                    - entry_cost
+                )
+
+            else:
+
+                exit_price = (
+                    final_close
+                    * (
+                        1
+                        + slippage_rate
+                    )
+                )
+
+                exit_value = (
+                    exit_price
+                    * shares
+                )
+
+                profit = (
+                    entry_value
+                    - exit_value
+                    - entry_cost
+                    - self.brokerage
+                )
+
+            cash += profit
+
+            invested_capital = (
+                entry_value
+                + entry_cost
+            )
+
+            if invested_capital > 0:
+
+                return_percent = (
+                    profit
+                    / invested_capital
+                ) * 100
+
+            else:
+
+                return_percent = 0
+
+            if (
+                initial_risk is not None
+                and initial_risk > 0
+            ):
+
+                r_multiple = (
+                    profit
+                    / initial_risk
+                )
+
+            else:
+
+                r_multiple = 0
+
+            trades.append({
+
+                "direction":
+                    direction,
+
+                "entry_date":
+                    entry_date,
+
+                "exit_date":
+                    final_index,
+
+                "entry_price":
+                    round(
+                        entry_price,
+                        2
+                    ),
+
+                "exit_price":
+                    round(
+                        exit_price,
+                        2
+                    ),
+
+                "shares":
+                    shares,
+
+                "profit":
+                    round(
+                        profit,
+                        2
+                    ),
+
+                "return_percent":
+                    round(
+                        return_percent,
+                        2
+                    ),
+
+                "exit_reason":
+                    "FINAL_LIQUIDATION",
+
+                "entry_atr":
+                    round(
+                        float(entry_atr),
+                        2
+                    ),
+
+                "initial_stop":
+                    round(
+                        float(stop_loss),
+                        2
+                    ),
+
+                "initial_risk":
+                    round(
+                        float(initial_risk),
+                        2
+                    ),
+
+                "r_multiple":
+                    round(
+                        float(r_multiple),
+                        2
+                    )
+
+            })
+
+        final_equity = cash
+
+        if final_equity > peak_equity:
+
+            peak_equity = final_equity
+
+        if peak_equity > 0:
+
+            drawdown = (
+                (
+                    peak_equity
+                    - final_equity
+                )
+                / peak_equity
+            ) * 100
+
+            max_drawdown = max(
+                max_drawdown,
+                drawdown
+            )
+
+        return {
+
+            "trades":
+                trades,
+
+            "equity_curve":
+                equity_curve,
+
+            "max_drawdown":
+                round(
+                    max_drawdown,
+                    2
+                ),
+
+            "peak_capital":
+                round(
+                    peak_equity,
+                    2
+                )
+
+        }
+
+    # =====================================
     # Performance Metrics
     # =====================================
 
