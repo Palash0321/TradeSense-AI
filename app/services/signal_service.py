@@ -26,10 +26,19 @@ from app.services.stock_service import get_stock_history
 from app.services.market_health_service import (
     calculate_market_health,
 )
+from app.services.nse_service import (
+    get_nifty_option_context,
+)
 
 def generate_signal(symbol: str, period: str = "6mo"):
 
     data = get_stock_data(symbol, period)
+
+    # =====================================
+    # NSE Option Chain Context
+    # =====================================
+
+    option_context = get_nifty_option_context()
 
     info = data["info"]
     current_price = info.get("currentPrice") or info.get("regularMarketPrice")
@@ -281,7 +290,9 @@ def generate_signal(symbol: str, period: str = "6mo"):
 
         macd_status=macd_status,
 
-        rsi_status=rsi_status
+        rsi_status=rsi_status,
+
+        option_context=option_context
 
     ).analyze()
 
@@ -415,6 +426,14 @@ def generate_signal(symbol: str, period: str = "6mo"):
         ),
 
         "preferred_setup": preferred_setup,
+
+        "option_chain": ai.get(
+            "trade_quality",
+            {}
+        ).get(
+            "option_chain",
+            {}
+        ),
 
         "trade_horizon": trade_horizon,
 
@@ -658,6 +677,8 @@ def generate_signal(symbol: str, period: str = "6mo"):
         "probability": probability,
 
         "ai_confidence": ai_confidence,
+
+        "option_context": option_context,
 
         "multi_timeframe": multi_timeframe,
 

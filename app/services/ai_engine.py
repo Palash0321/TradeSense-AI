@@ -9,6 +9,7 @@ from app.services.volume_service import VolumeService
 from app.services.rule_engine import RuleEngine
 from app.services.entry_engine_service import EntryEngineService
 from app.services.trade_validation_service import TradeValidationService
+from app.services.option_chain_service import OptionChainService
 from app.services.final_decision_service import FinalDecisionService
 from app.core.levels.market_structure import calculate_market_structure
 from app.core.liquidity.liquidity import calculate_liquidity
@@ -26,7 +27,8 @@ class AIEngine:
         setup_direction=None,
         trend_strength=None,
         macd_status=None,
-        rsi_status=None
+        rsi_status=None,
+        option_context=None
     ):
 
         self.symbol = symbol
@@ -38,6 +40,7 @@ class AIEngine:
         self.trend_strength = trend_strength
         self.macd_status = macd_status
         self.rsi_status = rsi_status
+        self.option_context = option_context or {}
 
     def analyze(self):
 
@@ -88,6 +91,14 @@ class AIEngine:
         # =====================================
 
         rules = RuleEngine()
+
+        # =====================================
+        # Option Chain Analysis
+        # =====================================
+
+        option_chain = OptionChainService(
+            self.option_context
+        ).analyze()
 
         analysis["atr"] = round(
             float(self.latest["ATR"]),
@@ -306,6 +317,66 @@ class AIEngine:
             )
 
         analysis["volume_analysis"] = volume
+
+        # =====================================
+        # Option Chain Rule
+        # =====================================
+
+        if option_chain["available"]:
+
+            if option_chain["bias"] in [
+                "BULLISH",
+                "MILD_BULLISH"
+            ]:
+
+                rules.add(
+
+                    module="Option Chain",
+
+                    weight=10,
+
+                    direction="bullish",
+
+                    reason=option_chain["reason"],
+
+                    confidence=option_chain["confidence"]
+
+                )
+
+            elif option_chain["bias"] in [
+                "BEARISH",
+                "MILD_BEARISH"
+            ]:
+
+                rules.add(
+
+                    module="Option Chain",
+
+                    weight=10,
+
+                    direction="bearish",
+
+                    reason=option_chain["reason"],
+
+                    confidence=option_chain["confidence"]
+
+                )
+
+            else:
+
+                rules.add(
+
+                    module="Option Chain",
+
+                    weight=0,
+
+                    direction="neutral",
+
+                    reason=option_chain["reason"],
+
+                    confidence=option_chain["confidence"]
+
+                )
 
         
         # =====================================
@@ -757,6 +828,8 @@ class AIEngine:
                     confidence=80
 
                 )
+
+        analysis["option_chain"] = option_chain
 
         result = rules.final_score()
         

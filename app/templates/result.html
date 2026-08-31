@@ -592,6 +592,111 @@
 
 </section>
 
+<!-- ================= OPTION CHAIN ================= -->
+
+<section class="option-chain-section">
+
+    <div class="section-title">
+        📊 Option Chain Analysis
+    </div>
+
+    {% if result.trade_signal.option_chain.available %}
+
+    <div class="option-chain-card">
+
+        <div class="option-chain-header">
+
+            <div>
+
+                <span class="option-chain-label">
+                    NIFTY OPTION CHAIN
+                </span>
+
+                <h2>
+                    {{ result.trade_signal.option_chain.bias|replace("_", " ") }}
+                </h2>
+
+            </div>
+
+            <span class="option-chain-confidence">
+                {{ result.trade_signal.option_chain.confidence }}% Confidence
+            </span>
+
+        </div>
+
+
+        <div class="option-chain-metrics">
+
+            <div>
+                <span>PCR</span>
+                <strong>
+                    {{ result.trade_signal.option_chain.pcr }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Max Call OI</span>
+                <strong>
+                    {{ "{:,}".format(result.trade_signal.option_chain.max_call_oi|int) }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Max Put OI</span>
+                <strong>
+                    {{ "{:,}".format(result.trade_signal.option_chain.max_put_oi|int) }}
+                </strong>
+            </div>
+
+            <div>
+                <span>Option Score</span>
+                <strong>
+                    {{ result.trade_signal.option_chain.score }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="option-chain-reason">
+
+            {{ result.trade_signal.option_chain.reason }}
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="option-chain-card unavailable">
+
+        <div class="option-chain-header">
+
+            <div>
+
+                <span class="option-chain-label">
+                    NIFTY OPTION CHAIN
+                </span>
+
+                <h2>
+                    Data Unavailable
+                </h2>
+
+            </div>
+
+        </div>
+
+        <p class="option-chain-unavailable-message">
+            NSE option-chain data is currently unavailable.
+            The remaining TradeSense analysis is still available.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
 <!-- ================= TRADE VALIDATION ================= -->
 
 <section class="trade-validation-section">

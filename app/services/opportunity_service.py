@@ -1026,9 +1026,17 @@ class OpportunityService:
             min(100, score)
         )
 
-        breakout_confirmed = (
-    breakout_state == "BREAKOUT_CONFIRMED"
-)
+        if setup_direction == "SHORT":
+
+            breakout_confirmed = (
+                breakout_state == "BREAKDOWN_CONFIRMED"
+            )
+
+        else:
+
+            breakout_confirmed = (
+                breakout_state == "BREAKOUT_CONFIRMED"
+            )
 
         # ----------------------------------
         # Actionability
@@ -1053,21 +1061,7 @@ class OpportunityService:
             )
 
             short_confirmation_ok = (
-
-                (
-                    break_direction == "BEARISH"
-                    and
-                    break_confirmed
-                )
-
-                or
-
                 breakout_state == "BREAKDOWN_CONFIRMED"
-
-                or
-
-                breakout_confirmation_score >= 70
-
             )
 
             if (
@@ -1128,11 +1122,6 @@ class OpportunityService:
 
             long_confirmation_ok = (
                 breakout_confirmed
-                or
-                setup_type in [
-                    "LONG_CONTINUATION",
-                    "LONG_REVERSAL"
-                ]
             )
 
             if (
