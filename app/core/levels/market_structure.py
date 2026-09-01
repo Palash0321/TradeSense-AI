@@ -69,69 +69,113 @@ def calculate_market_structure(
         result["structure"] = "INSUFFICIENT_DATA"
         return result
 
+
     # ==========================================
     # Swing detection
+    # Vectorized implementation
     # ==========================================
 
-    swing_highs = []
-    swing_lows = []
+    highs = pd.to_numeric(
+        df["High"],
+        errors="coerce"
+    )
 
-    for i in range(
-        swing_window,
-        len(df) - swing_window
-    ):
+    lows = pd.to_numeric(
+        df["Low"],
+        errors="coerce"
+    )
 
-        high = float(
-            df["High"].iloc[i]
+    left_high = (
+        highs
+        .shift(1)
+        .rolling(
+            swing_window
         )
+        .max()
+    )
 
-        low = float(
-            df["Low"].iloc[i]
+    right_high = (
+        highs
+        .shift(
+            -1
         )
+        .rolling(
+            swing_window
+        )
+        .max()
+        .shift(
+            -(swing_window - 1)
+        )
+    )
 
-        left_highs = df[
-            "High"
-        ].iloc[
-            i - swing_window:i
+    left_low = (
+        lows
+        .shift(1)
+        .rolling(
+            swing_window
+        )
+        .min()
+    )
+
+    right_low = (
+        lows
+        .shift(
+            -1
+        )
+        .rolling(
+            swing_window
+        )
+        .min()
+        .shift(
+            -(swing_window - 1)
+        )
+    )
+
+    swing_high_mask = (
+        (highs > left_high)
+        &
+        (highs > right_high)
+    )
+
+    swing_low_mask = (
+        (lows < left_low)
+        &
+        (lows < right_low)
+    )
+
+    swing_high_indices = (
+        df.index[
+            swing_high_mask.fillna(False)
         ]
+    )
 
-        right_highs = df[
-            "High"
-        ].iloc[
-            i + 1:i + swing_window + 1
+    swing_low_indices = (
+        df.index[
+            swing_low_mask.fillna(False)
         ]
+    )
 
-        left_lows = df[
-            "Low"
-        ].iloc[
-            i - swing_window:i
-        ]
+    swing_highs = [
+        {
+            "index": index,
+            "price": round(
+                float(highs.loc[index]),
+                2
+            )
+        }
+        for index in swing_high_indices
+    ]
 
-        right_lows = df[
-            "Low"
-        ].iloc[
-            i + 1:i + swing_window + 1
-        ]
-
-        if (
-            high > left_highs.max()
-            and
-            high > right_highs.max()
-        ):
-            swing_highs.append({
-                "index": df.index[i],
-                "price": round(high, 2)
-            })
-
-        if (
-            low < left_lows.min()
-            and
-            low < right_lows.min()
-        ):
-            swing_lows.append({
-                "index": df.index[i],
-                "price": round(low, 2)
-            })
+    swing_lows = [
+        {
+            "index": index,
+            "price": round(
+                float(lows.loc[index]),
+                2
+            )
+        }
+        for index in swing_low_indices
+    ]
 
     last_swing_high = (
         swing_highs[-1]["price"]
