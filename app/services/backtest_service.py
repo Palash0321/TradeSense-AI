@@ -1,5 +1,8 @@
 import pandas as pd
 import yfinance as yf
+from app.core.levels.market_structure import calculate_market_structure
+from app.core.liquidity.liquidity import calculate_liquidity
+from app.core.setup.setup_engine import calculate_setup
 
 
 class BacktestService:
@@ -2792,6 +2795,11 @@ class BacktestService:
                 signal_column
             ]
 
+            setup_name = row.get(
+                "Setup",
+                "UNKNOWN"
+            )
+
             # =================================
             # Mark-to-market equity
             # =================================
@@ -3140,6 +3148,9 @@ class BacktestService:
                         "direction":
                             direction,
 
+                        "setup":
+                            entry_setup,
+
                         "entry_date":
                             entry_date,
 
@@ -3433,6 +3444,8 @@ class BacktestService:
                 execution_price
             )
 
+            entry_setup = setup_name
+
             entry_date = (
                 next_index
             )
@@ -3547,6 +3560,9 @@ class BacktestService:
                 "direction":
                     direction,
 
+                "setup":
+                    entry_setup,
+
                 "entry_date":
                     entry_date,
 
@@ -3655,6 +3671,338 @@ class BacktestService:
     # =====================================
     # Performance Metrics
     # =====================================
+
+        # =====================================
+    # Historical TradeSense Signal Engine
+    # Structure + Liquidity + Setup
+    # =====================================
+
+    def generate_tradesense_signals(
+        self,
+        df=None,
+        swing_window=3
+    ):
+        """
+        Generate historical TradeSense signals
+        without using future candles.
+
+        Signal:
+            1  = LONG
+           -1  = SHORT
+            0  = WAIT
+
+        Each historical date only receives information
+        that would have been available by that date.
+        """
+
+        if df is None:
+
+            df = self.load_data()
+
+        if df is None or df.empty:
+
+            return pd.DataFrame()
+
+        required_columns = [
+            "Open",
+            "High",
+            "Low",
+            "Close"
+        ]
+
+        missing = [
+            column
+            for column in required_columns
+            if column not in df.columns
+        ]
+
+        if missing:
+
+            raise ValueError(
+                "Historical TradeSense signals require "
+                f"columns: {missing}"
+            )
+
+        result = df.copy()
+
+        # ---------------------------------
+        # ATR
+        # ---------------------------------
+
+        if "ATR" not in result.columns:
+
+            previous_close = (
+                result["Close"]
+                .shift(1)
+            )
+
+            true_range = pd.concat(
+                [
+                    result["High"]
+                    - result["Low"],
+
+                    (
+                        result["High"]
+                        - previous_close
+                    ).abs(),
+
+                    (
+                        result["Low"]
+                        - previous_close
+                    ).abs()
+                ],
+                axis=1
+            ).max(axis=1)
+
+            result["ATR"] = (
+                true_range
+                .rolling(14)
+                .mean()
+            )
+
+        # ---------------------------------
+        # Initialize historical outputs
+        # ---------------------------------
+
+        result["Signal"] = 0
+
+        result["Setup"] = "WAIT"
+
+        result["Setup_Direction"] = None
+
+        result["Setup_Confidence"] = 0
+
+        result["Setup_Reason"] = ""
+
+        result["Structure_Bias"] = "NEUTRAL"
+
+        result["Structure"] = "UNKNOWN"
+
+        result["BOS"] = None
+
+        result["CHOCH"] = None
+
+        result["Break_Direction"] = None
+
+        result["Break_Confirmed"] = False
+
+        result["Liquidity_Sweep"] = False
+
+        # ---------------------------------
+        # Historical walk-forward processing
+        # ---------------------------------
+
+        minimum_history = (
+            swing_window * 2 + 1
+        )
+
+        for i in range(
+            minimum_history - 1,
+            len(result)
+        ):
+
+            # ---------------------------------
+            # IMPORTANT:
+            #
+            # Only candles available up to
+            # the current historical date
+            # are supplied to the analysis.
+            #
+            # No future candles are included.
+            # ---------------------------------
+
+            history = result.iloc[
+                :i + 1
+            ].copy()
+
+            current_price = float(
+                history["Close"].iloc[-1]
+            )
+
+            # ---------------------------------
+            # Market Structure
+            # ---------------------------------
+
+            market_structure = (
+                calculate_market_structure(
+                    history,
+                    swing_window=swing_window
+                )
+            )
+
+            # ---------------------------------
+            # Liquidity
+            # ---------------------------------
+
+            liquidity = calculate_liquidity(
+                history,
+                market_structure
+            )
+
+            # ---------------------------------
+            # Structural Setup
+            # ---------------------------------
+
+            setup = calculate_setup(
+                market_structure=(
+                    market_structure
+                ),
+
+                liquidity=liquidity,
+
+                current_price=current_price
+            )
+
+            setup_type = setup.get(
+                "setup",
+                "WAIT"
+            )
+
+            setup_direction = setup.get(
+                "direction"
+            )
+
+            setup_confidence = float(
+                setup.get(
+                    "confidence",
+                    0
+                )
+                or 0
+            )
+
+            # ---------------------------------
+            # Convert setup → directional signal
+            # ---------------------------------
+
+            if setup_direction == "LONG":
+
+                signal = 1
+
+            elif setup_direction == "SHORT":
+
+                signal = -1
+
+            else:
+
+                signal = 0
+
+            # ---------------------------------
+            # Store historical signal
+            # ---------------------------------
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Signal"
+                )
+            ] = signal
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Setup"
+                )
+            ] = setup_type
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Setup_Direction"
+                )
+            ] = setup_direction
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Setup_Confidence"
+                )
+            ] = setup_confidence
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Setup_Reason"
+                )
+            ] = setup.get(
+                "reason",
+                ""
+            )
+
+            # ---------------------------------
+            # Market structure metadata
+            # ---------------------------------
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Structure_Bias"
+                )
+            ] = market_structure.get(
+                "bias",
+                "NEUTRAL"
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Structure"
+                )
+            ] = market_structure.get(
+                "structure",
+                "UNKNOWN"
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "BOS"
+                )
+            ] = market_structure.get(
+                "bos"
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "CHOCH"
+                )
+            ] = market_structure.get(
+                "choch"
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Break_Direction"
+                )
+            ] = market_structure.get(
+                "break_direction"
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Break_Confirmed"
+                )
+            ] = market_structure.get(
+                "break_confirmed",
+                False
+            )
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Liquidity_Sweep"
+                )
+            ] = liquidity.get(
+                "sweep",
+                {}
+            ).get(
+                "detected",
+                False
+            )
+
+        return result
 
     def performance_metrics(
         self,
