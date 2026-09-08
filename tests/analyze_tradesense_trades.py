@@ -19259,7 +19259,69 @@ def frozen_early_adverse_holdout_ledger_integrity_audit(trades):
         except ValueError:
             return None
 
+    def get_symbol(trade):
+
+        value = trade.get(
+            "_symbol"
+        )
+
+        if value is None:
+            value = trade.get(
+                "symbol"
+            )
+
+        if value is None:
+            value = trade.get(
+                "Symbol"
+            )
+
+        if value is None:
+            value = trade.get(
+                "ticker"
+            )
+
+        if value is None:
+            value = trade.get(
+                "Ticker"
+            )
+
+        if value is None:
+            return ""
+
+        return str(
+            value
+        ).strip()
+
+
+    def get_entry_price(trade):
+
+        return to_float(
+            trade.get(
+                "entry_price"
+            ),
+            default=None,
+        )
+
+
+    def get_initial_risk(trade):
+
+        return to_float(
+            trade.get(
+                "initial_risk"
+            ),
+            default=None,
+        )
+
+
     def ledger_trade_key(trade):
+
+        entry_price = get_entry_price(
+            trade
+        )
+
+        initial_risk = get_initial_risk(
+            trade
+        )
 
         return "|".join(
             [
@@ -19269,32 +19331,24 @@ def frozen_early_adverse_holdout_ledger_integrity_audit(trades):
                         ""
                     )
                 ),
-                str(
-                    trade.get(
-                        "symbol",
-                        trade.get(
-                            "ticker",
-                            ""
-                        )
-                    )
+                get_symbol(
+                    trade
                 ),
                 str(
                     trade.get(
                         "direction",
                         ""
                     )
-                ).upper(),
-                str(
-                    trade.get(
-                        "entry_price",
-                        ""
-                    )
+                ).strip().upper(),
+                (
+                    ""
+                    if entry_price is None
+                    else f"{entry_price:.12f}"
                 ),
-                str(
-                    trade.get(
-                        "initial_risk",
-                        ""
-                    )
+                (
+                    ""
+                    if initial_risk is None
+                    else f"{initial_risk:.12f}"
                 ),
             ]
         )
@@ -19556,15 +19610,9 @@ def frozen_early_adverse_holdout_ledger_integrity_audit(trades):
                         "symbol",
                         ""
                     )
-                ),
-                str(
-                    current_trade.get(
-                        "symbol",
-                        current_trade.get(
-                            "ticker",
-                            ""
-                        )
-                    )
+                ).strip(),
+                get_symbol(
+                    current_trade
                 )
             ),
             (
@@ -19648,6 +19696,57 @@ def frozen_early_adverse_holdout_ledger_integrity_audit(trades):
     print(
         "  Status: "
         f"{'PASS' if entry_field_pass else 'FAIL'}"
+    )
+
+    # --------------------------------------------------------------
+    # AUDIT 4B — frozen rule-version integrity
+    # --------------------------------------------------------------
+
+    rule_version_mismatches = []
+
+    for row in ledger_rows:
+
+        actual_version = str(
+            row.get(
+                "rule_version",
+                ""
+            )
+        ).strip()
+
+        if actual_version != "5B_0.25R":
+
+            rule_version_mismatches.append(
+                (
+                    row.get(
+                        "trade_key",
+                        ""
+                    ),
+                    actual_version,
+                )
+            )
+
+    print()
+    print(
+        "AUDIT 4B — FROZEN RULE VERSION INTEGRITY"
+    )
+
+    print(
+        f"  Invalid rule-version rows: "
+        f"{len(rule_version_mismatches)}"
+    )
+
+    rule_version_pass = (
+        len(rule_version_mismatches) == 0
+    )
+
+    print(
+        "  Expected rule version: "
+        "5B_0.25R"
+    )
+
+    print(
+        "  Status: "
+        f"{'PASS' if rule_version_pass else 'FAIL'}"
     )
 
     # --------------------------------------------------------------
@@ -19882,6 +19981,7 @@ def frozen_early_adverse_holdout_ledger_integrity_audit(trades):
             post_freeze_pass,
             current_dataset_pass,
             entry_field_pass,
+            rule_version_pass,
             bar5_pass,
             decision_pass,
             final_r_pass,
@@ -23655,33 +23755,101 @@ def frozen_early_adverse_future_holdout_test(trades):
             < RULE_THRESHOLD
         )
 
+    def get_symbol(trade):
+
+        value = trade.get(
+            "_symbol"
+        )
+
+        if value is None:
+            value = trade.get(
+                "symbol"
+            )
+
+        if value is None:
+            value = trade.get(
+                "Symbol"
+            )
+
+        if value is None:
+            value = trade.get(
+                "ticker"
+            )
+
+        if value is None:
+            value = trade.get(
+                "Ticker"
+            )
+
+        if value is None:
+            return ""
+
+        return str(
+            value
+        ).strip()
+
+
+    def get_entry_price(trade):
+
+        return to_float(
+            trade.get(
+                "entry_price"
+            ),
+            default=None,
+        )
+
+
+    def get_initial_risk(trade):
+
+        return to_float(
+            trade.get(
+                "initial_risk"
+            ),
+            default=None,
+        )
+
+
     def trade_key(trade):
 
-        return (
-            str(
-                trade.get(
-                    "entry_date",
+        entry_price = get_entry_price(
+            trade
+        )
+
+        initial_risk = get_initial_risk(
+            trade
+        )
+
+        return "|".join(
+            [
+                str(
+                    trade.get(
+                        "entry_date",
+                        ""
+                    )
+                ),
+                get_symbol(
+                    trade
+                ),
+                str(
+                    trade.get(
+                        "direction",
+                        trade.get(
+                            "Direction",
+                            ""
+                        )
+                    )
+                ).strip().upper(),
+                (
                     ""
-                )
-            ),
-            str(
-                trade.get(
-                    "symbol",
-                    trade.get(
-                        "Symbol",
-                        ""
-                    )
-                )
-            ),
-            str(
-                trade.get(
-                    "direction",
-                    trade.get(
-                        "Direction",
-                        ""
-                    )
-                )
-            ).upper(),
+                    if entry_price is None
+                    else f"{entry_price:.12f}"
+                ),
+                (
+                    ""
+                    if initial_risk is None
+                    else f"{initial_risk:.12f}"
+                ),
+            ]
         )
 
     def performance(sample):
@@ -23809,20 +23977,13 @@ def frozen_early_adverse_future_holdout_test(trades):
 
                 for row in reader:
 
-                    key = (
-                        row.get(
-                            "entry_date",
-                            ""
-                        ),
-                        row.get(
-                            "symbol",
-                            ""
-                        ),
-                        row.get(
-                            "direction",
-                            ""
-                        ).upper(),
+                    key = row.get(
+                        "trade_key",
+                        ""
                     )
+
+                    if not key:
+                        continue
 
                     ledger[key] = row
 
@@ -23859,10 +24020,45 @@ def frozen_early_adverse_future_holdout_test(trades):
             else "REJECT"
         )
 
+        entry_price = get_entry_price(
+            trade
+        )
+
+        initial_risk = get_initial_risk(
+            trade
+        )
+
         ledger[key] = {
-            "entry_date": key[0],
-            "symbol": key[1],
-            "direction": key[2],
+            "trade_key": key,
+            "rule_version": "5B_0.25R",
+            "entry_date": str(
+                trade.get(
+                    "entry_date",
+                    ""
+                )
+            ),
+            "symbol": get_symbol(
+                trade
+            ),
+            "direction": str(
+                trade.get(
+                    "direction",
+                    trade.get(
+                        "Direction",
+                        ""
+                    )
+                )
+            ).strip().upper(),
+            "entry_price": (
+                ""
+                if entry_price is None
+                else f"{entry_price:.12f}"
+            ),
+            "initial_risk": (
+                ""
+                if initial_risk is None
+                else f"{initial_risk:.12f}"
+            ),
             "early_adverse_r_bar_5": (
                 ""
                 if early_adverse is None
@@ -23900,6 +24096,14 @@ def frozen_early_adverse_future_holdout_test(trades):
                 "direction",
                 ""
             ),
+            row.get(
+                "entry_price",
+                ""
+            ),
+            row.get(
+                "initial_risk",
+                ""
+            ),
         )
     )
 
@@ -23913,9 +24117,13 @@ def frozen_early_adverse_future_holdout_test(trades):
         ) as file:
 
             fieldnames = [
+                "trade_key",
+                "rule_version",
                 "entry_date",
                 "symbol",
                 "direction",
+                "entry_price",
+                "initial_risk",
                 "early_adverse_r_bar_5",
                 "r_multiple",
                 "decision",
@@ -23978,6 +24186,14 @@ def frozen_early_adverse_future_holdout_test(trades):
 
         holdout_records.append(
             {
+                "trade_key": row.get(
+                    "trade_key",
+                    ""
+                ),
+                "rule_version": row.get(
+                    "rule_version",
+                    ""
+                ),
                 "entry_date": entry_date,
                 "symbol": row.get(
                     "symbol",
@@ -23986,6 +24202,18 @@ def frozen_early_adverse_future_holdout_test(trades):
                 "direction": row.get(
                     "direction",
                     ""
+                ),
+                "entry_price": to_float(
+                    row.get(
+                        "entry_price"
+                    ),
+                    default=None,
+                ),
+                "initial_risk": to_float(
+                    row.get(
+                        "initial_risk"
+                    ),
+                    default=None,
                 ),
                 "early_adverse_r_bar_5": (
                     early_adverse_value
