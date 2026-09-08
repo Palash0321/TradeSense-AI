@@ -1,0 +1,686 @@
+====================================================================================================
+TRADESENSE STRUCTURAL FAILURE DIAGNOSTIC
+====================================================================================================
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: RELIANCE.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 10
+ROWS: 1240
+LONG SIGNALS: 45
+SHORT SIGNALS: 39
+WAIT: 1156
+TRADES: 10
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: TCS.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 22
+ROWS: 1240
+LONG SIGNALS: 46
+SHORT SIGNALS: 44
+WAIT: 1150
+TRADES: 22
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: HDFCBANK.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 19
+ROWS: 1240
+LONG SIGNALS: 40
+SHORT SIGNALS: 42
+WAIT: 1158
+TRADES: 19
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: ICICIBANK.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 19
+ROWS: 1240
+LONG SIGNALS: 44
+SHORT SIGNALS: 37
+WAIT: 1159
+TRADES: 19
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: INFY.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 20
+ROWS: 1240
+LONG SIGNALS: 44
+SHORT SIGNALS: 42
+WAIT: 1154
+TRADES: 20
+
+----------------------------------------------------------------------------------------------------
+PROCESSING: SBIN.NS
+----------------------------------------------------------------------------------------------------
+EXECUTED TRADES: 16
+ROWS: 1240
+LONG SIGNALS: 43
+SHORT SIGNALS: 38
+WAIT: 1159
+TRADES: 16
+
+====================================================================================================
+OVERALL CURRENT RESULT
+====================================================================================================
+ALL TRADESENSE TRADES              Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+====================================================================================================
+STOCK × PERFORMANCE
+====================================================================================================
+TCS.NS                                                  Trades=22  Win= 22.73% PF= 0.58 P&L= -5983.99 R=  -7.38 AvgR=-0.335
+INFY.NS                                                 Trades=20  Win= 30.00% PF= 0.68 P&L= -4378.23 R=  -4.61 AvgR=-0.231
+HDFCBANK.NS                                             Trades=19  Win= 21.05% PF= 0.41 P&L= -8705.55 R=  -9.22 AvgR=-0.485
+ICICIBANK.NS                                            Trades=19  Win= 42.11% PF= 1.24 P&L=  2747.51 R=   2.97 AvgR= 0.156
+SBIN.NS                                                 Trades=16  Win= 18.75% PF= 0.45 P&L= -6661.55 R=  -7.06 AvgR=-0.441
+RELIANCE.NS                                             Trades=10  Win= 20.00% PF= 0.47 P&L= -3981.42 R=  -4.08 AvgR=-0.408
+
+====================================================================================================
+SETUP × PERFORMANCE
+====================================================================================================
+LONG_CONTINUATION                                       Trades=50  Win= 22.00% PF= 0.55 P&L=-16659.61 R= -18.46 AvgR=-0.369
+SHORT_REVERSAL                                          Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION                                      Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL                                           Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+
+====================================================================================================
+SETUP × DIRECTION
+====================================================================================================
+LONG_CONTINUATION × LONG                                Trades=50  Win= 22.00% PF= 0.55 P&L=-16659.61 R= -18.46 AvgR=-0.369
+SHORT_REVERSAL × SHORT                                  Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION × SHORT                              Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × LONG                                    Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+
+====================================================================================================
+SETUP × TREND
+====================================================================================================
+LONG_CONTINUATION × BULLISH                             Trades=28  Win= 14.29% PF= 0.31 P&L=-16161.52 R= -17.11 AvgR=-0.611
+LONG_CONTINUATION × NEUTRAL                             Trades=22  Win= 31.82% PF= 0.96 P&L=  -498.09 R=  -1.35 AvgR=-0.061
+SHORT_REVERSAL × NEUTRAL                                Trades=17  Win= 17.65% PF= 0.38 P&L= -8410.70 R=  -9.00 AvgR=-0.529
+SHORT_REVERSAL × BEARISH                                Trades=14  Win= 21.43% PF= 0.25 P&L= -8141.07 R=  -8.37 AvgR=-0.598
+SHORT_CONTINUATION × BEARISH                            Trades=11  Win= 45.45% PF= 1.84 P&L=  3989.79 R=   4.21 AvgR= 0.383
+LONG_REVERSAL × BULLISH                                 Trades=5   Win= 80.00% PF= 8.16 P&L=  6376.12 R=   6.70 AvgR= 1.340
+LONG_REVERSAL × NEUTRAL                                 Trades=5   Win= 20.00% PF= 0.26 P&L= -2791.05 R=  -3.23 AvgR=-0.646
+SHORT_CONTINUATION × NEUTRAL                            Trades=3   Win=  0.00% PF= 0.00 P&L= -3037.63 R=  -3.17 AvgR=-1.057
+LONG_REVERSAL × BEARISH                                 Trades=1   Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+
+====================================================================================================
+SETUP × LIQUIDITY SWEEP
+====================================================================================================
+LONG_CONTINUATION × NO_SWEEP                            Trades=45  Win= 24.44% PF= 0.62 P&L=-12045.87 R= -13.13 AvgR=-0.292
+SHORT_REVERSAL × NO_SWEEP                               Trades=28  Win= 17.86% PF= 0.32 P&L=-15386.89 R= -16.10 AvgR=-0.575
+SHORT_CONTINUATION × NO_SWEEP                           Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × NO_SWEEP                                Trades=8   Win= 50.00% PF= 1.93 P&L=  3469.85 R=   3.53 AvgR= 0.441
+LONG_CONTINUATION × SWEEP                               Trades=5   Win=  0.00% PF= 0.00 P&L= -4613.74 R=  -5.33 AvgR=-1.066
+LONG_REVERSAL × SWEEP                                   Trades=3   Win= 66.67% PF= 2.96 P&L=  1826.14 R=   1.88 AvgR= 0.627
+SHORT_REVERSAL × SWEEP                                  Trades=3   Win= 33.33% PF= 0.38 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+
+====================================================================================================
+SETUP × BOS
+====================================================================================================
+LONG_CONTINUATION × BULLISH                             Trades=50  Win= 22.00% PF= 0.55 P&L=-16659.61 R= -18.46 AvgR=-0.369
+SHORT_REVERSAL × MISSING                                Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION × BEARISH                            Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × MISSING                                 Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+
+====================================================================================================
+SETUP × CHOCH
+====================================================================================================
+LONG_CONTINUATION × MISSING                             Trades=50  Win= 22.00% PF= 0.55 P&L=-16659.61 R= -18.46 AvgR=-0.369
+SHORT_REVERSAL × BEARISH                                Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION × MISSING                            Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × BULLISH                                 Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+
+====================================================================================================
+SETUP × BREAK AGE
+====================================================================================================
+LONG_CONTINUATION × AGE_0                               Trades=49  Win= 22.45% PF= 0.56 P&L=-15672.03 R= -17.39 AvgR=-0.355
+SHORT_REVERSAL × AGE_0                                  Trades=30  Win= 20.00% PF= 0.34 P&L=-15610.45 R= -16.32 AvgR=-0.544
+SHORT_CONTINUATION × AGE_0                              Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × AGE_0                                   Trades=10  Win= 50.00% PF= 1.76 P&L=  3530.03 R=   3.47 AvgR= 0.347
+LONG_CONTINUATION × AGE_1                               Trades=1   Win=  0.00% PF= 0.00 P&L=  -987.58 R=  -1.07 AvgR=-1.070
+LONG_REVERSAL × AGE_3                                   Trades=1   Win=100.00% PF= 0.00 P&L=  1765.96 R=   1.94 AvgR= 1.940
+SHORT_REVERSAL × AGE_2                                  Trades=1   Win=  0.00% PF= 0.00 P&L=  -941.32 R=  -1.05 AvgR=-1.050
+
+====================================================================================================
+SETUP × STRUCTURE BIAS
+====================================================================================================
+LONG_CONTINUATION × BULLISH                             Trades=50  Win= 22.00% PF= 0.55 P&L=-16659.61 R= -18.46 AvgR=-0.369
+SHORT_REVERSAL × BULLISH                                Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION × BEARISH                            Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × BEARISH                                 Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+
+====================================================================================================
+SETUP × CONFIDENCE BUCKET
+====================================================================================================
+LONG_CONTINUATION × 70-79                               Trades=45  Win= 24.44% PF= 0.62 P&L=-12045.87 R= -13.13 AvgR=-0.292
+SHORT_REVERSAL × 60-69                                  Trades=31  Win= 19.35% PF= 0.32 P&L=-16551.77 R= -17.37 AvgR=-0.560
+SHORT_CONTINUATION × 70-79                              Trades=14  Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+LONG_REVERSAL × 60-69                                   Trades=11  Win= 54.55% PF= 2.14 P&L=  5295.99 R=   5.41 AvgR= 0.492
+LONG_CONTINUATION × 50-59                               Trades=3   Win=  0.00% PF= 0.00 P&L= -2568.86 R=  -3.20 AvgR=-1.067
+LONG_CONTINUATION × 80-89                               Trades=2   Win=  0.00% PF= 0.00 P&L= -2044.88 R=  -2.13 AvgR=-1.065
+
+====================================================================================================
+SETUP × TREND STRENGTH
+====================================================================================================
+
+< 20        TRADES:   23
+  LONG_CONTINUATION        Trades= 11 Win= 27.27% PF= 0.69 R=  -2.65
+  LONG_REVERSAL            Trades=  2 Win=  0.00% PF= 0.00 R=  -2.11
+  SHORT_CONTINUATION       Trades=  1 Win=  0.00% PF= 0.00 R=  -1.05
+  SHORT_REVERSAL           Trades=  9 Win= 22.22% PF= 0.52 R=  -3.53
+
+20 - 40     TRADES:   29
+  LONG_CONTINUATION        Trades= 13 Win= 30.77% PF= 0.91 R=  -0.81
+  LONG_REVERSAL            Trades=  3 Win= 33.33% PF= 0.92 R=  -0.18
+  SHORT_CONTINUATION       Trades=  3 Win=  0.00% PF= 0.00 R=  -2.33
+  SHORT_REVERSAL           Trades= 10 Win= 10.00% PF= 0.20 R=  -7.58
+
+40 - 60     TRADES:   19
+  LONG_CONTINUATION        Trades=  8 Win= 12.50% PF= 0.28 R=  -4.98
+  LONG_REVERSAL            Trades=  3 Win=100.00% PF= 0.00 R=   4.88
+  SHORT_CONTINUATION       Trades=  3 Win= 66.67% PF= 3.63 R=   2.81
+  SHORT_REVERSAL           Trades=  5 Win=  0.00% PF= 0.00 R=  -5.30
+
+60 - 80     TRADES:    8
+  LONG_CONTINUATION        Trades=  5 Win= 20.00% PF= 0.46 R=  -2.30
+  LONG_REVERSAL            Trades=  1 Win=100.00% PF= 0.00 R=   1.94
+  SHORT_CONTINUATION       Trades=  1 Win=  0.00% PF= 0.00 R=  -1.05
+  SHORT_REVERSAL           Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06
+
+>= 80       TRADES:   27
+  LONG_CONTINUATION        Trades= 13 Win= 15.38% PF= 0.33 R=  -7.72
+  LONG_REVERSAL            Trades=  2 Win= 50.00% PF= 1.83 R=   0.88
+  SHORT_CONTINUATION       Trades=  6 Win= 50.00% PF= 1.84 R=   2.66
+  SHORT_REVERSAL           Trades=  6 Win= 50.00% PF= 1.03 R=   0.10
+
+====================================================================================================
+SETUP × FIB ZONE
+====================================================================================================
+LONG_CONTINUATION × ABOVE_618                           Trades=35  Win= 20.00% PF= 0.48 P&L=-14081.42 R= -15.54 AvgR=-0.444
+SHORT_REVERSAL × BELOW_618                              Trades=19  Win= 21.05% PF= 0.38 P&L= -9259.29 R=  -9.57 AvgR=-0.504
+LONG_CONTINUATION × ABOVE_382                           Trades=14  Win= 28.57% PF= 0.80 P&L= -1764.66 R=  -1.85 AvgR=-0.132
+SHORT_CONTINUATION × BELOW_618                          Trades=12  Win= 41.67% PF= 1.45 P&L=  2724.20 R=   3.16 AvgR= 0.263
+SHORT_REVERSAL × BELOW_382                              Trades=12  Win= 16.67% PF= 0.24 P&L= -7292.48 R=  -7.80 AvgR=-0.650
+LONG_REVERSAL × ABOVE_618                               Trades=6   Win= 50.00% PF= 1.58 P&L=  1667.16 R=   1.71 AvgR= 0.285
+LONG_REVERSAL × ABOVE_382                               Trades=5   Win= 60.00% PF= 3.01 P&L=  3628.83 R=   3.70 AvgR= 0.740
+SHORT_CONTINUATION × BELOW_382                          Trades=2   Win=  0.00% PF= 0.00 P&L= -1772.04 R=  -2.12 AvgR=-1.060
+LONG_CONTINUATION × UNKNOWN                             Trades=1   Win=  0.00% PF= 0.00 P&L=  -813.53 R=  -1.07 AvgR=-1.070
+
+========================================================================================================================
+SETUP × TREND STRENGTH × FIB ZONE
+========================================================================================================================
+LONG_CONTINUATION        20-40   ABOVE_382      Trades=  1 Win=  0.00% PF= 0.00 R=  -0.09
+LONG_CONTINUATION        20-40   ABOVE_618      Trades= 11 Win= 36.36% PF= 1.05 R=   0.35
+LONG_CONTINUATION        20-40   UNKNOWN        Trades=  1 Win=  0.00% PF= 0.00 R=  -1.07
+LONG_CONTINUATION        40-60   ABOVE_382      Trades=  3 Win= 33.33% PF= 0.92 R=  -0.18
+LONG_CONTINUATION        40-60   ABOVE_618      Trades=  5 Win=  0.00% PF= 0.00 R=  -4.80
+LONG_CONTINUATION        60-80   ABOVE_618      Trades=  5 Win= 20.00% PF= 0.46 R=  -2.30
+LONG_CONTINUATION        <20     ABOVE_382      Trades=  3 Win= 33.33% PF= 0.91 R=  -0.19
+LONG_CONTINUATION        <20     ABOVE_618      Trades=  8 Win= 25.00% PF= 0.61 R=  -2.46
+LONG_CONTINUATION        >=80    ABOVE_382      Trades=  7 Win= 28.57% PF= 0.74 R=  -1.39
+LONG_CONTINUATION        >=80    ABOVE_618      Trades=  6 Win=  0.00% PF= 0.00 R=  -6.33
+LONG_REVERSAL            20-40   ABOVE_382      Trades=  2 Win= 50.00% PF= 1.83 R=   0.88
+LONG_REVERSAL            20-40   ABOVE_618      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06
+LONG_REVERSAL            40-60   ABOVE_382      Trades=  1 Win=100.00% PF= 0.00 R=   1.94
+LONG_REVERSAL            40-60   ABOVE_618      Trades=  2 Win=100.00% PF= 0.00 R=   2.94
+LONG_REVERSAL            60-80   ABOVE_382      Trades=  1 Win=100.00% PF= 0.00 R=   1.94
+LONG_REVERSAL            <20     ABOVE_382      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06
+LONG_REVERSAL            <20     ABOVE_618      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.05
+LONG_REVERSAL            >=80    ABOVE_618      Trades=  2 Win= 50.00% PF= 1.83 R=   0.88
+SHORT_CONTINUATION       20-40   BELOW_618      Trades=  3 Win=  0.00% PF= 0.00 R=  -2.33
+SHORT_CONTINUATION       40-60   BELOW_382      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.07
+SHORT_CONTINUATION       40-60   BELOW_618      Trades=  2 Win=100.00% PF= 0.00 R=   3.88
+SHORT_CONTINUATION       60-80   BELOW_382      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.05
+SHORT_CONTINUATION       <20     BELOW_618      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.05
+SHORT_CONTINUATION       >=80    BELOW_618      Trades=  6 Win= 50.00% PF= 1.84 R=   2.66
+SHORT_REVERSAL           20-40   BELOW_382      Trades=  3 Win=  0.00% PF= 0.00 R=  -3.18
+SHORT_REVERSAL           20-40   BELOW_618      Trades=  7 Win= 14.29% PF= 0.31 R=  -4.40
+SHORT_REVERSAL           40-60   BELOW_382      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06
+SHORT_REVERSAL           40-60   BELOW_618      Trades=  4 Win=  0.00% PF= 0.00 R=  -4.24
+SHORT_REVERSAL           60-80   BELOW_618      Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06
+SHORT_REVERSAL           <20     BELOW_382      Trades=  4 Win=  0.00% PF= 0.00 R=  -4.23
+SHORT_REVERSAL           <20     BELOW_618      Trades=  5 Win= 40.00% PF= 1.22 R=   0.70
+SHORT_REVERSAL           >=80    BELOW_382      Trades=  4 Win= 50.00% PF= 1.32 R=   0.67
+SHORT_REVERSAL           >=80    BELOW_618      Trades=  2 Win= 50.00% PF= 0.46 R=  -0.57
+
+====================================================================================================
+FIBONACCI ZONE × PERFORMANCE
+====================================================================================================
+ABOVE_618                                               Trades=41  Win= 24.39% PF= 0.58 P&L=-12414.26 R= -13.83 AvgR=-0.337
+BELOW_618                                               Trades=31  Win= 29.03% PF= 0.69 P&L= -6535.09 R=  -6.41 AvgR=-0.207
+ABOVE_382                                               Trades=19  Win= 36.84% PF= 1.17 P&L=  1864.17 R=   1.85 AvgR= 0.097
+BELOW_382                                               Trades=14  Win= 14.29% PF= 0.20 P&L= -9064.52 R=  -9.92 AvgR=-0.709
+UNKNOWN                                                 Trades=1   Win=  0.00% PF= 0.00 P&L=  -813.53 R=  -1.07 AvgR=-1.070
+
+====================================================================================================
+FIBONACCI PREMIUM / DISCOUNT × PERFORMANCE
+====================================================================================================
+PREMIUM                                                 Trades=60  Win= 28.33% PF= 0.74 P&L=-10550.09 R= -11.98 AvgR=-0.200
+DISCOUNT                                                Trades=45  Win= 24.44% PF= 0.52 P&L=-15599.61 R= -16.33 AvgR=-0.363
+UNKNOWN                                                 Trades=1   Win=  0.00% PF= 0.00 P&L=  -813.53 R=  -1.07 AvgR=-1.070
+
+====================================================================================================
+FIBONACCI EXTENSION × PERFORMANCE
+====================================================================================================
+BULLISH_EXTENSION                                       Trades=60  Win= 28.33% PF= 0.74 P&L=-10550.09 R= -11.98 AvgR=-0.200
+BEARISH_EXTENSION                                       Trades=44  Win= 25.00% PF= 0.53 P&L=-14658.29 R= -15.28 AvgR=-0.347
+NORMAL                                                  Trades=1   Win=  0.00% PF= 0.00 P&L=  -941.32 R=  -1.05 AvgR=-1.050
+UNKNOWN                                                 Trades=1   Win=  0.00% PF= 0.00 P&L=  -813.53 R=  -1.07 AvgR=-1.070
+
+====================================================================================================
+LIQUIDITY × TREND
+====================================================================================================
+NO_SWEEP × NEUTRAL                                      Trades=42  Win= 23.81% PF= 0.60 P&L=-12146.04 R= -13.49 AvgR=-0.321
+NO_SWEEP × BULLISH                                      Trades=30  Win= 23.33% PF= 0.57 P&L= -9589.23 R= -10.22 AvgR=-0.341
+NO_SWEEP × BEARISH                                      Trades=23  Win= 34.78% PF= 0.91 P&L= -1275.48 R=  -0.95 AvgR=-0.041
+SWEEP × NEUTRAL                                         Trades=5   Win= 20.00% PF= 0.27 P&L= -2591.43 R=  -3.26 AvgR=-0.652
+SWEEP × BEARISH                                         Trades=3   Win= 33.33% PF= 0.38 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+SWEEP × BULLISH                                         Trades=3   Win= 33.33% PF= 0.90 P&L=  -196.17 R=  -0.19 AvgR=-0.063
+
+====================================================================================================
+STRUCTURE BIAS × TREND
+====================================================================================================
+BULLISH × NEUTRAL                                       Trades=39  Win= 25.64% PF= 0.67 P&L= -8908.79 R= -10.35 AvgR=-0.265
+BULLISH × BULLISH                                       Trades=28  Win= 14.29% PF= 0.31 P&L=-16161.52 R= -17.11 AvgR=-0.611
+BULLISH × BEARISH                                       Trades=14  Win= 21.43% PF= 0.25 P&L= -8141.07 R=  -8.37 AvgR=-0.598
+BEARISH × BEARISH                                       Trades=12  Win= 50.00% PF= 2.20 P&L=  5700.71 R=   6.15 AvgR= 0.512
+BEARISH × NEUTRAL                                       Trades=8   Win= 12.50% PF= 0.14 P&L= -5828.68 R=  -6.40 AvgR=-0.800
+BEARISH × BULLISH                                       Trades=5   Win= 80.00% PF= 8.16 P&L=  6376.12 R=   6.70 AvgR= 1.340
+
+====================================================================================================
+DIRECTION × LIQUIDITY
+====================================================================================================
+LONG × NO_SWEEP                                         Trades=53  Win= 28.30% PF= 0.76 P&L= -8576.02 R=  -9.60 AvgR=-0.181
+SHORT × NO_SWEEP                                        Trades=42  Win= 23.81% PF= 0.52 P&L=-14434.73 R= -15.06 AvgR=-0.359
+LONG × SWEEP                                            Trades=8   Win= 25.00% PF= 0.50 P&L= -2787.60 R=  -3.45 AvgR=-0.431
+SHORT × SWEEP                                           Trades=3   Win= 33.33% PF= 0.38 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+
+====================================================================================================
+DIRECTION × TREND
+====================================================================================================
+LONG × BULLISH                                          Trades=33  Win= 24.24% PF= 0.60 P&L= -9785.40 R= -10.41 AvgR=-0.315
+LONG × NEUTRAL                                          Trades=27  Win= 29.63% PF= 0.81 P&L= -3289.14 R=  -4.58 AvgR=-0.170
+SHORT × BEARISH                                         Trades=25  Win= 32.00% PF= 0.73 P&L= -4151.28 R=  -4.16 AvgR=-0.166
+SHORT × NEUTRAL                                         Trades=20  Win= 15.00% PF= 0.31 P&L=-11448.33 R= -12.17 AvgR=-0.609
+LONG × BEARISH                                          Trades=1   Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+
+====================================================================================================
+EXIT REASON
+====================================================================================================
+STOP_LOSS                                               Trades=75  Win=  0.00% PF= 0.00 P&L=-72778.89 R= -79.36 AvgR=-1.058
+TARGET                                                  Trades=25  Win=100.00% PF= 0.00 P&L= 44475.92 R=  48.52 AvgR= 1.941
+FINAL_LIQUIDATION                                       Trades=6   Win= 50.00% PF= 2.68 P&L=  1339.74 R=   1.46 AvgR= 0.243
+
+====================================================================================================
+SETUP × EXIT REASON
+====================================================================================================
+LONG_CONTINUATION × STOP_LOSS                           Trades=37  Win=  0.00% PF= 0.00 P&L=-36060.80 R= -39.12 AvgR=-1.057
+SHORT_REVERSAL × STOP_LOSS                              Trades=25  Win=  0.00% PF= 0.00 P&L=-24470.67 R= -26.48 AvgR=-1.059
+LONG_CONTINUATION × TARGET                              Trades=11  Win=100.00% PF= 0.00 P&L= 20017.58 R=  21.33 AvgR= 1.939
+SHORT_CONTINUATION × STOP_LOSS                          Trades=8   Win=  0.00% PF= 0.00 P&L= -7587.17 R=  -8.47 AvgR=-1.059
+LONG_REVERSAL × STOP_LOSS                               Trades=5   Win=  0.00% PF= 0.00 P&L= -4660.25 R=  -5.29 AvgR=-1.058
+LONG_REVERSAL × TARGET                                  Trades=5   Win=100.00% PF= 0.00 P&L=  8977.28 R=   9.70 AvgR= 1.940
+SHORT_CONTINUATION × TARGET                             Trades=5   Win=100.00% PF= 0.00 P&L=  8722.33 R=   9.72 AvgR= 1.944
+SHORT_REVERSAL × TARGET                                 Trades=4   Win=100.00% PF= 0.00 P&L=  6758.73 R=   7.77 AvgR= 1.942
+LONG_CONTINUATION × FINAL_LIQUIDATION                   Trades=2   Win=  0.00% PF= 0.00 P&L=  -616.39 R=  -0.67 AvgR=-0.335
+SHORT_REVERSAL × FINAL_LIQUIDATION                      Trades=2   Win=100.00% PF= 0.00 P&L=  1160.17 R=   1.34 AvgR= 0.670
+LONG_REVERSAL × FINAL_LIQUIDATION                       Trades=1   Win=100.00% PF= 0.00 P&L=   978.96 R=   1.00 AvgR= 1.000
+SHORT_CONTINUATION × FINAL_LIQUIDATION                  Trades=1   Win=  0.00% PF= 0.00 P&L=  -183.00 R=  -0.21 AvgR=-0.210
+
+====================================================================================================
+TRADE DATASET SAVED
+====================================================================================================
+Trades saved: 106
+File: tests/output\tradesense_trades.csv
+
+====================================================================================================
+TRADE DATA INTEGRITY
+====================================================================================================
+entry_trend                         0/106 missing
+entry_trend_strength                0/106 missing
+entry_trend_slope                   0/106 missing
+entry_price_position                0/106 missing
+Diagnostic_Setup                    0/106 missing
+Diagnostic_Direction                0/106 missing
+Diagnostic_Liquidity                0/106 missing
+Diagnostic_Break_Age                0/106 missing
+Diagnostic_Structure_Bias           0/106 missing
+
+========================================================================================================================
+TRADE-LEVEL ENTRY QUALITY DIAGNOSTIC
+========================================================================================================================
+
+WINNING TRADES: 28
+LOSING TRADES:  78
+
+------------------------------------------------------------------------------------------------------------------------
+INDIVIDUAL TRADE OUTCOMES
+------------------------------------------------------------------------------------------------------------------------
+SYMBOL      ENTRY DATE   DIR    SETUP                  TREND      STRENGTH    SLOPEPRICE POS  BIAS      LIQ       AGE    FIB ZONE  FIB R%PREM/DISCEXT                      R    MAE%    MFE%  BARS MAX_FAV_R MAX_ADV_R   0.5R    1R    1.5R  FAV_FIRST   FAILEXIT              
+------------------------------------------------------------------------------------------------------------------------
+RELIANCE.NS 2021-10-20   LONG   LONG_CONTINUATION      NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      ABOVE_382       -5.3PREMIUM      BULLISH_EXTENSION    -1.06   -8.88    0.00     8      0.00      1.24     NO    NO      NO         NA    YESSTOP_LOSS         
+RELIANCE.NS 2021-11-23   SHORT  SHORT_CONTINUATION     NEUTRAL        16.4   -7.579BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      163.6DISCOUNT     BEARISH_EXTENSION    -1.05    8.33    3.59    37      0.44      1.01     NO    NO      NO         NA     NOSTOP_LOSS         
+RELIANCE.NS 2022-02-18   LONG   LONG_CONTINUATION      NEUTRAL        17.5    2.205ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      121.3PREMIUM      BULLISH_EXTENSION    -1.05   -8.31    0.39     5      0.05      1.16     NO    NO      NO         NA     NOSTOP_LOSS         
+RELIANCE.NS 2022-03-21   LONG   LONG_REVERSAL          NEUTRAL        19.9    4.856ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_618      128.5PREMIUM      BULLISH_EXTENSION    -1.05  -10.89   16.75   250      1.61      1.05    YES   YES     YES         NA     NOSTOP_LOSS         
+RELIANCE.NS 2023-04-03   LONG   LONG_CONTINUATION      NEUTRAL        35.8    2.128ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      142.4PREMIUM      BULLISH_EXTENSION     1.94   -1.65   17.41    66      2.31      0.22    YES   YES     YES         NA     NOTARGET            
+RELIANCE.NS 2023-07-25   SHORT  SHORT_REVERSAL         NEUTRAL        35.2   -0.047BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      123.1DISCOUNT     BEARISH_EXTENSION    -1.06    9.37   10.89   116      1.37      1.18    YES   YES      NO         NA     NOSTOP_LOSS         
+RELIANCE.NS 2024-01-30   LONG   LONG_CONTINUATION      BULLISH       100.0   10.887ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      169.8PREMIUM      BULLISH_EXTENSION    -1.05   -8.26   10.09   175      1.23      1.00    YES   YES      NO         NA     NOSTOP_LOSS         
+RELIANCE.NS 2024-10-28   SHORT  SHORT_CONTINUATION     BEARISH        92.0   -5.349BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      125.5DISCOUNT     BEARISH_EXTENSION     1.94    1.30   13.45    88      2.20      0.21    YES   YES     YES         NA     NOTARGET            
+RELIANCE.NS 2025-03-10   LONG   LONG_REVERSAL          NEUTRAL        30.4    3.238ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_618      111.7PREMIUM      BULLISH_EXTENSION    -1.06  -10.54    4.93    19      0.73      1.56    YES    NO      NO         NA     NOSTOP_LOSS         
+RELIANCE.NS 2025-04-29   LONG   LONG_CONTINUATION      BULLISH        51.8    9.938ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      131.7PREMIUM      BULLISH_EXTENSION    -0.58    0.00    0.00   340      1.80      0.92    YES   YES     YES         NA     NOFINAL_LIQUIDATION 
+TCS.NS      2021-09-29   SHORT  SHORT_REVERSAL         NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      BELOW_382      -14.6DISCOUNT     BEARISH_EXTENSION    -1.06    7.64    9.85    76      1.35      1.05    YES   YES      NO         NA     NOSTOP_LOSS         
+TCS.NS      2022-02-23   SHORT  SHORT_REVERSAL         NEUTRAL        17.9  -17.459BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      163.1DISCOUNT     BEARISH_EXTENSION     1.94    6.33   16.18    78      2.21      0.86    YES   YES     YES         NA     NOTARGET            
+TCS.NS      2022-07-15   SHORT  SHORT_CONTINUATION     BEARISH        88.1  -20.655BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      108.5DISCOUNT     BEARISH_EXTENSION    -1.06   10.01    2.07    11      0.24      1.16     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2022-08-12   LONG   LONG_CONTINUATION      NEUTRAL        15.7   14.522ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382      -11.9PREMIUM      BULLISH_EXTENSION    -1.06   -6.07    0.00     9      0.00      1.01     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2022-09-19   SHORT  SHORT_REVERSAL         BEARISH        58.9  -17.585BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      155.6DISCOUNT     BEARISH_EXTENSION    -1.06    7.82    3.52    31      0.45      1.00     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2022-11-14   LONG   LONG_CONTINUATION      BULLISH        42.2   12.876ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      144.2PREMIUM      BULLISH_EXTENSION    -1.06   -5.51    7.44    88      1.37      1.02    YES   YES      NO         NA     NOSTOP_LOSS         
+TCS.NS      2023-04-03   LONG   LONG_REVERSAL          BEARISH        46.7   -1.003BELOW_FAST BEARISH   NO_SWEEP  0      ABOVE_382      -47.9PREMIUM      BULLISH_EXTENSION     1.94   -4.89   13.97   128      2.04      0.72    YES   YES     YES         NA     NOTARGET            
+TCS.NS      2023-10-20   SHORT  SHORT_REVERSAL         NEUTRAL        22.9   -8.362BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      110.7DISCOUNT     BEARISH_EXTENSION    -1.06    5.75    3.94    33      0.71      1.03    YES    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-01-04   SHORT  SHORT_REVERSAL         NEUTRAL        31.3   -3.011BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -27.8DISCOUNT     BEARISH_EXTENSION    -1.06    8.76    1.27    21      0.16      1.12     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-02-07   LONG   LONG_REVERSAL          BULLISH        85.1   27.126ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_618      193.3PREMIUM      BULLISH_EXTENSION    -1.06   -7.27    2.35    32      0.35      1.08     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-05-07   LONG   LONG_REVERSAL          NEUTRAL        11.5    2.761ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_382      -23.7PREMIUM      BULLISH_EXTENSION    -1.06   -7.14    1.35    18      0.19      1.02     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-06-28   LONG   LONG_CONTINUATION      NEUTRAL        17.9    9.750ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382      -57.6PREMIUM      BULLISH_EXTENSION     1.93   -0.96   11.14    15      2.05      0.18    YES   YES     YES         NA     NOTARGET            
+TCS.NS      2024-08-20   LONG   LONG_CONTINUATION      BULLISH        86.1   23.116ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      118.4PREMIUM      BULLISH_EXTENSION    -1.05   -8.80    1.83    38      0.26      1.24     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-10-23   SHORT  SHORT_CONTINUATION     BEARISH        57.0  -18.018BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_382      -16.6DISCOUNT     BEARISH_EXTENSION    -1.07    6.49    2.06    21      0.33      1.05     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2024-11-26   LONG   LONG_CONTINUATION      NEUTRAL        23.1   17.983ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      133.1PREMIUM      BULLISH_EXTENSION    -1.07   -8.56    3.92    56      0.47      1.02     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2025-03-26   LONG   LONG_CONTINUATION      NEUTRAL        39.5    3.268ABOVE_FAST BULLISH   SWEEP     0      ABOVE_618      120.2PREMIUM      BULLISH_EXTENSION    -1.07   -6.99    0.80     6      0.12      1.07     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2025-05-13   LONG   LONG_CONTINUATION      NEUTRAL        39.9   17.163ABOVE_FAST BULLISH   SWEEP     0      UNKNOWN           NAUNKNOWN      UNKNOWN              -1.07   -7.18    0.00    18      0.00      1.02     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2025-07-14   SHORT  SHORT_CONTINUATION     BEARISH        53.1  -14.316BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      186.7DISCOUNT     BEARISH_EXTENSION     1.94    0.28   11.38    53      2.12      0.05    YES   YES     YES         NA     NOTARGET            
+TCS.NS      2025-10-28   LONG   LONG_CONTINUATION      NEUTRAL        23.0    6.452ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      111.7PREMIUM      BULLISH_EXTENSION    -1.06   -5.68    8.80    74      1.57      1.01    YES   YES     YES         NA     NOSTOP_LOSS         
+TCS.NS      2026-03-10   SHORT  SHORT_CONTINUATION     BEARISH       100.0  -18.377BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      126.6DISCOUNT     BEARISH_EXTENSION     1.95    2.98   18.85    70      2.10      0.33    YES   YES     YES         NA     NOTARGET            
+TCS.NS      2026-06-24   SHORT  SHORT_CONTINUATION     BEARISH       100.0  -14.217BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      141.7DISCOUNT     BEARISH_EXTENSION    -1.06   10.49    3.99    18      0.45      1.18     NO    NO      NO         NA     NOSTOP_LOSS         
+TCS.NS      2026-07-28   LONG   LONG_CONTINUATION      NEUTRAL        27.9   10.494ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -4.6PREMIUM      BULLISH_EXTENSION    -0.09    0.00    0.00    28      0.80      0.40    YES    NO      NO         NA     NOFINAL_LIQUIDATION 
+HDFCBANK.NS 2021-09-27   LONG   LONG_CONTINUATION      NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      ABOVE_618      120.9PREMIUM      BULLISH_EXTENSION    -1.06   -5.69    6.66    37      1.17      1.00    YES   YES      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2021-11-23   SHORT  SHORT_CONTINUATION     BEARISH        47.7   -2.967BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      155.9DISCOUNT     BEARISH_EXTENSION     1.94    5.08   13.56    73      2.34      0.88    YES   YES     YES         NA     NOTARGET            
+HDFCBANK.NS 2022-04-05   LONG   LONG_CONTINUATION      BULLISH        31.0    9.207ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      217.8PREMIUM      BULLISH_EXTENSION    -1.05  -10.25    0.00     4      0.00      1.03     NO    NO      NO         NA    YESSTOP_LOSS         
+HDFCBANK.NS 2022-04-20   SHORT  SHORT_REVERSAL         BEARISH        34.8   -6.428BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      118.5DISCOUNT     BEARISH_EXTENSION    -1.05   20.98    6.02   141      0.43      1.50     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2022-12-13   LONG   LONG_CONTINUATION      BULLISH        89.5    2.199ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      116.5PREMIUM      BULLISH_EXTENSION    -1.06   -4.45    1.07    19      0.26      1.06     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2023-01-11   SHORT  SHORT_CONTINUATION     NEUTRAL        27.4   -2.190BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      128.4DISCOUNT     BEARISH_EXTENSION    -1.06    6.55    0.41     8      0.07      1.08     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2023-03-14   SHORT  SHORT_REVERSAL         BEARISH        31.5   -2.356BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382       -8.4DISCOUNT     BEARISH_EXTENSION    -1.06    6.41    2.34    16      0.38      1.04     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2023-05-05   LONG   LONG_CONTINUATION      BULLISH        61.2    3.007ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      199.8PREMIUM      BULLISH_EXTENSION    -1.06   -6.31    7.12    97      1.42      1.26    YES   YES      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2023-10-27   SHORT  SHORT_REVERSAL         BEARISH        71.8   -3.185BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      138.8DISCOUNT     BEARISH_EXTENSION    -1.06    6.47    0.42    22      0.08      1.21     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2023-12-22   LONG   LONG_CONTINUATION      BULLISH        75.8    3.519ABOVE_FAST BULLISH   SWEEP     0      ABOVE_618      147.3PREMIUM      BULLISH_EXTENSION    -1.06   -9.31    2.14    18      0.41      1.77     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2024-04-03   LONG   LONG_CONTINUATION      NEUTRAL        23.6    1.627ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      117.0PREMIUM      BULLISH_EXTENSION     1.94   -3.17   13.32    51      2.47      0.59    YES   YES     YES         NA     NOTARGET            
+HDFCBANK.NS 2024-07-03   LONG   LONG_CONTINUATION      BULLISH       100.0    4.670ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -5.2PREMIUM      BULLISH_EXTENSION    -1.06   -8.40    0.07     3      0.01      1.46     NO    NO      NO         NA    YESSTOP_LOSS         
+HDFCBANK.NS 2024-08-05   LONG   LONG_REVERSAL          BULLISH        44.2    1.490ABOVE_FAST BEARISH   SWEEP     0      ABOVE_618      113.0PREMIUM      BULLISH_EXTENSION     1.94   -2.95   13.60    84      2.19      0.48    YES   YES     YES         NA     NOTARGET            
+HDFCBANK.NS 2025-01-06   SHORT  SHORT_CONTINUATION     NEUTRAL        23.2   -2.341BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      137.3DISCOUNT     BEARISH_EXTENSION    -1.06    6.06    6.56    56      1.08      1.00    YES   YES      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2025-04-08   SHORT  SHORT_REVERSAL         NEUTRAL        17.0   -0.460BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382       -9.8DISCOUNT     BEARISH_EXTENSION    -1.06    8.87    0.73     6      0.10      1.22     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2025-06-09   LONG   LONG_CONTINUATION      BULLISH        69.4    2.380ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      167.6PREMIUM      BULLISH_EXTENSION    -1.06   -5.22    2.04    59      0.41      1.06     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2025-09-19   LONG   LONG_CONTINUATION      NEUTRAL         9.1    0.616ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      117.2PREMIUM      BULLISH_EXTENSION    -1.07   -4.36    4.57    77      1.14      1.09    YES   YES      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2026-02-04   LONG   LONG_REVERSAL          NEUTRAL        23.2    0.792ABOVE_FAST BEARISH   SWEEP     0      ABOVE_382      -19.9PREMIUM      BULLISH_EXTENSION    -1.06   -7.18    0.39    18      0.06      1.01     NO    NO      NO         NA     NOSTOP_LOSS         
+HDFCBANK.NS 2026-03-20   SHORT  SHORT_REVERSAL         BEARISH       100.0   -6.414BELOW_FAST BULLISH   SWEEP     0      BELOW_382       -7.6DISCOUNT     BEARISH_EXTENSION     0.85    0.00    0.00   116      1.00      0.68    YES    NO      NO         NA     NOFINAL_LIQUIDATION 
+ICICIBANK.NS2021-10-19   LONG   LONG_CONTINUATION      NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      ABOVE_618      121.2PREMIUM      BULLISH_EXTENSION     1.94   -2.43   14.72     5      2.08      0.34    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2022-01-06   LONG   LONG_CONTINUATION      BULLISH        34.3    4.109ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      134.2PREMIUM      BULLISH_EXTENSION    -1.05   -9.48    7.76    35      1.01      1.23    YES   YES      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2022-03-07   SHORT  SHORT_CONTINUATION     BEARISH        69.1   -5.882BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_382      -13.4DISCOUNT     BEARISH_EXTENSION    -1.05   14.33    3.12    23      0.22      1.02     NO    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2022-04-28   SHORT  SHORT_REVERSAL         NEUTRAL         9.9   -0.859BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      143.6DISCOUNT     BEARISH_EXTENSION    -1.06    8.88    9.27    61      1.21      1.16    YES   YES      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2022-08-02   LONG   LONG_CONTINUATION      BULLISH        98.0    4.558ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -7.6PREMIUM      BULLISH_EXTENSION     1.94   -1.52   12.36    29      2.11      0.26    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2022-10-19   LONG   LONG_CONTINUATION      BULLISH        57.4    2.084ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      112.6PREMIUM      BULLISH_EXTENSION    -1.05   -9.75    6.35    70      0.83      1.27    YES    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2023-02-23   SHORT  SHORT_REVERSAL         BEARISH        48.7   -1.887BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      135.5DISCOUNT     BEARISH_EXTENSION    -1.06    6.15    3.04    26      0.52      1.06    YES    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2023-05-03   LONG   LONG_CONTINUATION      BULLISH        64.4    2.790ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      113.8PREMIUM      BULLISH_EXTENSION     1.94   -2.33   10.81   152      2.01      0.43    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2024-01-03   SHORT  SHORT_REVERSAL         NEUTRAL        23.8   -1.220BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      130.9DISCOUNT     BEARISH_EXTENSION    -1.06    7.69    1.38    14      0.24      1.32     NO    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2024-02-23   LONG   LONG_REVERSAL          BULLISH        63.7    3.764ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_382      -15.9PREMIUM      BULLISH_EXTENSION     1.94   -3.04   15.31    82      2.04      0.40    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2024-07-10   LONG   LONG_CONTINUATION      BULLISH        94.0    5.911ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      123.8PREMIUM      BULLISH_EXTENSION    -1.05   -7.58    0.30    21      0.04      1.00     NO    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2024-08-26   LONG   LONG_REVERSAL          BULLISH        22.0    1.556ABOVE_FAST BEARISH   NO_SWEEP  0      ABOVE_382      -18.1PREMIUM      BULLISH_EXTENSION     1.94   -0.52   12.89    20      2.12      0.09    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2024-10-29   LONG   LONG_CONTINUATION      BULLISH        46.2    3.471ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382      -11.8PREMIUM      BULLISH_EXTENSION    -1.05   -8.44    3.67    58      0.49      1.14     NO    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2025-02-07   LONG   LONG_CONTINUATION      NEUTRAL        15.1    1.980ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      127.8PREMIUM      BULLISH_EXTENSION     1.94   -5.75   13.61    54      2.08      0.88    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2025-05-13   LONG   LONG_CONTINUATION      BULLISH       100.0    4.853ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      126.3PREMIUM      BULLISH_EXTENSION    -1.06   -6.86    4.06    99      0.61      1.03    YES    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2025-10-20   LONG   LONG_CONTINUATION      NEUTRAL        22.1    4.482ABOVE_FAST BULLISH   SWEEP     0      ABOVE_618      104.2PREMIUM      BULLISH_EXTENSION    -1.06   -4.68    0.11     2      0.03      1.09     NO    NO      NO         NA    YESSTOP_LOSS         
+ICICIBANK.NS2025-11-06   SHORT  SHORT_REVERSAL         BEARISH        49.0   -3.469BELOW_FAST BULLISH   SWEEP     0      BELOW_618      105.6DISCOUNT     BEARISH_EXTENSION    -1.06    6.39    0.85    43      0.16      1.17     NO    NO      NO         NA     NOSTOP_LOSS         
+ICICIBANK.NS2026-01-20   SHORT  SHORT_REVERSAL         NEUTRAL        10.9   -1.191BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      121.3DISCOUNT     BEARISH_EXTENSION     1.94    4.45   13.52    49      2.04      0.67    YES   YES     YES         NA     NOTARGET            
+ICICIBANK.NS2026-04-09   LONG   LONG_REVERSAL          NEUTRAL        47.2    3.943ABOVE_FAST BEARISH   SWEEP     0      ABOVE_618      111.0PREMIUM      BULLISH_EXTENSION     1.00    0.00    0.00   105      1.46      0.72    YES   YES      NO         NA     NOFINAL_LIQUIDATION 
+INFY.NS     2021-10-04   SHORT  SHORT_REVERSAL         NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      BELOW_618      111.6DISCOUNT     BEARISH_EXTENSION    -1.06    7.67    0.53    10      0.07      1.08     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2021-11-01   SHORT  SHORT_REVERSAL         NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      BELOW_382      -12.1DISCOUNT     BEARISH_EXTENSION    -1.05   11.09    0.40    37      0.04      1.03     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2022-01-17   LONG   LONG_CONTINUATION      BULLISH        79.6    7.733ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      113.4PREMIUM      BULLISH_EXTENSION    -1.06   -8.48    0.69     5      0.11      1.29     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2022-02-15   SHORT  SHORT_REVERSAL         BEARISH        51.1   -7.678BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -13.6DISCOUNT     BEARISH_EXTENSION    -1.06   11.65    1.90    19      0.21      1.30     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2022-04-07   SHORT  SHORT_REVERSAL         NEUTRAL        25.1   -2.343BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      135.9DISCOUNT     BEARISH_EXTENSION     1.95    1.03   15.84    16      2.11      0.14    YES   YES     YES         NA     NOTARGET            
+INFY.NS     2022-05-05   SHORT  SHORT_CONTINUATION     BEARISH       100.0  -11.388BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      127.9DISCOUNT     BEARISH_EXTENSION     1.95    7.32   23.95   236      2.21      0.68    YES   YES     YES         NA     NOTARGET            
+INFY.NS     2023-05-15   SHORT  SHORT_REVERSAL         BEARISH        98.8   -3.697BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -35.5DISCOUNT     BEARISH_EXTENSION    -1.06    5.25    0.50     7      0.10      1.07     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2023-06-26   SHORT  SHORT_REVERSAL         BEARISH        48.2   -2.534BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      167.0DISCOUNT     BEARISH_EXTENSION    -1.06    5.51    0.53     4      0.11      1.11     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2023-07-14   LONG   LONG_CONTINUATION      BULLISH        35.7    4.366ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      118.5PREMIUM      BULLISH_EXTENSION    -1.06   -5.57    8.45     6      1.55      1.02    YES   YES     YES         NA     NOSTOP_LOSS         
+INFY.NS     2023-08-28   LONG   LONG_CONTINUATION      BULLISH        53.0    2.705ABOVE_FAST BULLISH   SWEEP     1      ABOVE_382       -0.2PREMIUM      BULLISH_EXTENSION    -1.07   -4.81    6.82    41      1.57      1.11    YES   YES     YES         NA     NOSTOP_LOSS         
+INFY.NS     2023-11-17   LONG   LONG_CONTINUATION      NEUTRAL        23.2    4.205ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      181.4PREMIUM      BULLISH_EXTENSION     1.94   -1.07   12.17    39      2.22      0.19    YES   YES     YES         NA     NOTARGET            
+INFY.NS     2024-01-25   LONG   LONG_CONTINUATION      BULLISH       100.0    8.844ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -5.9PREMIUM      BULLISH_EXTENSION    -1.05  -10.54    3.49    40      0.44      1.32     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2024-04-18   SHORT  SHORT_CONTINUATION     BEARISH        86.1   -9.714BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      216.9DISCOUNT     BEARISH_EXTENSION    -1.06    8.45    4.32    35      0.66      1.30    YES    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2024-06-28   LONG   LONG_CONTINUATION      BULLISH        47.0    7.128ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -7.8PREMIUM      BULLISH_EXTENSION     1.94   -0.93   12.15    14      2.02      0.15    YES   YES     YES         NA     NOTARGET            
+INFY.NS     2024-07-29   LONG   LONG_CONTINUATION      BULLISH       100.0   15.976ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -7.2PREMIUM      BULLISH_EXTENSION    -1.05   -9.33    0.40     6      0.05      1.28     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2024-08-29   LONG   LONG_CONTINUATION      BULLISH       100.0    9.950ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      178.5PREMIUM      BULLISH_EXTENSION    -1.06   -7.16    2.92    44      0.52      1.28    YES    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2024-11-25   LONG   LONG_CONTINUATION      NEUTRAL        18.5    5.577ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      124.7PREMIUM      BULLISH_EXTENSION    -1.06   -8.74    4.62    66      0.61      1.15    YES    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2025-03-13   SHORT  SHORT_REVERSAL         BEARISH       100.0  -15.329BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -31.2DISCOUNT     BEARISH_EXTENSION     1.94    8.16   20.88   236      2.04      0.80    YES   YES     YES         NA     NOTARGET            
+INFY.NS     2026-03-13   SHORT  SHORT_REVERSAL         BEARISH       100.0   -8.182BELOW_FAST BULLISH   SWEEP     0      BELOW_618      113.3DISCOUNT     BEARISH_EXTENSION    -1.06   10.17    2.77    16      0.29      1.05     NO    NO      NO         NA     NOSTOP_LOSS         
+INFY.NS     2026-04-24   SHORT  SHORT_REVERSAL         BEARISH        97.7   -5.552BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      138.4DISCOUNT     BEARISH_EXTENSION     0.49    0.00    0.00    95      1.71      0.63    YES   YES     YES         NA     NOFINAL_LIQUIDATION 
+SBIN.NS     2021-10-13   LONG   LONG_CONTINUATION      NEUTRAL         0.0    0.000NEUTRAL    BULLISH   NO_SWEEP  0      ABOVE_618      133.8PREMIUM      BULLISH_EXTENSION    -1.05  -10.93   12.82    99      1.32      1.13    YES   YES      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2022-04-04   LONG   LONG_CONTINUATION      NEUTRAL        17.9    1.706ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      121.8PREMIUM      BULLISH_EXTENSION    -1.05   -9.05    2.39    25      0.29      1.11     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2022-05-31   LONG   LONG_CONTINUATION      NEUTRAL        26.1    0.369ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      116.5PREMIUM      BULLISH_EXTENSION     1.95   -9.23   23.55   102      2.07      0.81    YES   YES     YES         NA     NOTARGET            
+SBIN.NS     2022-11-07   LONG   LONG_CONTINUATION      BULLISH        86.4    3.008ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382      -11.7PREMIUM      BULLISH_EXTENSION    -1.05  -13.26    2.60    58      0.33      1.68     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-03-06   LONG   LONG_CONTINUATION      NEUTRAL        45.0    2.123ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      108.6PREMIUM      BULLISH_EXTENSION    -1.05   -8.04    0.43     6      0.06      1.10     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-03-27   SHORT  SHORT_REVERSAL         BEARISH        86.4   -2.405BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -16.7DISCOUNT     BEARISH_EXTENSION    -1.06    9.69    0.98    17      0.12      1.15     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-06-16   SHORT  SHORT_REVERSAL         NEUTRAL        25.4   -1.269BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      166.9DISCOUNT     BEARISH_EXTENSION    -1.07    4.89    2.53    12      0.56      1.08    YES    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-07-21   LONG   LONG_CONTINUATION      BULLISH        59.8    2.185ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_618      153.7PREMIUM      BULLISH_EXTENSION    -1.06   -6.42    1.85    11      0.29      1.02     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-08-16   SHORT  SHORT_REVERSAL         NEUTRAL        17.0   -2.550BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -10.6DISCOUNT     BEARISH_EXTENSION    -1.06    7.12    0.76    21      0.11      1.04     NO    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2023-10-10   SHORT  SHORT_REVERSAL         NEUTRAL        10.8   -0.539BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_618      118.6DISCOUNT     BEARISH_EXTENSION    -1.06    7.05    7.37    45      1.13      1.08    YES   YES      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2024-01-09   SHORT  SHORT_REVERSAL         NEUTRAL        34.2   -0.424BELOW_FAST BULLISH   NO_SWEEP  0      BELOW_382      -35.2DISCOUNT     BEARISH_EXTENSION    -1.06   13.86    4.87    21      0.63      1.80    YES    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2024-02-12   LONG   LONG_REVERSAL          BULLISH        90.0    7.483ABOVE_FAST BEARISH   NO_SWEEP  3      ABOVE_618      277.8PREMIUM      BULLISH_EXTENSION     1.94   -3.38   25.49    74      2.45      0.32    YES   YES     YES         NA     NOTARGET            
+SBIN.NS     2024-06-07   SHORT  SHORT_REVERSAL         NEUTRAL        28.9   -0.127BELOW_FAST BULLISH   NO_SWEEP  2      BELOW_618       82.9DISCOUNT     NORMAL               -1.05   16.40   16.98   350      1.09      1.05    YES   YES      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2025-11-20   LONG   LONG_CONTINUATION      BULLISH       100.0    3.900ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382       -9.9PREMIUM      BULLISH_EXTENSION     1.93   -4.31   10.42    52      2.12      0.88    YES   YES     YES         NA     NOTARGET            
+SBIN.NS     2026-02-10   LONG   LONG_CONTINUATION      BULLISH       100.0    9.390ABOVE_FAST BULLISH   NO_SWEEP  0      ABOVE_382      -56.3PREMIUM      BULLISH_EXTENSION    -1.05  -10.07    7.16    24      0.72      1.01    YES    NO      NO         NA     NOSTOP_LOSS         
+SBIN.NS     2026-03-30   SHORT  SHORT_CONTINUATION     BEARISH        33.9   -6.495BELOW_FAST BEARISH   NO_SWEEP  0      BELOW_618      133.9DISCOUNT     BEARISH_EXTENSION    -0.21    0.00    0.00   111      0.55      0.95    YES    NO      NO         NA     NOFINAL_LIQUIDATION 
+
+------------------------------------------------------------------------------------------------------------------------
+WINNERS VS LOSERS
+------------------------------------------------------------------------------------------------------------------------
+METRIC                           WINNERS         LOSERS     DIFFERENCE
+----------------------------------------------------------------------
+Trend Strength                   53.8996        46.9150         6.9846
+Trend Slope                      -1.6078         1.6203        -3.2281
+MAE %                            -0.4480        -0.5093         0.0613
+MFE %                            15.2212         3.7248        11.4964
+Initial Risk                    915.7318       915.6267         0.1051
+Entry ATR                        30.9696        32.8331        -1.8634
+R Multiple                        1.8164        -1.0287         2.8451
+
+------------------------------------------------------------------------------------------------------------------------
+ENTRY CONTEXT: WINNERS VS LOSERS
+------------------------------------------------------------------------------------------------------------------------
+
+SETUP
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+LONG_CONTINUATION                       11          39      22.00%
+LONG_REVERSAL                            6           5      54.55%
+SHORT_CONTINUATION                       5           9      35.71%
+SHORT_REVERSAL                           6          25      19.35%
+
+TREND
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+BEARISH                                  9          17      34.62%
+BULLISH                                  8          25      24.24%
+NEUTRAL                                 11          36      23.40%
+
+STRUCTURE BIAS
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+BEARISH                                 11          14      44.00%
+BULLISH                                 17          64      20.99%
+
+LIQUIDITY
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+NO_SWEEP                                25          70      26.32%
+SWEEP                                    3           8      27.27%
+
+DIRECTION
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+LONG                                    17          44      27.87%
+SHORT                                   11          34      24.44%
+
+PRICE POSITION
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+ABOVE_FAST                              15          41      26.79%
+BELOW_FAST                              12          31      27.91%
+NEUTRAL                                  1           6      14.29%
+
+BREAK AGE
+CONTEXT                         WIN TRADES LOSS TRADES    WIN RATE
+----------------------------------------------------------------------
+AGE_0                                   27          76      26.21%
+AGE_1                                    0           1       0.00%
+AGE_2                                    0           1       0.00%
+AGE_3                                    1           0     100.00%
+
+------------------------------------------------------------------------------------------------------------------------
+BEST AND WORST TRADES
+------------------------------------------------------------------------------------------------------------------------
+
+TOP 10 TRADES BY R:
+TCS.NS       2026-03-10   SHORT_CONTINUATION      SHORT   R=  1.95 MAE=   2.98% MFE=  18.85% EXIT=TARGET
+INFY.NS      2022-04-07   SHORT_REVERSAL          SHORT   R=  1.95 MAE=   1.03% MFE=  15.84% EXIT=TARGET
+INFY.NS      2022-05-05   SHORT_CONTINUATION      SHORT   R=  1.95 MAE=   7.32% MFE=  23.95% EXIT=TARGET
+SBIN.NS      2022-05-31   LONG_CONTINUATION       LONG    R=  1.95 MAE=  -9.23% MFE=  23.55% EXIT=TARGET
+RELIANCE.NS  2023-04-03   LONG_CONTINUATION       LONG    R=  1.94 MAE=  -1.65% MFE=  17.41% EXIT=TARGET
+RELIANCE.NS  2024-10-28   SHORT_CONTINUATION      SHORT   R=  1.94 MAE=   1.30% MFE=  13.45% EXIT=TARGET
+TCS.NS       2022-02-23   SHORT_REVERSAL          SHORT   R=  1.94 MAE=   6.33% MFE=  16.18% EXIT=TARGET
+TCS.NS       2023-04-03   LONG_REVERSAL           LONG    R=  1.94 MAE=  -4.89% MFE=  13.97% EXIT=TARGET
+TCS.NS       2025-07-14   SHORT_CONTINUATION      SHORT   R=  1.94 MAE=   0.28% MFE=  11.38% EXIT=TARGET
+HDFCBANK.NS  2021-11-23   SHORT_CONTINUATION      SHORT   R=  1.94 MAE=   5.08% MFE=  13.56% EXIT=TARGET
+
+BOTTOM 10 TRADES BY R:
+SBIN.NS      2023-08-16   SHORT_REVERSAL          SHORT   R= -1.06 MAE=   7.12% MFE=   0.76% EXIT=STOP_LOSS
+SBIN.NS      2023-10-10   SHORT_REVERSAL          SHORT   R= -1.06 MAE=   7.05% MFE=   7.37% EXIT=STOP_LOSS
+SBIN.NS      2024-01-09   SHORT_REVERSAL          SHORT   R= -1.06 MAE=  13.86% MFE=   4.87% EXIT=STOP_LOSS
+TCS.NS       2024-10-23   SHORT_CONTINUATION      SHORT   R= -1.07 MAE=   6.49% MFE=   2.06% EXIT=STOP_LOSS
+TCS.NS       2024-11-26   LONG_CONTINUATION       LONG    R= -1.07 MAE=  -8.56% MFE=   3.92% EXIT=STOP_LOSS
+TCS.NS       2025-03-26   LONG_CONTINUATION       LONG    R= -1.07 MAE=  -6.99% MFE=   0.80% EXIT=STOP_LOSS
+TCS.NS       2025-05-13   LONG_CONTINUATION       LONG    R= -1.07 MAE=  -7.18% MFE=   0.00% EXIT=STOP_LOSS
+HDFCBANK.NS  2025-09-19   LONG_CONTINUATION       LONG    R= -1.07 MAE=  -4.36% MFE=   4.57% EXIT=STOP_LOSS
+INFY.NS      2023-08-28   LONG_CONTINUATION       LONG    R= -1.07 MAE=  -4.81% MFE=   6.82% EXIT=STOP_LOSS
+SBIN.NS      2023-06-16   SHORT_REVERSAL          SHORT   R= -1.07 MAE=   4.89% MFE=   2.53% EXIT=STOP_LOSS
+
+========================================================================================================================
+MFE QUALITY OF LOSING TRADES
+========================================================================================================================
+
+< 0R              TRADES:    0
+0R - 0.25R        TRADES:   29
+0.25R - 0.50R     TRADES:   18
+0.50R - 1.00R     TRADES:   13
+1.00R - 1.50R     TRADES:   13
+>= 1.50R          TRADES:    5
+
+========================================================================================================================
+LOSING TRADE MFE BY SETUP
+========================================================================================================================
+
+LONG_CONTINUATION        LOSERS:   39 AVG_MFE:    0.60R >=0.5R:   17 >=1.0R:   11 >=1.5R:    4
+LONG_REVERSAL            LOSERS:    5 AVG_MFE:    0.59R >=0.5R:    2 >=1.0R:    1 >=1.5R:    1
+SHORT_CONTINUATION       LOSERS:    9 AVG_MFE:    0.45R >=0.5R:    3 >=1.0R:    1 >=1.5R:    0
+SHORT_REVERSAL           LOSERS:   25 AVG_MFE:    0.46R >=0.5R:    9 >=1.0R:    5 >=1.5R:    0
+
+========================================================================================================================
+LOSING TRADE PROFIT GIVEBACK
+========================================================================================================================
+
+LOSERS REACHING >= 0.5R: 31
+AVG MFE:            1.05R
+AVG REALIZED:      -0.98R
+AVG GIVEBACK:       2.03R
+
+LOSERS REACHING >= 1.0R: 18
+AVG MFE:            1.33R
+AVG REALIZED:      -1.03R
+AVG GIVEBACK:       2.36R
+
+LOSERS REACHING >= 1.5R: 5
+AVG MFE:            1.62R
+AVG REALIZED:      -0.96R
+AVG GIVEBACK:       2.58R
+
+------------------------------------------------------------------------------------------------------------------------
+PROFIT GIVEBACK BY SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION        TRADES:   17 AVG_MFE:    1.13R AVG_REALIZED:   -0.97R AVG_GIVEBACK:    2.10R
+LONG_REVERSAL            TRADES:    2 AVG_MFE:    1.17R AVG_REALIZED:   -1.06R AVG_GIVEBACK:    2.23R
+SHORT_CONTINUATION       TRADES:    3 AVG_MFE:    0.76R AVG_REALIZED:   -0.78R AVG_GIVEBACK:    1.54R
+SHORT_REVERSAL           TRADES:    9 AVG_MFE:    0.95R AVG_REALIZED:   -1.06R AVG_GIVEBACK:    2.01R
+
+========================================================================================================================
+LOSING TRADE MFE / MAE TIMING
+========================================================================================================================
+
+MFE BUCKET          TRADES     AVG_MFE     AVG_MAE    AVG_BARS       AVG_R
+---------------------------------------------------------------------------
+< 0.5R                  47        0.20R        1.15R        23.1       -1.06R
+0.5R - 1.0R             13        0.65R        1.15R        45.2       -0.92R
+1.0R - 1.5R             13        1.22R        1.10R       100.9       -1.06R
+>= 1.5R                  5        1.62R        1.02R       142.2       -0.96R
+
+------------------------------------------------------------------------------------------------------------------------
+TIME TO FAVORABLE EXCURSION
+------------------------------------------------------------------------------------------------------------------------
+
+LOSERS REACHING 0.5R:   31
+AVG BARS TO 0.5R:   20.42
+FASTEST:       1 bars
+SLOWEST:     148 bars
+
+LOSERS REACHING 1.0R:   18
+AVG BARS TO 1.0R:   37.11
+FASTEST:       2 bars
+SLOWEST:     184 bars
+
+LOSERS REACHING 1.5R:    5
+AVG BARS TO 1.5R:   52.00
+FASTEST:       4 bars
+SLOWEST:     147 bars
+
+------------------------------------------------------------------------------------------------------------------------
+PROFITABLE EXCURSION BEFORE LOSS
+------------------------------------------------------------------------------------------------------------------------
+
+LOSERS REACHING >= 0.5R:   31
+AVG MFE:            1.05R
+AVG REALIZED:      -0.98R
+AVG GIVEBACK:       2.03R
+AVG BARS:           84.2
+
+LOSERS REACHING >= 1.0R:   18
+AVG MFE:            1.33R
+AVG REALIZED:      -1.03R
+AVG GIVEBACK:       2.36R
+AVG BARS:          112.4
+
+LOSERS REACHING >= 1.5R:    5
+AVG MFE:            1.62R
+AVG REALIZED:      -0.96R
+AVG GIVEBACK:       2.58R
+AVG BARS:          142.2
+
+====================================================================================================
+OUT-OF-SAMPLE TEST — SHORT_REVERSAL EXCLUSION
+====================================================================================================
+
+OOS PERIOD:
+2025-01-01 -> latest available date
+
+BASELINE — ALL SETUPS
+Trades=27  Win= 33.33% PF= 0.85 P&L= -2264.51 R=  -2.82 AvgR=-0.104
+
+FILTERED — EXCLUDE SHORT_REVERSAL
+Trades=20  Win= 25.00% PF= 0.68 P&L= -3938.53 R=  -4.86 AvgR=-0.243
+
+SHORT_REVERSAL TRADES REMOVED: 7
+
+====================================================================================================
+FINAL DIAGNOSTIC SUMMARY
+====================================================================================================
+Stocks processed: 6
+Total executed trades: 106
+Total P&L: -26963.23
+Total R: -29.38
+Overall win rate: 26.42
+====================================================================================================

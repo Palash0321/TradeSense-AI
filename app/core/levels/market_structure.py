@@ -3,7 +3,8 @@ import pandas as pd
 
 def calculate_market_structure(
     history: pd.DataFrame,
-    swing_window: int = 3
+    swing_window: int = 3,
+    break_validity_bars: int = 5
 ):
     """
     Market structure engine.
@@ -35,6 +36,7 @@ def calculate_market_structure(
         "break_level": None,
         "break_date": None,
         "break_confirmed": False,
+        "break_age": None,
         "strength": 0
     }
 
@@ -306,6 +308,7 @@ def calculate_market_structure(
     break_level = None
     break_date = None
     break_confirmed = False
+    break_age = None
 
     # ------------------------------------------
     # Find the most recent relevant swing
@@ -432,6 +435,14 @@ def calculate_market_structure(
 
         break_confirmed = True
 
+        break_age = (
+            len(df)
+            - 1
+            - df.index.get_loc(
+                break_event["index"]
+            )
+        )
+
         # --------------------------------------
         # BOS vs CHOCH
         # --------------------------------------
@@ -467,6 +478,25 @@ def calculate_market_structure(
         ):
 
             choch = "BEARISH"
+
+    # ==========================================
+    # Break recency
+    #
+    # BOS / CHOCH remains actionable only
+    # for a limited number of candles.
+    # ==========================================
+
+    if (
+        break_confirmed
+        and
+        break_age is not None
+        and
+        break_age > break_validity_bars
+    ):
+
+        break_confirmed = False
+        bos = None
+        choch = None
 
     # ==========================================
     # Structure strength
@@ -519,6 +549,8 @@ def calculate_market_structure(
         "break_date": break_date,
 
         "break_confirmed": break_confirmed,
+
+        "break_age": break_age,
 
         "strength": strength
     }

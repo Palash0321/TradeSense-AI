@@ -3,6 +3,8 @@ import yfinance as yf
 from app.core.levels.market_structure import calculate_market_structure
 from app.core.liquidity.liquidity import calculate_liquidity
 from app.core.setup.setup_engine import calculate_setup
+from app.core.trend.trend_engine import calculate_trend_context
+from app.core.fibonacci.fibonacci_engine import calculate_fibonacci_context
 
 
 class BacktestService:
@@ -792,6 +794,10 @@ class BacktestService:
 
         buy_cost = 0
 
+        max_adverse_price = None
+
+        max_favorable_price = None
+
         # ---------------------------------
         # Slippage
         # ---------------------------------
@@ -825,6 +831,35 @@ class BacktestService:
                         * close_price
                     )
                 )
+                current_low = float(
+                    row["Low"]
+                )
+
+                current_high = float(
+                    row["High"]
+                )
+
+                if max_adverse_price is None:
+
+                    max_adverse_price = current_low
+
+                else:
+
+                    max_adverse_price = min(
+                        max_adverse_price,
+                        current_low
+                    )
+
+                if max_favorable_price is None:
+
+                    max_favorable_price = current_high
+
+                else:
+
+                    max_favorable_price = max(
+                        max_favorable_price,
+                        current_high
+                    )
 
             else:
 
@@ -963,6 +998,10 @@ class BacktestService:
                 buy_date = next_index
 
                 in_position = True
+
+                max_adverse_price = buy_price
+
+                max_favorable_price = buy_price
 
             # =================================
             # SELL
@@ -1794,11 +1833,12 @@ class BacktestService:
                                 2
                             ),
 
-                                                "r_multiple":
+                        "r_multiple":
                             round(
                                 float(r_multiple),
                                 2
                             ),
+
 
                         "mae_percent":
                             round(
@@ -2557,7 +2597,7 @@ class BacktestService:
                     is not None
                     else None,
 
-                                "r_multiple":
+                "r_multiple":
                     round(
                         float(r_multiple),
                         2
@@ -2689,7 +2729,9 @@ class BacktestService:
         signal_column="Signal",
         initial_stop_atr=2.0,
         target_r=2.0,
-        risk_per_trade=0.01
+        risk_per_trade=0.01,
+        delayed_early_adverse_bars=None,
+        delayed_early_adverse_threshold=None
     ):
 
         if df is None or df.empty:
@@ -2761,6 +2803,61 @@ class BacktestService:
 
         max_favorable_price = None
 
+        # =================================
+        # Trade Path Diagnostics
+        # =================================
+
+        bars_in_trade = 0
+
+        max_favorable_r = 0.0
+        max_adverse_r = 0.0
+
+        # Early Adverse-R Diagnostics
+        early_adverse_r_bar_1 = None
+        early_adverse_r_bar_2 = None
+        early_adverse_r_bar_3 = None
+        early_adverse_r_bar_4 = None
+        early_adverse_r_bar_5 = None
+
+        reached_0_5r = False
+        reached_1r = False
+        reached_1_5r = False
+
+        bars_to_0_5r = None
+        bars_to_1r = None
+        bars_to_1_5r = None
+
+        favorable_first = None
+        immediate_failure = False
+
+        bars_to_0_5r = None
+        bars_to_1r = None
+        bars_to_1_5r = None
+        bars_to_max_favorable = None
+        bars_to_max_adverse = None
+
+        # =================================
+        # Post-Trigger Early-Adverse-R Diagnostics
+        # Research only
+        # =================================
+
+        early_adverse_triggered = False
+        early_adverse_trigger_bar = None
+
+        post_trigger_max_favorable_r = None
+        post_trigger_max_adverse_r = None
+
+        post_trigger_bars_to_entry = None
+        post_trigger_recovered_to_entry = False
+
+        post_trigger_bars_to_0_25r = None
+        post_trigger_bars_to_0_5r = None
+        post_trigger_bars_to_1r = None
+
+        post_trigger_recovered_0_25r = False
+        post_trigger_recovered_0_5r = False
+        post_trigger_recovered_1r = False
+
         slippage_rate = (
             self.slippage / 100
         )
@@ -2798,6 +2895,26 @@ class BacktestService:
             setup_name = row.get(
                 "Setup",
                 "UNKNOWN"
+            )
+
+            trend_name = row.get(
+                "Trend",
+                "NEUTRAL"
+            )
+
+            trend_strength = row.get(
+                "Trend_Strength",
+                0.0
+            )
+
+            trend_slope = row.get(
+                "Trend_Slope",
+                0.0
+            )
+
+            price_position = row.get(
+                "Price_Position",
+                "NEUTRAL"
             )
 
             # =================================
@@ -3009,6 +3126,361 @@ class BacktestService:
                     )
 
                 # ---------------------------------
+                # Trade Path Diagnostics
+                # ---------------------------------
+
+                bars_in_trade += 1
+
+                if risk_per_share is not None and risk_per_share > 0:
+
+                    if direction == "LONG":
+
+                        favorable_r = (
+                            high_price
+                            - entry_price
+                        ) / risk_per_share
+
+                        adverse_r = (
+                            low_price
+                            - entry_price
+                        ) / risk_per_share
+
+                        adverse_r = abs(
+                            min(adverse_r, 0)
+                        )
+
+                    else:
+
+                        favorable_r = (
+                            entry_price
+                            - low_price
+                        ) / risk_per_share
+
+                        adverse_r = (
+                            high_price
+                            - entry_price
+                        ) / risk_per_share
+
+                        adverse_r = abs(
+                            max(adverse_r, 0)
+                        )
+
+                    max_favorable_r = max(
+                        max_favorable_r,
+                        favorable_r
+                    )
+
+                    max_adverse_r = max(
+                        max_adverse_r,
+                        adverse_r
+                    )
+
+                    # =================================
+                    # Post-Trigger Early-Adverse-R Path
+                    # Frozen rule: 3 bars / 0.25R
+                    # Research only
+                    # =================================
+
+                    if (
+                        not early_adverse_triggered
+                        and bars_in_trade <= 3
+                        and max_adverse_r >= 0.25
+                    ):
+                        early_adverse_triggered = True
+
+                        early_adverse_trigger_bar = (
+                            bars_in_trade
+                        )
+
+                    elif (
+                        early_adverse_triggered
+                        and bars_in_trade > early_adverse_trigger_bar
+                    ):
+
+                        if (
+                            post_trigger_max_favorable_r is None
+                            or favorable_r
+                            > post_trigger_max_favorable_r
+                        ):
+                            post_trigger_max_favorable_r = (
+                                favorable_r
+                            )
+
+                        if (
+                            post_trigger_max_adverse_r is None
+                            or adverse_r
+                            > post_trigger_max_adverse_r
+                        ):
+                            post_trigger_max_adverse_r = (
+                                adverse_r
+                            )
+
+                        post_trigger_bars = (
+                            bars_in_trade
+                            - early_adverse_trigger_bar
+                        )
+
+                        if (
+                            post_trigger_bars_to_entry is None
+                            and favorable_r >= 0.0
+                        ):
+                            post_trigger_bars_to_entry = (
+                                post_trigger_bars
+                            )
+
+                            post_trigger_recovered_to_entry = (
+                                True
+                            )
+
+                        if (
+                            post_trigger_bars_to_0_25r is None
+                            and favorable_r >= 0.25
+                        ):
+                            post_trigger_bars_to_0_25r = (
+                                post_trigger_bars
+                            )
+
+                            post_trigger_recovered_0_25r = (
+                                True
+                            )
+
+                        if (
+                            post_trigger_bars_to_0_5r is None
+                            and favorable_r >= 0.50
+                        ):
+                            post_trigger_bars_to_0_5r = (
+                                post_trigger_bars
+                            )
+
+                            post_trigger_recovered_0_5r = (
+                                True
+                            )
+
+                        if (
+                            post_trigger_bars_to_1r is None
+                            and favorable_r >= 1.00
+                        ):
+                            post_trigger_bars_to_1r = (
+                                post_trigger_bars
+                            )
+
+                            post_trigger_recovered_1r = (
+                                True
+                            )
+
+                    # =================================
+                    # Early Adverse-R Diagnostics
+                    # =================================
+
+                    if bars_in_trade == 1:
+                        early_adverse_r_bar_1 = (
+                            max_adverse_r
+                        )
+
+                    elif bars_in_trade == 2:
+                        early_adverse_r_bar_2 = (
+                            max_adverse_r
+                        )
+
+                    elif bars_in_trade == 3:
+                        early_adverse_r_bar_3 = (
+                            max_adverse_r
+                        )
+
+                    elif bars_in_trade == 4:
+                        early_adverse_r_bar_4 = (
+                            max_adverse_r
+                        )
+
+                    elif bars_in_trade == 5:
+                        early_adverse_r_bar_5 = (
+                            max_adverse_r
+                        )
+
+                    current_bars = bars_in_trade
+
+                    previous_max_favorable_r = max_favorable_r
+                    previous_max_adverse_r = max_adverse_r
+
+                    if (
+                        bars_to_0_5r is None
+                        and favorable_r >= 0.5
+                    ):
+                        bars_to_0_5r = current_bars
+
+                    if (
+                        bars_to_1r is None
+                        and favorable_r >= 1.0
+                    ):
+                        bars_to_1r = current_bars
+
+                    if (
+                        bars_to_1_5r is None
+                        and favorable_r >= 1.5
+                    ):
+                        bars_to_1_5r = current_bars
+
+                    if favorable_r > previous_max_favorable_r:
+                        bars_to_max_favorable = current_bars
+
+                    if adverse_r > previous_max_adverse_r:
+                        bars_to_max_adverse = current_bars
+
+                    # ---------------------------------
+                    # R-multiple milestones
+                    # ---------------------------------
+
+                    if (
+                        not reached_0_5r
+                        and max_favorable_r >= 0.5
+                    ):
+
+                        reached_0_5r = True
+
+                        bars_to_0_5r = (
+                            bars_in_trade
+                        )
+
+                    if (
+                        not reached_1r
+                        and max_favorable_r >= 1.0
+                    ):
+
+                        reached_1r = True
+
+                        bars_to_1r = (
+                            bars_in_trade
+                        )
+
+                    if (
+                        not reached_1_5r
+                        and max_favorable_r >= 1.5
+                    ):
+
+                        reached_1_5r = True
+
+                        bars_to_1_5r = (
+                            bars_in_trade
+                        )
+
+                    # ---------------------------------
+                    # Which side happened first?
+                    # ---------------------------------
+
+                    if favorable_first is None:
+
+                        if direction == "LONG":
+
+                            favorable_move = (
+                                high_price
+                                > entry_price
+                            )
+
+                            adverse_move = (
+                                low_price
+                                < entry_price
+                            )
+
+                        else:
+
+                            favorable_move = (
+                                low_price
+                                < entry_price
+                            )
+
+                            adverse_move = (
+                                high_price
+                                > entry_price
+                            )
+
+                        if (
+                            favorable_move
+                            and not adverse_move
+                        ):
+
+                            favorable_first = (
+                                "FAVORABLE_FIRST"
+                            )
+
+                        elif (
+                            adverse_move
+                            and not favorable_move
+                        ):
+
+                            favorable_first = (
+                                "ADVERSE_FIRST"
+                            )
+
+                        elif (
+                            favorable_move
+                            and adverse_move
+                        ):
+
+                            favorable_first = (
+                                "SAME_BAR_BOTH"
+                            )
+
+                # ---------------------------------
+                # Immediate failure
+                # ---------------------------------
+
+                if (
+                    bars_in_trade <= 2
+                    and max_adverse_r >= 0.5
+                ):
+
+                    immediate_failure = True
+
+                # =================================
+                # Research-only delayed early-adverse
+                # kill-switch
+                # =================================
+                if (
+                    exit_price is None
+                    and delayed_early_adverse_bars is not None
+                    and delayed_early_adverse_threshold is not None
+                    and bars_in_trade >= delayed_early_adverse_bars
+                    and max_adverse_r >= delayed_early_adverse_threshold
+                ):
+                    trigger_price = (
+                        entry_price
+                        - (
+                            delayed_early_adverse_threshold
+                            * risk_per_share
+                        )
+                    )
+
+                    if direction == "LONG":
+                        exit_price = (
+                            trigger_price
+                            * (
+                                1
+                                - slippage_rate
+                            )
+                        )
+
+                    else:
+                        trigger_price = (
+                            entry_price
+                            + (
+                                delayed_early_adverse_threshold
+                                * risk_per_share
+                            )
+                        )
+
+                        exit_price = (
+                            trigger_price
+                            * (
+                                1
+                                + slippage_rate
+                            )
+                        )
+
+                    exit_reason = (
+                        "RESEARCH_EARLY_ADVERSE_KILL"
+                    )
+
+                # ---------------------------------
                 # Exit
                 # ---------------------------------
 
@@ -3151,6 +3623,31 @@ class BacktestService:
                         "setup":
                             entry_setup,
 
+                        "entry_trend":
+                            entry_trend,
+
+                        "entry_trend_strength":
+                            round(
+                                float(entry_trend_strength),
+                                2
+                            )
+                            if entry_trend_strength is not None
+                            else None,
+
+                        "entry_trend_slope":
+                            round(
+                                float(entry_trend_slope),
+                                4
+                            )
+                            if entry_trend_slope is not None
+                            else None,
+
+                        "entry_price_position":
+                            entry_price_position,
+
+                        "entry_price_position_value":
+                            entry_price_position_value,
+
                         "entry_date":
                             entry_date,
 
@@ -3221,7 +3718,201 @@ class BacktestService:
                             round(
                                 float(mfe_percent),
                                 2
+                            ),
+
+                        # =================================
+                        # Trade Path Diagnostics
+                        # =================================
+
+                        "early_adverse_triggered":
+                            early_adverse_triggered,
+
+                        "early_adverse_trigger_bar":
+                            early_adverse_trigger_bar,
+
+                        "post_trigger_max_favorable_r":
+                            round(
+                                float(post_trigger_max_favorable_r),
+                                2
                             )
+                            if post_trigger_max_favorable_r is not None
+                            else None,
+
+                        "post_trigger_max_adverse_r":
+                            round(
+                                float(post_trigger_max_adverse_r),
+                                2
+                            )
+                            if post_trigger_max_adverse_r is not None
+                            else None,
+
+                        "post_trigger_bars_to_entry":
+                            post_trigger_bars_to_entry,
+
+                        "post_trigger_bars_to_0_25r":
+                            post_trigger_bars_to_0_25r,
+
+                        "post_trigger_bars_to_0_5r":
+                            post_trigger_bars_to_0_5r,
+
+                        "post_trigger_bars_to_1r":
+                            post_trigger_bars_to_1r,
+
+                        "post_trigger_recovered_to_entry":
+                            post_trigger_recovered_to_entry,
+
+                        "post_trigger_recovered_0_25r":
+                            post_trigger_recovered_0_25r,
+
+                        "post_trigger_recovered_0_5r":
+                            post_trigger_recovered_0_5r,
+
+                        "post_trigger_recovered_1r":
+                            post_trigger_recovered_1r,
+
+                        "bars_in_trade":
+                            bars_in_trade,
+
+                        "max_favorable_r":
+                            round(
+                                float(max_favorable_r),
+                                2
+                            ),
+
+                        "max_adverse_r":
+                            round(
+                                float(max_adverse_r),
+                                2
+                            ),
+
+                        # =================================
+                        # Early Adverse-R Diagnostics
+                        # =================================
+
+                        "early_adverse_r_bar_1":
+                            round(
+                                float(
+                                    early_adverse_r_bar_1
+                                ),
+                                2
+                            )
+                            if early_adverse_r_bar_1 is not None
+                            else None,
+
+                        "early_adverse_r_bar_2":
+                            round(
+                                float(
+                                    early_adverse_r_bar_2
+                                ),
+                                2
+                            )
+                            if early_adverse_r_bar_2 is not None
+                            else None,
+
+                        "early_adverse_r_bar_3":
+                            round(
+                                float(
+                                    early_adverse_r_bar_3
+                                ),
+                                2
+                            )
+                            if early_adverse_r_bar_3 is not None
+                            else None,
+
+                        "early_adverse_r_bar_4":
+                            round(
+                                float(
+                                    early_adverse_r_bar_4
+                                ),
+                                2
+                            )
+                            if early_adverse_r_bar_4 is not None
+                            else None,
+
+                        "early_adverse_r_bar_5":
+                            round(
+                                float(
+                                    early_adverse_r_bar_5
+                                ),
+                                2
+                            )
+                            if early_adverse_r_bar_5 is not None
+                            else None,
+
+                        "reached_0_5r":
+                            reached_0_5r,
+
+                        "reached_1r":
+                            reached_1r,
+
+                        "reached_1_5r":
+                            reached_1_5r,
+
+                        "bars_to_0_5r":
+                            bars_to_0_5r,
+
+                        "bars_to_1r":
+                            bars_to_1r,
+
+                        "bars_to_1_5r":
+                            bars_to_1_5r,
+
+                        "favorable_first":
+                            favorable_first,
+
+                        "immediate_failure":
+                            immediate_failure,
+
+                        # =================================
+                        # Post-Trigger Early-Adverse-R Diagnostics
+                        # Research only
+                        # =================================
+
+                        "early_adverse_triggered":
+                            early_adverse_triggered,
+
+                        "early_adverse_trigger_bar":
+                            early_adverse_trigger_bar,
+
+                        "post_trigger_max_favorable_r":
+                            round(
+                                float(post_trigger_max_favorable_r),
+                                2
+                            )
+                            if post_trigger_max_favorable_r is not None
+                            else None,
+
+                        "post_trigger_max_adverse_r":
+                            round(
+                                float(post_trigger_max_adverse_r),
+                                2
+                            )
+                            if post_trigger_max_adverse_r is not None
+                            else None,
+
+                        "post_trigger_bars_to_entry":
+                            post_trigger_bars_to_entry,
+
+                        "post_trigger_bars_to_0_25r":
+                            post_trigger_bars_to_0_25r,
+
+                        "post_trigger_bars_to_0_5r":
+                            post_trigger_bars_to_0_5r,
+
+                        "post_trigger_bars_to_1r":
+                            post_trigger_bars_to_1r,
+
+                        "post_trigger_recovered_to_entry":
+                            post_trigger_recovered_to_entry,
+
+                        "post_trigger_recovered_0_25r":
+                            post_trigger_recovered_0_25r,
+
+                        "post_trigger_recovered_0_5r":
+                            post_trigger_recovered_0_5r,
+
+                        "post_trigger_recovered_1r":
+                            post_trigger_recovered_1r
 
                     })
 
@@ -3250,6 +3941,14 @@ class BacktestService:
                     max_adverse_price = None
 
                     max_favorable_price = None
+
+                    entry_trend = None
+
+                    entry_trend_strength = None
+
+                    entry_trend_slope = None
+
+                    entry_price_position = None
 
                     continue
 
@@ -3450,6 +4149,33 @@ class BacktestService:
                 next_index
             )
 
+            entry_trend = row.get(
+                "Trend",
+                "NEUTRAL"
+            )
+
+            entry_trend_strength = row.get(
+                "Trend_Strength",
+                0.0
+            )
+
+            entry_trend_slope = row.get(
+                "Fast_EMA_Slope",
+                row.get(
+                    "Trend_Slope",
+                    0.0
+                )
+            )
+
+            entry_price_position = row.get(
+                "Price_Position",
+                "NEUTRAL"
+            )
+
+            entry_price_position_value = row.get(
+                "Price_Position_Value"
+            )
+
             initial_risk = (
                 risk_per_share
                 * shares
@@ -3464,6 +4190,54 @@ class BacktestService:
             max_favorable_price = (
                 entry_price
             )
+
+            # =================================
+            # Reset Trade Path Diagnostics
+            # =================================
+
+            bars_in_trade = 0
+
+            max_favorable_r = 0.0
+            max_adverse_r = 0.0
+
+            # Early Adverse-R Diagnostics
+            early_adverse_r_bar_1 = None
+            early_adverse_r_bar_2 = None
+            early_adverse_r_bar_3 = None
+            early_adverse_r_bar_4 = None
+            early_adverse_r_bar_5 = None
+
+            reached_0_5r = False
+            reached_1r = False
+            reached_1_5r = False
+
+            bars_to_0_5r = None
+            bars_to_1r = None
+            bars_to_1_5r = None
+
+            favorable_first = None
+            immediate_failure = False
+
+            # =================================
+            # Post-Trigger Early-Adverse-R Diagnostics
+            # Research only
+            # =================================
+
+            early_adverse_triggered = False
+            early_adverse_trigger_bar = None
+
+            post_trigger_max_favorable_r = None
+            post_trigger_max_adverse_r = None
+
+            post_trigger_bars_to_0_25r = None
+            post_trigger_bars_to_0_5r = None
+            post_trigger_bars_to_1r = None
+            post_trigger_bars_to_entry = None
+
+            post_trigger_recovered_0_25r = False
+            post_trigger_recovered_0_5r = False
+            post_trigger_recovered_1r = False
+            post_trigger_recovered_to_entry = False
 
             in_position = True
 
@@ -3621,7 +4395,221 @@ class BacktestService:
                     round(
                         float(r_multiple),
                         2
+                    ),
+                "entry_trend":
+                    entry_trend,
+
+                "entry_trend_strength":
+                    round(
+                        float(entry_trend_strength),
+                        2
                     )
+                    if entry_trend_strength is not None
+                    else None,
+
+                "entry_trend_slope":
+                    round(
+                        float(entry_trend_slope),
+                        4
+                    )
+                    if entry_trend_slope is not None
+                    else None,
+
+                "entry_price_position":
+                    entry_price_position,
+
+                "entry_price_position_value":
+                    entry_price_position_value,
+
+
+                # =================================
+                # Trade Path Diagnostics
+                # =================================
+
+                "early_adverse_triggered":
+                    early_adverse_triggered,
+
+                "early_adverse_trigger_bar":
+                    early_adverse_trigger_bar,
+
+                "post_trigger_max_favorable_r":
+                    round(
+                        float(post_trigger_max_favorable_r),
+                        2
+                    )
+                    if post_trigger_max_favorable_r is not None
+                    else None,
+
+                "post_trigger_max_adverse_r":
+                    round(
+                        float(post_trigger_max_adverse_r),
+                        2
+                    )
+                    if post_trigger_max_adverse_r is not None
+                    else None,
+
+                "post_trigger_bars_to_entry":
+                    post_trigger_bars_to_entry,
+
+                "post_trigger_bars_to_0_25r":
+                    post_trigger_bars_to_0_25r,
+
+                "post_trigger_bars_to_0_5r":
+                    post_trigger_bars_to_0_5r,
+
+                "post_trigger_bars_to_1r":
+                    post_trigger_bars_to_1r,
+
+                "post_trigger_recovered_to_entry":
+                    post_trigger_recovered_to_entry,
+
+                "post_trigger_recovered_0_25r":
+                    post_trigger_recovered_0_25r,
+
+                "post_trigger_recovered_0_5r":
+                    post_trigger_recovered_0_5r,
+
+                "post_trigger_recovered_1r":
+                    post_trigger_recovered_1r,
+
+                "bars_in_trade":
+                    bars_in_trade,
+
+                "max_favorable_r":
+                    round(
+                        float(max_favorable_r),
+                        2
+                    ),
+
+                "max_adverse_r":
+                    round(
+                        float(max_adverse_r),
+                        2
+                    ),
+
+                # =================================
+                # Early Adverse-R Diagnostics
+                # =================================
+
+                "early_adverse_r_bar_1":
+                    round(
+                        float(
+                            early_adverse_r_bar_1
+                        ),
+                        2
+                    )
+                    if early_adverse_r_bar_1 is not None
+                    else None,
+
+                "early_adverse_r_bar_2":
+                    round(
+                        float(
+                            early_adverse_r_bar_2
+                        ),
+                        2
+                    )
+                    if early_adverse_r_bar_2 is not None
+                    else None,
+
+                "early_adverse_r_bar_3":
+                    round(
+                        float(
+                            early_adverse_r_bar_3
+                        ),
+                        2
+                    )
+                    if early_adverse_r_bar_3 is not None
+                    else None,
+
+                "early_adverse_r_bar_4":
+                    round(
+                        float(
+                            early_adverse_r_bar_4
+                        ),
+                        2
+                    )
+                    if early_adverse_r_bar_4 is not None
+                    else None,
+
+                "early_adverse_r_bar_5":
+                    round(
+                        float(
+                            early_adverse_r_bar_5
+                        ),
+                        2
+                    )
+                    if early_adverse_r_bar_5 is not None
+                    else None,
+
+                "reached_0_5r":
+                    reached_0_5r,
+
+                "reached_1r":
+                    reached_1r,
+
+                "reached_1_5r":
+                    reached_1_5r,
+
+                "bars_to_0_5r":
+                    bars_to_0_5r,
+
+                "bars_to_1r":
+                    bars_to_1r,
+
+                "bars_to_1_5r":
+                    bars_to_1_5r,
+
+                "favorable_first":
+                    favorable_first,
+
+                "immediate_failure":
+                    immediate_failure,
+
+                "early_adverse_triggered":
+                    early_adverse_triggered,
+
+                "early_adverse_trigger_bar":
+                    early_adverse_trigger_bar,
+
+                "post_trigger_max_favorable_r":
+                    round(
+                        float(post_trigger_max_favorable_r),
+                        2
+                    )
+                    if post_trigger_max_favorable_r is not None
+                    else None,
+
+                "post_trigger_max_adverse_r":
+                    round(
+                        float(post_trigger_max_adverse_r),
+                        2
+                    )
+                    if post_trigger_max_adverse_r is not None
+                    else None,
+
+                "post_trigger_bars_to_entry":
+                    post_trigger_bars_to_entry,
+
+                "post_trigger_bars_to_0_25r":
+                    post_trigger_bars_to_0_25r,
+
+                "post_trigger_bars_to_0_5r":
+                    post_trigger_bars_to_0_5r,
+
+                "post_trigger_bars_to_1r":
+                    post_trigger_bars_to_1r,
+
+                "post_trigger_recovered_to_entry":
+                    post_trigger_recovered_to_entry,
+
+                "post_trigger_recovered_0_25r":
+                    post_trigger_recovered_0_25r,
+
+                "post_trigger_recovered_0_5r":
+                    post_trigger_recovered_0_5r,
+
+                "post_trigger_recovered_1r":
+                    post_trigger_recovered_1r
 
             })
 
@@ -3786,7 +4774,48 @@ class BacktestService:
 
         result["Break_Confirmed"] = False
 
+        result["Break_Age"] = None
+
         result["Liquidity_Sweep"] = False
+
+        # ---------------------------------
+        # Fibonacci context
+        # ---------------------------------
+
+        result["Fib_Retracement"] = None
+
+        result["Fib_Zone"] = "UNKNOWN"
+
+        result["Fib_Distance_382"] = None
+
+        result["Fib_Distance_500"] = None
+
+        result["Fib_Distance_618"] = None
+
+        result["Fib_Premium_Discount"] = "UNKNOWN"
+
+        result["Fib_Extension_State"] = "UNKNOWN"
+
+        result["Fib_Extension_Percent"] = None
+
+
+        # ---------------------------------
+        # Trend context
+        # ---------------------------------
+
+        result["Trend"] = "NEUTRAL"
+
+        result["Trend_Strength"] = 0.0
+
+        result["Fast_EMA"] = None
+
+        result["Slow_EMA"] = None
+
+        result["Trend_Slope"] = 0.0
+
+        result["Price_Position"] = "NEUTRAL"
+
+        result["Price_Position_Value"] = None
 
         # ---------------------------------
         # Historical walk-forward processing
@@ -3795,6 +4824,13 @@ class BacktestService:
         minimum_history = (
             swing_window * 2 + 1
         )
+
+        # ---------------------------------
+        # Historical walk-forward processing
+        # Event-based structural signals
+        # ---------------------------------
+
+        last_structural_event = None
 
         for i in range(
             minimum_history - 1,
@@ -3807,13 +4843,11 @@ class BacktestService:
             # Only candles available up to
             # the current historical date
             # are supplied to the analysis.
-            #
-            # No future candles are included.
             # ---------------------------------
 
             history = result.iloc[
                 :i + 1
-            ].copy()
+            ]
 
             current_price = float(
                 history["Close"].iloc[-1]
@@ -3830,6 +4864,64 @@ class BacktestService:
                 )
             )
 
+            fibonacci_context = calculate_fibonacci_context(
+                history,
+                market_structure
+            )
+
+            # ---------------------------------
+            # Store Fibonacci context
+            # ---------------------------------
+
+            if fibonacci_context.get("fib_valid"):
+
+                result.at[result.index[i], "Fib_Retracement"] = (
+                    fibonacci_context.get("retracement_percent")
+                )
+
+                result.at[result.index[i], "Fib_Zone"] = (
+                    fibonacci_context.get("fib_zone") or "UNKNOWN"
+                )
+
+                result.at[result.index[i], "Fib_Distance_382"] = (
+                    fibonacci_context.get("distance_to_382_percent")
+                )
+
+                result.at[result.index[i], "Fib_Distance_500"] = (
+                    fibonacci_context.get("distance_to_500_percent")
+                )
+
+                result.at[result.index[i], "Fib_Distance_618"] = (
+                    fibonacci_context.get("distance_to_618_percent")
+                )
+
+                result.at[result.index[i], "Fib_Premium_Discount"] = (
+                    fibonacci_context.get("premium_discount") or "UNKNOWN"
+                )
+
+                result.at[result.index[i], "Fib_Extension_State"] = (
+                    fibonacci_context.get("extension_state") or "UNKNOWN"
+                )
+
+                result.at[result.index[i], "Fib_Extension_Percent"] = (
+                    fibonacci_context.get("extension_percent")
+                )
+
+                result.at[
+                    result.index[i],
+                    "Price_Position_Value"
+                ] = fibonacci_context.get(
+                    "price_position"
+                )
+
+            # ---------------------------------
+            # Trend Context
+            # ---------------------------------
+
+            trend_context = calculate_trend_context(
+                history
+            )
+
             # ---------------------------------
             # Liquidity
             # ---------------------------------
@@ -3837,6 +4929,76 @@ class BacktestService:
             liquidity = calculate_liquidity(
                 history,
                 market_structure
+            )
+
+            # ---------------------------------
+            # Structural event
+            # ---------------------------------
+
+            break_confirmed = bool(
+                market_structure.get(
+                    "break_confirmed",
+                    False
+                )
+            )
+
+            break_direction = (
+                market_structure.get(
+                    "break_direction"
+                )
+            )
+
+            break_level = (
+                market_structure.get(
+                    "break_level"
+                )
+            )
+
+            break_date = (
+                market_structure.get(
+                    "break_date"
+                )
+            )
+
+            # ---------------------------------
+            # Create a unique structural event
+            #
+            # The same BOS/CHOCH must not be
+            # treated as a new event on every
+            # subsequent candle.
+            # ---------------------------------
+
+            structural_event = None
+
+            if (
+                break_confirmed
+                and
+                break_direction is not None
+                and
+                break_level is not None
+                and
+                break_date is not None
+            ):
+
+                structural_event = (
+                    break_direction,
+                    round(
+                        float(break_level),
+                        2
+                    ),
+                    str(break_date)
+                )
+
+            # ---------------------------------
+            # Determine whether this is a NEW
+            # structural event.
+            # ---------------------------------
+
+            new_structural_event = (
+                structural_event is not None
+                and
+                structural_event
+                != last_structural_event
             )
 
             # ---------------------------------
@@ -3871,20 +5033,79 @@ class BacktestService:
             )
 
             # ---------------------------------
-            # Convert setup → directional signal
+            # Default: WAIT
             # ---------------------------------
 
-            if setup_direction == "LONG":
+            signal = 0
 
-                signal = 1
+            # ---------------------------------
+            # Only NEW structural events can
+            # generate structural setups.
+            #
+            # Liquidity-only setups are handled
+            # separately below.
+            # ---------------------------------
 
-            elif setup_direction == "SHORT":
+            structural_setup = setup_type in [
+                "LONG_CONTINUATION",
+                "SHORT_CONTINUATION",
+                "LONG_REVERSAL",
+                "SHORT_REVERSAL"
+            ]
 
-                signal = -1
+            if (
+                structural_setup
+                and
+                new_structural_event
+            ):
 
-            else:
+                if setup_direction == "LONG":
 
-                signal = 0
+                    signal = 1
+
+                elif setup_direction == "SHORT":
+
+                    signal = -1
+
+            # ---------------------------------
+            # Liquidity-only setup
+            #
+            # Keep genuine liquidity sweeps
+            # available even when there is no
+            # new BOS/CHOCH event.
+            # ---------------------------------
+
+            elif (
+                not structural_setup
+                and
+                setup_type in [
+                    "LONG_REVERSAL",
+                    "SHORT_REVERSAL"
+                ]
+            ):
+
+                if setup_direction == "LONG":
+
+                    signal = 1
+
+                elif setup_direction == "SHORT":
+
+                    signal = -1
+
+            # ---------------------------------
+            # Once a NEW structural event has
+            # been observed, remember it.
+            #
+            # This prevents the same BOS/CHOCH
+            # from producing another signal on
+            # every following candle.
+            # ---------------------------------
+
+            if new_structural_event:
+
+                last_structural_event = (
+                    structural_event
+                )
 
             # ---------------------------------
             # Store historical signal
@@ -3902,30 +5123,46 @@ class BacktestService:
                 result.columns.get_loc(
                     "Setup"
                 )
-            ] = setup_type
+            ] = (
+                setup_type
+                if signal != 0
+                else "WAIT"
+            )
 
             result.iloc[
                 i,
                 result.columns.get_loc(
                     "Setup_Direction"
                 )
-            ] = setup_direction
+            ] = (
+                setup_direction
+                if signal != 0
+                else None
+            )
 
             result.iloc[
                 i,
                 result.columns.get_loc(
                     "Setup_Confidence"
                 )
-            ] = setup_confidence
+            ] = (
+                setup_confidence
+                if signal != 0
+                else 0
+            )
 
             result.iloc[
                 i,
                 result.columns.get_loc(
                     "Setup_Reason"
                 )
-            ] = setup.get(
-                "reason",
-                ""
+            ] = (
+                setup.get(
+                    "reason",
+                    ""
+                )
+                if signal != 0
+                else "No new structural trading event."
             )
 
             # ---------------------------------
@@ -3975,18 +5212,22 @@ class BacktestService:
                 result.columns.get_loc(
                     "Break_Direction"
                 )
-            ] = market_structure.get(
-                "break_direction"
-            )
+            ] = break_direction
 
             result.iloc[
                 i,
                 result.columns.get_loc(
                     "Break_Confirmed"
                 )
+            ] = break_confirmed
+
+            result.iloc[
+                i,
+                result.columns.get_loc(
+                    "Break_Age"
+                )
             ] = market_structure.get(
-                "break_confirmed",
-                False
+                "break_age"
             )
 
             result.iloc[
@@ -4002,7 +5243,137 @@ class BacktestService:
                 False
             )
 
+            # ---------------------------------
+            # Trend metadata
+            # ---------------------------------
+
+            result.at[
+                result.index[i],
+                "Trend"
+            ] = trend_context.get(
+                "trend",
+                "NEUTRAL"
+            )
+
+            result.at[
+                result.index[i],
+                "Trend_Strength"
+            ] = trend_context.get(
+                "trend_strength",
+                0.0
+            )
+
+            result.at[
+                result.index[i],
+                "Fast_EMA"
+            ] = trend_context.get(
+                "fast_ema"
+            )
+
+            result.at[
+                result.index[i],
+                "Slow_EMA"
+            ] = trend_context.get(
+                "slow_ema"
+            )
+
+            result.at[
+                result.index[i],
+                "Trend_Slope"
+            ] = trend_context.get(
+                "fast_slope",
+                0.0
+            )
+
+            result.at[
+                result.index[i],
+                "Price_Position"
+            ] = trend_context.get(
+                "price_position",
+                "NEUTRAL"
+            )
         return result
+
+    # =====================================
+    # Delayed Early-Adverse Research
+    # Counterfactual Backtest
+    # =====================================
+
+    def run_delayed_early_adverse_research(
+        self,
+        df,
+        signal_column="Signal",
+        initial_stop_atr=3.5,
+        target_r=2.0,
+        risk_per_trade=0.01
+    ):
+        rules = [
+            (
+                "3B_0.25R",
+                3,
+                0.25
+            ),
+            (
+                "4B_0.25R",
+                4,
+                0.25
+            ),
+            (
+                "5B_0.25R",
+                5,
+                0.25
+            ),
+            (
+                "5B_0.35R",
+                5,
+                0.35
+            ),
+            (
+                "5B_0.50R",
+                5,
+                0.50
+            ),
+        ]
+
+        results = {}
+
+        # ---------------------------------
+        # Baseline
+        # ---------------------------------
+
+        baseline = self.run_directional_backtest(
+            df,
+            signal_column=signal_column,
+            initial_stop_atr=initial_stop_atr,
+            target_r=target_r,
+            risk_per_trade=risk_per_trade
+        )
+
+        results["NO_FILTER"] = baseline
+
+        # ---------------------------------
+        # Research rules
+        # ---------------------------------
+
+        for (
+            rule_name,
+            bars,
+            threshold
+        ) in rules:
+
+            results[rule_name] = (
+                self.run_directional_backtest(
+                    df,
+                    signal_column=signal_column,
+                    initial_stop_atr=initial_stop_atr,
+                    target_r=target_r,
+                    risk_per_trade=risk_per_trade,
+                    delayed_early_adverse_bars=bars,
+                    delayed_early_adverse_threshold=threshold
+                )
+            )
+
+        return results
 
     def performance_metrics(
         self,
@@ -4020,7 +5391,24 @@ class BacktestService:
         risk_per_trade=0.01
     ):
 
-        if self.strategy == "ema_atr":
+        if self.strategy == "tradesense":
+
+            df = self.load_data(
+                start_date=start_date,
+                end_date=end_date
+            )
+
+            df = self.generate_tradesense_signals(
+                df
+            )
+
+            result = self.run_directional_backtest(
+                df,
+                initial_stop_atr=initial_stop_atr,
+                risk_per_trade=risk_per_trade
+            )
+
+        elif self.strategy == "ema_atr":
 
             result = self.run_backtest_v3(
                 start_date=start_date,
@@ -4040,6 +5428,7 @@ class BacktestService:
                     profit_lock_pct
                 )
             )
+
         elif self.strategy == "ema":
 
             result = self.run_backtest()
@@ -4150,12 +5539,29 @@ class BacktestService:
 
         for trade in trades:
 
-            days = (
-                trade["sell_date"]
-                - trade["buy_date"]
-            ).days
+            entry_date = trade.get(
+                "entry_date",
+                trade.get("buy_date")
+            )
 
-            holding_days.append(days)
+            exit_date = trade.get(
+                "exit_date",
+                trade.get("sell_date")
+            )
+
+            if (
+                entry_date is not None
+                and exit_date is not None
+            ):
+
+                days = (
+                    pd.to_datetime(exit_date)
+                    - pd.to_datetime(entry_date)
+                ).days
+
+                holding_days.append(
+                    max(0, days)
+                )
 
         average_holding = 0
 

@@ -1,0 +1,2128 @@
+==============================================================================================================
+FAST TRADESENSE RESEARCH
+==============================================================================================================
+
+Loaded trades: 106
+
+DATASET RANGE
+First entry: 2021-09-27 00:00:00
+Last entry:  2026-07-28 00:00:00
+
+==============================================================================================================
+BASELINE PERFORMANCE
+==============================================================================================================
+Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+==============================================================================================================
+EXCLUDE SHORT_REVERSAL
+==============================================================================================================
+
+BASELINE
+Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+FILTERED
+Trades= 75 Win= 29.33% PF= 0.78 P&L=-10411.46 R= -12.01 AvgR=-0.160
+
+Trades removed: 31
+
+==============================================================================================================
+EXCLUDE LONG_CONTINUATION
+==============================================================================================================
+
+BASELINE
+Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+FILTERED
+Trades= 56 Win= 30.36% PF= 0.73 P&L=-10303.62 R= -10.92 AvgR=-0.195
+
+Trades removed: 50
+
+==============================================================================================================
+EXCLUDE SHORT_CONTINUATION
+==============================================================================================================
+
+BASELINE
+Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+FILTERED
+Trades= 92 Win= 25.00% PF= 0.57 P&L=-27915.39 R= -30.42 AvgR=-0.331
+
+Trades removed: 14
+
+==============================================================================================================
+EXCLUDE LONG_REVERSAL
+==============================================================================================================
+
+BASELINE
+Trades=106 Win= 26.42% PF= 0.63 P&L=-26963.23 R= -29.38 AvgR=-0.277
+
+FILTERED
+Trades= 95 Win= 23.16% PF= 0.54 P&L=-32259.22 R= -34.79 AvgR=-0.366
+
+Trades removed: 11
+
+==============================================================================================================
+SETUP × TREND EXCLUSION MATRIX
+==============================================================================================================
+
+BASELINE Trades=106 R= -29.38
+
+EXCLUDE LONG_CONTINUATION × BULLISH
+  Removed= 28 Remaining= 78 Win= 30.77% PF=  0.78 R= -12.27 AvgR= -0.157 DeltaR=  17.11
+
+EXCLUDE LONG_CONTINUATION × NEUTRAL
+  Removed= 22 Remaining= 84 Win= 25.00% PF=  0.56 R= -28.03 AvgR= -0.334 DeltaR=   1.35
+
+EXCLUDE LONG_REVERSAL × BEARISH
+  Removed=  1 Remaining=105 Win= 25.71% PF=  0.61 R= -31.32 AvgR= -0.298 DeltaR=  -1.94
+
+EXCLUDE LONG_REVERSAL × BULLISH
+  Removed=  5 Remaining=101 Win= 23.76% PF=  0.54 R= -36.08 AvgR= -0.357 DeltaR=  -6.70
+
+EXCLUDE LONG_REVERSAL × NEUTRAL
+  Removed=  5 Remaining=101 Win= 26.73% PF=  0.65 R= -26.15 AvgR= -0.259 DeltaR=   3.23
+
+EXCLUDE SHORT_CONTINUATION × BEARISH
+  Removed= 11 Remaining= 95 Win= 24.21% PF=  0.55 R= -33.59 AvgR= -0.354 DeltaR=  -4.21
+
+EXCLUDE SHORT_CONTINUATION × NEUTRAL
+  Removed=  3 Remaining=103 Win= 27.18% PF=  0.66 R= -26.21 AvgR= -0.254 DeltaR=   3.17
+
+EXCLUDE SHORT_REVERSAL × BEARISH
+  Removed= 14 Remaining= 92 Win= 27.17% PF=  0.70 R= -21.01 AvgR= -0.228 DeltaR=   8.37
+
+EXCLUDE SHORT_REVERSAL × NEUTRAL
+  Removed= 17 Remaining= 89 Win= 28.09% PF=  0.69 R= -20.38 AvgR= -0.229 DeltaR=   9.00
+
+========================================================================================================================
+SETUP × TREND COMBINATION COUNTERFACTUAL
+========================================================================================================================
+
+NO FILTER
+Trades=106 Win= 26.42% PF=  0.63 R= -29.38 AvgR= -0.277 DeltaR=   0.00
+
+EXCLUDE LC × BULLISH
+Trades= 78 Win= 30.77% PF=  0.78 R= -12.27 AvgR= -0.157 DeltaR=  17.11
+
+EXCLUDE SR × BEARISH
+Trades= 92 Win= 27.17% PF=  0.70 R= -21.01 AvgR= -0.228 DeltaR=   8.37
+
+EXCLUDE SR × NEUTRAL
+Trades= 89 Win= 28.09% PF=  0.69 R= -20.38 AvgR= -0.229 DeltaR=   9.00
+
+EXCLUDE ALL SHORT_REVERSAL
+Trades= 75 Win= 29.33% PF=  0.79 R= -12.01 AvgR= -0.160 DeltaR=  17.37
+
+EXCLUDE LC BULLISH + ALL SR
+Trades= 47 Win= 38.30% PF=  1.22 R=   5.10 AvgR=  0.109 DeltaR=  34.48
+
+KEEP LC NEUTRAL + LR BULLISH + SC BEARISH
+Trades= 38 Win= 42.11% PF=  1.52 R=   9.56 AvgR=  0.252 DeltaR=  38.94
+
+========================================================================================================================
+FROZEN HYPOTHESIS HOLDOUT TEST
+========================================================================================================================
+
+Hypothesis:
+  Exclude LONG_CONTINUATION × BULLISH
+  Exclude SHORT_REVERSAL × BEARISH
+  Exclude SHORT_REVERSAL × NEUTRAL
+
+IMPORTANT: This is a frozen-hypothesis holdout sanity check.
+The hypothesis was discovered using the full historical dataset.
+
+========================================================================================================================
+TRAINING PERIOD: BEFORE 2025-01-01
+========================================================================================================================
+BASELINE                  Trades= 79 Win= 24.05% PF=  0.58 R= -26.56 AvgR= -0.336
+FROZEN HYPOTHESIS         Trades= 32 Win= 43.75% PF=  1.47 R=   8.14 AvgR=  0.254
+
+========================================================================================================================
+HOLDOUT PERIOD: 2025-01-01 ONWARD
+========================================================================================================================
+BASELINE                  Trades= 27 Win= 33.33% PF=  0.85 R=  -2.82 AvgR= -0.104
+FROZEN HYPOTHESIS         Trades= 15 Win= 26.67% PF=  0.74 R=  -3.04 AvgR= -0.203
+
+========================================================================================================================
+HOLDOUT BY STOCK
+========================================================================================================================
+
+HDFCBANK.NS
+  BASELINE                Trades=  6 Win= 16.67% PF=  0.15 R=  -4.46 AvgR= -0.743
+  FROZEN HYPOTHESIS       Trades=  3 Win=  0.00% PF=  0.00 R=  -3.19 AvgR= -1.063
+
+ICICIBANK.NS
+  BASELINE                Trades=  6 Win= 50.00% PF=  1.53 R=   1.70 AvgR=  0.283
+  FROZEN HYPOTHESIS       Trades=  3 Win= 66.67% PF=  2.76 R=   1.88 AvgR=  0.627
+
+INFY.NS
+  BASELINE                Trades=  3 Win= 66.67% PF=  2.26 R=   1.37 AvgR=  0.457
+  FROZEN HYPOTHESIS       Trades=0
+
+RELIANCE.NS
+  BASELINE                Trades=  2 Win=  0.00% PF=  0.00 R=  -1.64 AvgR= -0.820
+  FROZEN HYPOTHESIS       Trades=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+SBIN.NS
+  BASELINE                Trades=  3 Win= 33.33% PF=  1.54 R=   0.67 AvgR=  0.223
+  FROZEN HYPOTHESIS       Trades=  1 Win=  0.00% PF=  0.00 R=  -0.21 AvgR= -0.210
+
+TCS.NS
+  BASELINE                Trades=  7 Win= 28.57% PF=  0.98 R=  -0.46 AvgR= -0.066
+  FROZEN HYPOTHESIS       Trades=  7 Win= 28.57% PF=  0.98 R=  -0.46 AvgR= -0.066
+
+==============================================================================================================
+SETUP × TREND × PRICE POSITION
+==============================================================================================================
+LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades= 28 Win= 14.29% PF= 0.31 P&L=-16161.52 R= -17.11 AvgR=-0.611
+LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades= 18 Win= 33.33% PF= 0.99 P&L=   653.57 R=  -0.12 AvgR=-0.007
+LONG_CONTINUATION        NEUTRAL     NEUTRAL        Trades=  4 Win= 25.00% PF= 0.61 P&L= -1151.66 R=  -1.23 AvgR=-0.308
+LONG_REVERSAL            BEARISH     BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     ABOVE_FAST     Trades=  5 Win= 80.00% PF= 7.32 P&L=  6376.12 R=   6.70 AvgR= 1.340
+LONG_REVERSAL            NEUTRAL     ABOVE_FAST     Trades=  5 Win= 20.00% PF= 0.24 P&L= -2791.05 R=  -3.23 AvgR=-0.646
+SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades= 11 Win= 45.45% PF= 1.76 P&L=  3989.79 R=   4.21 AvgR= 0.383
+SHORT_CONTINUATION       NEUTRAL     BELOW_FAST     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3037.63 R=  -3.17 AvgR=-1.057
+SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades= 14 Win= 21.43% PF= 0.28 P&L= -8141.07 R=  -8.37 AvgR=-0.598
+SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades= 14 Win= 21.43% PF= 0.50 P&L= -5585.85 R=  -5.83 AvgR=-0.416
+SHORT_REVERSAL           NEUTRAL     NEUTRAL        Trades=  3 Win=  0.00% PF= 0.00 P&L= -2824.85 R=  -3.17 AvgR=-1.057
+
+========================================================================================================================
+SETUP × TREND × LIQUIDITY × PRICE POSITION
+========================================================================================================================
+LONG_CONTINUATION        BULLISH     NO_SWEEP    ABOVE_FAST     Trades= 26 Win= 15.38% PF= 0.34 P&L=-14187.53 R= -14.98 AvgR=-0.576
+LONG_CONTINUATION        NEUTRAL     NO_SWEEP    ABOVE_FAST     Trades= 15 Win= 40.00% PF= 1.36 P&L=  3293.32 R=   3.08 AvgR= 0.205
+SHORT_REVERSAL           NEUTRAL     NO_SWEEP    BELOW_FAST     Trades= 14 Win= 21.43% PF= 0.50 P&L= -5585.85 R=  -5.83 AvgR=-0.416
+SHORT_CONTINUATION       BEARISH     NO_SWEEP    BELOW_FAST     Trades= 11 Win= 45.45% PF= 1.76 P&L=  3989.79 R=   4.21 AvgR= 0.383
+SHORT_REVERSAL           BEARISH     NO_SWEEP    BELOW_FAST     Trades= 11 Win= 18.18% PF= 0.25 P&L= -6976.19 R=  -7.10 AvgR=-0.645
+LONG_CONTINUATION        NEUTRAL     NO_SWEEP    NEUTRAL        Trades=  4 Win= 25.00% PF= 0.61 P&L= -1151.66 R=  -1.23 AvgR=-0.308
+LONG_REVERSAL            BULLISH     NO_SWEEP    ABOVE_FAST     Trades=  4 Win= 75.00% PF= 5.49 P&L=  4598.30 R=   4.76 AvgR= 1.190
+LONG_CONTINUATION        NEUTRAL     SWEEP       ABOVE_FAST     Trades=  3 Win=  0.00% PF= 0.00 P&L= -2639.75 R=  -3.20 AvgR=-1.067
+LONG_REVERSAL            NEUTRAL     NO_SWEEP    ABOVE_FAST     Trades=  3 Win=  0.00% PF= 0.00 P&L= -2839.37 R=  -3.17 AvgR=-1.057
+SHORT_CONTINUATION       NEUTRAL     NO_SWEEP    BELOW_FAST     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3037.63 R=  -3.17 AvgR=-1.057
+SHORT_REVERSAL           BEARISH     SWEEP       BELOW_FAST     Trades=  3 Win= 33.33% PF= 0.40 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+SHORT_REVERSAL           NEUTRAL     NO_SWEEP    NEUTRAL        Trades=  3 Win=  0.00% PF= 0.00 P&L= -2824.85 R=  -3.17 AvgR=-1.057
+LONG_CONTINUATION        BULLISH     SWEEP       ABOVE_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1973.99 R=  -2.13 AvgR=-1.065
+LONG_REVERSAL            NEUTRAL     SWEEP       ABOVE_FAST     Trades=  2 Win= 50.00% PF= 0.94 P&L=    48.32 R=  -0.06 AvgR=-0.030
+LONG_REVERSAL            BEARISH     NO_SWEEP    BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     SWEEP       ABOVE_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1777.82 R=   1.94 AvgR= 1.940
+
+==================================================================================================================================
+STOCK × SETUP × TREND × PRICE POSITION
+==================================================================================================================================
+
+STOCK           SETUP                    TREND       PRICE POSITION PERFORMANCE
+----------------------------------------------------------------------------------------------------------------------------------
+ICICIBANK.NS    LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  7 Win= 28.57% PF= 0.74 P&L= -1430.63 R=  -1.38 AvgR=-0.197
+INFY.NS         LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  7 Win= 14.29% PF= 0.31 P&L= -3987.10 R=  -4.41 AvgR=-0.630
+TCS.NS          LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  7 Win= 14.29% PF= 0.36 P&L= -2570.13 R=  -3.49 AvgR=-0.499
+HDFCBANK.NS     LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  6 Win=  0.00% PF= 0.00 P&L= -6001.63 R=  -6.35 AvgR=-1.058
+INFY.NS         SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades=  6 Win= 33.33% PF= 0.57 P&L= -1882.75 R=  -1.81 AvgR=-0.302
+SBIN.NS         SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  5 Win=  0.00% PF= 0.00 P&L= -4876.78 R=  -5.30 AvgR=-1.060
+TCS.NS          SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  5 Win= 40.00% PF= 1.22 P&L=   883.19 R=   0.70 AvgR= 0.140
+HDFCBANK.NS     SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades=  4 Win= 25.00% PF= 0.27 P&L= -2243.11 R=  -2.32 AvgR=-0.580
+SBIN.NS         LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  4 Win= 25.00% PF= 0.61 P&L= -1221.09 R=  -1.23 AvgR=-0.308
+ICICIBANK.NS    SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  3 Win= 33.33% PF= 0.92 P&L=  -277.93 R=  -0.18 AvgR=-0.060
+SBIN.NS         LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  3 Win= 33.33% PF= 0.93 P&L=  -116.16 R=  -0.15 AvgR=-0.050
+TCS.NS          SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  3 Win= 33.33% PF= 0.92 P&L=  -401.41 R=  -0.18 AvgR=-0.060
+HDFCBANK.NS     LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  2 Win= 50.00% PF= 1.81 P&L=   813.47 R=   0.87 AvgR= 0.435
+HDFCBANK.NS     SHORT_CONTINUATION       NEUTRAL     BELOW_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -2011.34 R=  -2.12 AvgR=-1.060
+ICICIBANK.NS    LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  2 Win= 50.00% PF= 1.83 P&L=   885.52 R=   0.88 AvgR= 0.440
+ICICIBANK.NS    LONG_REVERSAL            BULLISH     ABOVE_FAST     Trades=  2 Win=100.00% PF= 0.00 P&L=  3722.58 R=   3.88 AvgR= 1.940
+ICICIBANK.NS    SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -2027.88 R=  -2.12 AvgR=-1.060
+INFY.NS         LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  2 Win= 50.00% PF= 1.83 P&L=   915.93 R=   0.88 AvgR= 0.440
+INFY.NS         SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  2 Win= 50.00% PF= 1.84 P&L=   662.40 R=   0.89 AvgR= 0.445
+INFY.NS         SHORT_REVERSAL           NEUTRAL     NEUTRAL        Trades=  2 Win=  0.00% PF= 0.00 P&L= -1951.62 R=  -2.11 AvgR=-1.055
+RELIANCE.NS     LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1550.34 R=  -1.63 AvgR=-0.815
+RELIANCE.NS     LONG_CONTINUATION        NEUTRAL     ABOVE_FAST     Trades=  2 Win= 50.00% PF= 1.85 P&L=   724.94 R=   0.89 AvgR= 0.445
+RELIANCE.NS     LONG_REVERSAL            NEUTRAL     ABOVE_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1965.34 R=  -2.11 AvgR=-1.055
+TCS.NS          LONG_CONTINUATION        BULLISH     ABOVE_FAST     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1970.73 R=  -2.11 AvgR=-1.055
+HDFCBANK.NS     LONG_CONTINUATION        NEUTRAL     NEUTRAL        Trades=  1 Win=  0.00% PF= 0.00 P&L= -1019.53 R=  -1.06 AvgR=-1.060
+HDFCBANK.NS     LONG_REVERSAL            BULLISH     ABOVE_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1777.82 R=   1.94 AvgR= 1.940
+HDFCBANK.NS     LONG_REVERSAL            NEUTRAL     ABOVE_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -930.64 R=  -1.06 AvgR=-1.060
+HDFCBANK.NS     SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1859.96 R=   1.94 AvgR= 1.940
+HDFCBANK.NS     SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -950.55 R=  -1.06 AvgR=-1.060
+ICICIBANK.NS    LONG_CONTINUATION        NEUTRAL     NEUTRAL        Trades=  1 Win=100.00% PF= 0.00 P&L=  1871.82 R=   1.94 AvgR= 1.940
+ICICIBANK.NS    LONG_REVERSAL            NEUTRAL     ABOVE_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=   978.96 R=   1.00 AvgR= 1.000
+ICICIBANK.NS    SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -974.93 R=  -1.05 AvgR=-1.050
+INFY.NS         SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1864.91 R=   1.95 AvgR= 1.950
+RELIANCE.NS     LONG_CONTINUATION        NEUTRAL     NEUTRAL        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -962.47 R=  -1.06 AvgR=-1.060
+RELIANCE.NS     SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1742.17 R=   1.94 AvgR= 1.940
+RELIANCE.NS     SHORT_CONTINUATION       NEUTRAL     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L= -1026.29 R=  -1.05 AvgR=-1.050
+RELIANCE.NS     SHORT_REVERSAL           NEUTRAL     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -944.09 R=  -1.06 AvgR=-1.060
+SBIN.NS         LONG_CONTINUATION        NEUTRAL     NEUTRAL        Trades=  1 Win=  0.00% PF= 0.00 P&L= -1041.48 R=  -1.05 AvgR=-1.050
+SBIN.NS         LONG_REVERSAL            BULLISH     ABOVE_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1765.96 R=   1.94 AvgR= 1.940
+SBIN.NS         SHORT_CONTINUATION       BEARISH     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -183.00 R=  -0.21 AvgR=-0.210
+SBIN.NS         SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -989.00 R=  -1.06 AvgR=-1.060
+TCS.NS          LONG_REVERSAL            BEARISH     BELOW_FAST     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+TCS.NS          LONG_REVERSAL            BULLISH     ABOVE_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -890.24 R=  -1.06 AvgR=-1.060
+TCS.NS          LONG_REVERSAL            NEUTRAL     ABOVE_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -874.03 R=  -1.06 AvgR=-1.060
+TCS.NS          SHORT_REVERSAL           BEARISH     BELOW_FAST     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -998.33 R=  -1.06 AvgR=-1.060
+TCS.NS          SHORT_REVERSAL           NEUTRAL     NEUTRAL        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -873.23 R=  -1.06 AvgR=-1.060
+
+==================================================================================================================================
+SETUP × TREND × MFE × MAE
+==================================================================================================================================
+
+SETUP                    TREND       MFE         MAE         PERFORMANCE
+----------------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION        BULLISH     <0.5R       >=1R        Trades= 13 Win=  0.00% PF= 0.00 P&L=-13012.18 R= -13.71 AvgR=-1.055
+SHORT_REVERSAL           BEARISH     <0.5R       >=1R        Trades= 10 Win=  0.00% PF= 0.00 P&L= -9861.57 R= -10.59 AvgR=-1.059
+LONG_CONTINUATION        NEUTRAL     <0.5R       >=1R        Trades=  9 Win=  0.00% PF= 0.00 P&L= -8272.78 R=  -9.54 AvgR=-1.060
+SHORT_REVERSAL           NEUTRAL     <0.5R       >=1R        Trades=  6 Win=  0.00% PF= 0.00 P&L= -5821.55 R=  -6.35 AvgR=-1.058
+SHORT_REVERSAL           NEUTRAL     1R-1.5R     >=1R        Trades=  5 Win=  0.00% PF= 0.00 P&L= -4750.93 R=  -5.29 AvgR=-1.058
+LONG_CONTINUATION        BULLISH     0.5R-1R     >=1R        Trades=  4 Win=  0.00% PF= 0.00 P&L= -3924.81 R=  -4.22 AvgR=-1.055
+LONG_CONTINUATION        BULLISH     1R-1.5R     >=1R        Trades=  4 Win=  0.00% PF= 0.00 P&L= -4040.20 R=  -4.22 AvgR=-1.055
+LONG_CONTINUATION        NEUTRAL     >=1.5R      <0.5R       Trades=  4 Win=100.00% PF= 0.00 P&L=  7109.69 R=   7.75 AvgR= 1.938
+LONG_REVERSAL            BULLISH     >=1.5R      <0.5R       Trades=  4 Win=100.00% PF= 0.00 P&L=  7266.36 R=   7.76 AvgR= 1.940
+SHORT_CONTINUATION       BEARISH     <0.5R       >=1R        Trades=  4 Win=  0.00% PF= 0.00 P&L= -3571.80 R=  -4.24 AvgR=-1.060
+LONG_CONTINUATION        BULLISH     >=1.5R      <0.5R       Trades=  3 Win=100.00% PF= 0.00 P&L=  5522.33 R=   5.82 AvgR= 1.940
+LONG_CONTINUATION        NEUTRAL     1R-1.5R     >=1R        Trades=  3 Win=  0.00% PF= 0.00 P&L= -3019.85 R=  -3.18 AvgR=-1.060
+LONG_CONTINUATION        NEUTRAL     >=1.5R      0.5R-1R     Trades=  3 Win=100.00% PF= 0.00 P&L=  5605.05 R=   5.83 AvgR= 1.943
+SHORT_CONTINUATION       BEARISH     >=1.5R      <0.5R       Trades=  3 Win=100.00% PF= 0.00 P&L=  5222.23 R=   5.83 AvgR= 1.943
+SHORT_REVERSAL           NEUTRAL     0.5R-1R     >=1R        Trades=  3 Win=  0.00% PF= 0.00 P&L= -3007.18 R=  -3.19 AvgR=-1.063
+LONG_CONTINUATION        BULLISH     >=1.5R      0.5R-1R     Trades=  2 Win= 50.00% PF= 3.33 P&L=  1242.30 R=   1.35 AvgR= 0.675
+LONG_CONTINUATION        BULLISH     >=1.5R      >=1R        Trades=  2 Win=  0.00% PF= 0.00 P&L= -1948.96 R=  -2.13 AvgR=-1.065
+LONG_REVERSAL            NEUTRAL     <0.5R       >=1R        Trades=  2 Win=  0.00% PF= 0.00 P&L= -1804.67 R=  -2.12 AvgR=-1.060
+SHORT_CONTINUATION       BEARISH     >=1.5R      0.5R-1R     Trades=  2 Win=100.00% PF= 0.00 P&L=  3500.10 R=   3.89 AvgR= 1.945
+SHORT_CONTINUATION       NEUTRAL     <0.5R       >=1R        Trades=  2 Win=  0.00% PF= 0.00 P&L= -2034.91 R=  -2.11 AvgR=-1.055
+SHORT_REVERSAL           BEARISH     >=1.5R      0.5R-1R     Trades=  2 Win=100.00% PF= 0.00 P&L=  2021.36 R=   2.43 AvgR= 1.215
+SHORT_REVERSAL           NEUTRAL     >=1.5R      0.5R-1R     Trades=  2 Win=100.00% PF= 0.00 P&L=  3304.05 R=   3.88 AvgR= 1.940
+LONG_CONTINUATION        NEUTRAL     0.5R-1R     <0.5R       Trades=  1 Win=  0.00% PF= 0.00 P&L=   -78.18 R=  -0.09 AvgR=-0.090
+LONG_CONTINUATION        NEUTRAL     0.5R-1R     >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -925.36 R=  -1.06 AvgR=-1.060
+LONG_CONTINUATION        NEUTRAL     >=1.5R      >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -916.66 R=  -1.06 AvgR=-1.060
+LONG_REVERSAL            BEARISH     >=1.5R      0.5R-1R     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     <0.5R       >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -890.24 R=  -1.06 AvgR=-1.060
+LONG_REVERSAL            NEUTRAL     0.5R-1R     >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -980.08 R=  -1.06 AvgR=-1.060
+LONG_REVERSAL            NEUTRAL     1R-1.5R     0.5R-1R     Trades=  1 Win=100.00% PF= 0.00 P&L=   978.96 R=   1.00 AvgR= 1.000
+LONG_REVERSAL            NEUTRAL     >=1.5R      >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -985.26 R=  -1.05 AvgR=-1.050
+SHORT_CONTINUATION       BEARISH     0.5R-1R     0.5R-1R     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -183.00 R=  -0.21 AvgR=-0.210
+SHORT_CONTINUATION       BEARISH     0.5R-1R     >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L=  -977.74 R=  -1.06 AvgR=-1.060
+SHORT_CONTINUATION       NEUTRAL     1R-1.5R     >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L= -1002.72 R=  -1.06 AvgR=-1.060
+SHORT_REVERSAL           BEARISH     0.5R-1R     >=1R        Trades=  1 Win=  0.00% PF= 0.00 P&L= -1029.44 R=  -1.06 AvgR=-1.060
+SHORT_REVERSAL           BEARISH     1R-1.5R     0.5R-1R     Trades=  1 Win=100.00% PF= 0.00 P&L=   728.58 R=   0.85 AvgR= 0.850
+SHORT_REVERSAL           NEUTRAL     >=1.5R      <0.5R       Trades=  1 Win=100.00% PF= 0.00 P&L=  1864.91 R=   1.95 AvgR= 1.950
+
+==================================================================================================================================
+SETUP × TREND × FAVORABLE FIRST × IMMEDIATE FAILURE
+==================================================================================================================================
+
+SETUP                    TREND       FIRST MOVE        FAILURE               PERFORMANCE
+----------------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION        BULLISH     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades= 22 Win= 13.64% PF= 0.30 P&L=-12916.09 R= -13.78 AvgR=-0.626
+LONG_CONTINUATION        NEUTRAL     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades= 17 Win= 35.29% PF= 1.09 P&L=  1318.89 R=   0.95 AvgR= 0.056
+SHORT_REVERSAL           NEUTRAL     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades= 16 Win= 18.75% PF= 0.42 P&L= -7459.29 R=  -7.95 AvgR=-0.497
+SHORT_REVERSAL           BEARISH     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades= 14 Win= 21.43% PF= 0.28 P&L= -8141.07 R=  -8.37 AvgR=-0.598
+SHORT_CONTINUATION       BEARISH     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades= 10 Win= 50.00% PF= 2.18 P&L=  4956.50 R=   5.27 AvgR= 0.527
+LONG_CONTINUATION        BULLISH     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  6 Win= 16.67% PF= 0.37 P&L= -3245.43 R=  -3.33 AvgR=-0.555
+LONG_CONTINUATION        NEUTRAL     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  5 Win= 20.00% PF= 0.46 P&L= -1816.98 R=  -2.30 AvgR=-0.460
+LONG_REVERSAL            NEUTRAL     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades=  5 Win= 20.00% PF= 0.24 P&L= -2791.05 R=  -3.23 AvgR=-0.646
+LONG_REVERSAL            BULLISH     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  3 Win= 66.67% PF= 3.66 P&L=  2752.04 R=   2.82 AvgR= 0.940
+SHORT_CONTINUATION       NEUTRAL     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3037.63 R=  -3.17 AvgR=-1.057
+LONG_REVERSAL            BULLISH     SAME_BAR_BOTH     IMMEDIATE_FAILURE     Trades=  2 Win=100.00% PF= 0.00 P&L=  3624.08 R=   3.88 AvgR= 1.940
+LONG_REVERSAL            BEARISH     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+SHORT_CONTINUATION       BEARISH     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -966.71 R=  -1.06 AvgR=-1.060
+SHORT_REVERSAL           NEUTRAL     ADVERSE_FIRST     IMMEDIATE_FAILURE     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -951.41 R=  -1.05 AvgR=-1.050
+
+==============================================================================================================
+SETUP × TREND × MFE OUTCOME
+==============================================================================================================
+LONG_CONTINUATION        BULLISH     Trades= 28 Losers= 24 >=0.5R= 11 >=1R=  7 >=1.5R=  3 AvgMFE05= 1.15R AvgR05= -1.01R Giveback05= 2.16R Bars05= 20.5 Bars1= 39.3
+LONG_CONTINUATION        NEUTRAL     Trades= 22 Losers= 15 >=0.5R=  6 >=1R=  4 >=1.5R=  1 AvgMFE05= 1.10R AvgR05= -0.90R Giveback05= 2.00R Bars05= 12.5 Bars1= 19.8
+LONG_REVERSAL            BULLISH     Trades=  5 Losers=  1 >=0.5R=  0 >=1R=  0 >=1.5R=  0 AvgMFE05= 0.00R AvgR05=  0.00R Giveback05= 0.00R Bars05=  0.0 Bars1=  0.0
+LONG_REVERSAL            NEUTRAL     Trades=  5 Losers=  4 >=0.5R=  2 >=1R=  1 >=1.5R=  1 AvgMFE05= 1.17R AvgR05= -1.06R Giveback05= 2.23R Bars05=  7.0 Bars1= 21.0
+SHORT_CONTINUATION       BEARISH     Trades= 11 Losers=  6 >=0.5R=  2 >=1R=  0 >=1.5R=  0 AvgMFE05= 0.60R AvgR05= -0.64R Giveback05= 1.24R Bars05= 32.5 Bars1=  0.0
+SHORT_CONTINUATION       NEUTRAL     Trades=  3 Losers=  3 >=0.5R=  1 >=1R=  1 >=1.5R=  0 AvgMFE05= 1.08R AvgR05= -1.06R Giveback05= 2.14R Bars05=  3.0 Bars1=  6.0
+SHORT_REVERSAL           BEARISH     Trades= 14 Losers= 11 >=0.5R=  1 >=1R=  0 >=1.5R=  0 AvgMFE05= 0.52R AvgR05= -1.06R Giveback05= 1.58R Bars05= 15.0 Bars1=  0.0
+SHORT_REVERSAL           NEUTRAL     Trades= 17 Losers= 14 >=0.5R=  8 >=1R=  5 >=1.5R=  0 AvgMFE05= 1.01R AvgR05= -1.06R Giveback05= 2.07R Bars05= 29.4 Bars1= 57.4
+
+==============================================================================================================
+SETUP × MFE BUCKET OUTCOME
+==============================================================================================================
+LONG_CONTINUATION        <0.5R       Trades= 22 Win=  0.00% PF= 0.00 R= -23.25 AvgR=-1.057 AvgMFE= 0.19R Giveback= 1.24R
+LONG_CONTINUATION        0.5R-1R     Trades=  6 Win=  0.00% PF= 0.00 R=  -5.37 AvgR=-0.895 AvgMFE= 0.68R Giveback= 1.58R
+LONG_CONTINUATION        1R-1.5R     Trades=  7 Win=  0.00% PF= 0.00 R=  -7.40 AvgR=-1.057 AvgMFE= 1.24R Giveback= 2.29R
+LONG_CONTINUATION        >=1.5R      Trades= 15 Win= 73.33% PF= 5.66 R=  17.56 AvgR= 1.171 AvgMFE= 2.00R Giveback= 0.83R
+LONG_REVERSAL            <0.5R       Trades=  3 Win=  0.00% PF= 0.00 R=  -3.18 AvgR=-1.060 AvgMFE= 0.20R Giveback= 1.26R
+LONG_REVERSAL            0.5R-1R     Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06 AvgR=-1.060 AvgMFE= 0.73R Giveback= 1.79R
+LONG_REVERSAL            1R-1.5R     Trades=  1 Win=100.00% PF= 0.00 R=   1.00 AvgR= 1.000 AvgMFE= 1.46R Giveback= 0.46R
+LONG_REVERSAL            >=1.5R      Trades=  6 Win= 83.33% PF= 9.24 R=   8.65 AvgR= 1.442 AvgMFE= 2.08R Giveback= 0.63R
+SHORT_CONTINUATION       <0.5R       Trades=  6 Win=  0.00% PF= 0.00 R=  -6.35 AvgR=-1.058 AvgMFE= 0.29R Giveback= 1.35R
+SHORT_CONTINUATION       0.5R-1R     Trades=  2 Win=  0.00% PF= 0.00 R=  -1.27 AvgR=-0.635 AvgMFE= 0.60R Giveback= 1.24R
+SHORT_CONTINUATION       1R-1.5R     Trades=  1 Win=  0.00% PF= 0.00 R=  -1.06 AvgR=-1.060 AvgMFE= 1.08R Giveback= 2.14R
+SHORT_CONTINUATION       >=1.5R      Trades=  5 Win=100.00% PF= 0.00 R=   9.72 AvgR= 1.944 AvgMFE= 2.19R Giveback= 0.25R
+SHORT_REVERSAL           <0.5R       Trades= 16 Win=  0.00% PF= 0.00 R= -16.94 AvgR=-1.059 AvgMFE= 0.19R Giveback= 1.25R
+SHORT_REVERSAL           0.5R-1R     Trades=  4 Win=  0.00% PF= 0.00 R=  -4.25 AvgR=-1.062 AvgMFE= 0.60R Giveback= 1.67R
+SHORT_REVERSAL           1R-1.5R     Trades=  6 Win= 16.67% PF= 0.16 R=  -4.44 AvgR=-0.740 AvgMFE= 1.19R Giveback= 1.93R
+SHORT_REVERSAL           >=1.5R      Trades=  5 Win=100.00% PF= 0.00 R=   8.26 AvgR= 1.652 AvgMFE= 2.02R Giveback= 0.37R
+
+==============================================================================================================
+SETUP × TREND × MFE BUCKET
+==============================================================================================================
+LONG_CONTINUATION        BULLISH     <0.5R       Trades= 13 Win=  0.00% PF= 0.00 P&L=-13012.18 R= -13.71 AvgR=-1.055
+LONG_CONTINUATION        BULLISH     0.5R-1R     Trades=  4 Win=  0.00% PF= 0.00 P&L= -3924.81 R=  -4.22 AvgR=-1.055
+LONG_CONTINUATION        BULLISH     1R-1.5R     Trades=  4 Win=  0.00% PF= 0.00 P&L= -4040.20 R=  -4.22 AvgR=-1.055
+LONG_CONTINUATION        BULLISH     >=1.5R      Trades=  7 Win= 57.14% PF= 2.86 P&L=  4815.67 R=   5.04 AvgR= 0.720
+LONG_CONTINUATION        NEUTRAL     <0.5R       Trades=  9 Win=  0.00% PF= 0.00 P&L= -8272.78 R=  -9.54 AvgR=-1.060
+LONG_CONTINUATION        NEUTRAL     0.5R-1R     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1003.54 R=  -1.15 AvgR=-0.575
+LONG_CONTINUATION        NEUTRAL     1R-1.5R     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3019.85 R=  -3.18 AvgR=-1.060
+LONG_CONTINUATION        NEUTRAL     >=1.5R      Trades=  8 Win= 87.50% PF=12.81 P&L= 11798.08 R=  12.52 AvgR= 1.565
+LONG_REVERSAL            BEARISH     >=1.5R      Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     <0.5R       Trades=  1 Win=  0.00% PF= 0.00 P&L=  -890.24 R=  -1.06 AvgR=-1.060
+LONG_REVERSAL            BULLISH     >=1.5R      Trades=  4 Win=100.00% PF= 0.00 P&L=  7266.36 R=   7.76 AvgR= 1.940
+LONG_REVERSAL            NEUTRAL     <0.5R       Trades=  2 Win=  0.00% PF= 0.00 P&L= -1804.67 R=  -2.12 AvgR=-1.060
+LONG_REVERSAL            NEUTRAL     0.5R-1R     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -980.08 R=  -1.06 AvgR=-1.060
+LONG_REVERSAL            NEUTRAL     1R-1.5R     Trades=  1 Win=100.00% PF= 0.00 P&L=   978.96 R=   1.00 AvgR= 1.000
+LONG_REVERSAL            NEUTRAL     >=1.5R      Trades=  1 Win=  0.00% PF= 0.00 P&L=  -985.26 R=  -1.05 AvgR=-1.050
+SHORT_CONTINUATION       BEARISH     <0.5R       Trades=  4 Win=  0.00% PF= 0.00 P&L= -3571.80 R=  -4.24 AvgR=-1.060
+SHORT_CONTINUATION       BEARISH     0.5R-1R     Trades=  2 Win=  0.00% PF= 0.00 P&L= -1160.74 R=  -1.27 AvgR=-0.635
+SHORT_CONTINUATION       BEARISH     >=1.5R      Trades=  5 Win=100.00% PF= 0.00 P&L=  8722.33 R=   9.72 AvgR= 1.944
+SHORT_CONTINUATION       NEUTRAL     <0.5R       Trades=  2 Win=  0.00% PF= 0.00 P&L= -2034.91 R=  -2.11 AvgR=-1.055
+SHORT_CONTINUATION       NEUTRAL     1R-1.5R     Trades=  1 Win=  0.00% PF= 0.00 P&L= -1002.72 R=  -1.06 AvgR=-1.060
+SHORT_REVERSAL           BEARISH     <0.5R       Trades= 10 Win=  0.00% PF= 0.00 P&L= -9861.57 R= -10.59 AvgR=-1.059
+SHORT_REVERSAL           BEARISH     0.5R-1R     Trades=  1 Win=  0.00% PF= 0.00 P&L= -1029.44 R=  -1.06 AvgR=-1.060
+SHORT_REVERSAL           BEARISH     1R-1.5R     Trades=  1 Win=100.00% PF= 0.00 P&L=   728.58 R=   0.85 AvgR= 0.850
+SHORT_REVERSAL           BEARISH     >=1.5R      Trades=  2 Win=100.00% PF= 0.00 P&L=  2021.36 R=   2.43 AvgR= 1.215
+SHORT_REVERSAL           NEUTRAL     <0.5R       Trades=  6 Win=  0.00% PF= 0.00 P&L= -5821.55 R=  -6.35 AvgR=-1.058
+SHORT_REVERSAL           NEUTRAL     0.5R-1R     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3007.18 R=  -3.19 AvgR=-1.063
+SHORT_REVERSAL           NEUTRAL     1R-1.5R     Trades=  5 Win=  0.00% PF= 0.00 P&L= -4750.93 R=  -5.29 AvgR=-1.058
+SHORT_REVERSAL           NEUTRAL     >=1.5R      Trades=  3 Win=100.00% PF= 0.00 P&L=  5168.96 R=   5.83 AvgR= 1.943
+
+==============================================================================================================
+MFE THRESHOLD OUTCOME ANALYSIS
+==============================================================================================================
+
+SETUP: LONG_CONTINUATION
+--------------------------------------------------------------------------------------------------------------
+0.5R  Trades= 28 Win= 39.29% AvgR= 0.171 Winners= 11 Losers= 17 Target= 11 Stop= 15 Liquidation=  2
+1.0R  Trades= 22 Win= 50.00% AvgR= 0.462 Winners= 11 Losers= 11 Target= 11 Stop= 10 Liquidation=  1
+1.5R  Trades= 15 Win= 73.33% AvgR= 1.171 Winners= 11 Losers=  4 Target= 11 Stop=  3 Liquidation=  1
+
+SETUP: LONG_REVERSAL
+--------------------------------------------------------------------------------------------------------------
+0.5R  Trades=  8 Win= 75.00% AvgR= 1.074 Winners=  6 Losers=  2 Target=  5 Stop=  2 Liquidation=  1
+1.0R  Trades=  7 Win= 85.71% AvgR= 1.379 Winners=  6 Losers=  1 Target=  5 Stop=  1 Liquidation=  1
+1.5R  Trades=  6 Win= 83.33% AvgR= 1.442 Winners=  5 Losers=  1 Target=  5 Stop=  1 Liquidation=  0
+
+SETUP: SHORT_CONTINUATION
+--------------------------------------------------------------------------------------------------------------
+0.5R  Trades=  8 Win= 62.50% AvgR= 0.924 Winners=  5 Losers=  3 Target=  5 Stop=  2 Liquidation=  1
+1.0R  Trades=  6 Win= 83.33% AvgR= 1.443 Winners=  5 Losers=  1 Target=  5 Stop=  1 Liquidation=  0
+1.5R  Trades=  5 Win=100.00% AvgR= 1.944 Winners=  5 Losers=  0 Target=  5 Stop=  0 Liquidation=  0
+
+SETUP: SHORT_REVERSAL
+--------------------------------------------------------------------------------------------------------------
+0.5R  Trades= 15 Win= 40.00% AvgR=-0.029 Winners=  6 Losers=  9 Target=  4 Stop=  9 Liquidation=  2
+1.0R  Trades= 10 Win= 50.00% AvgR= 0.297 Winners=  5 Losers=  5 Target=  4 Stop=  5 Liquidation=  1
+1.5R  Trades=  5 Win=100.00% AvgR= 1.652 Winners=  5 Losers=  0 Target=  4 Stop=  0 Liquidation=  1
+
+========================================================================================================================
+SETUP × CONFIDENCE × LIQUIDITY × BREAK AGE
+========================================================================================================================
+
+SETUP                    CONF      LIQ       AGE       PERFORMANCE
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION        50-59     SWEEP     AGE_0     Trades=  3 Win=  0.00% PF= 0.00 P&L= -2568.86 R=  -3.20 AvgR=-1.067
+LONG_CONTINUATION        70-79     NO_SWEEP  AGE_0     Trades= 45 Win= 24.44% PF= 0.62 P&L=-12045.87 R= -13.13 AvgR=-0.292
+LONG_CONTINUATION        80-89     SWEEP     AGE_0     Trades=  1 Win=  0.00% PF= 0.00 P&L= -1057.30 R=  -1.06 AvgR=-1.060
+LONG_CONTINUATION        80-89     SWEEP     AGE_1     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -987.58 R=  -1.07 AvgR=-1.070
+LONG_REVERSAL            60-69     NO_SWEEP  AGE_0     Trades=  7 Win= 42.86% PF= 1.38 P&L=  1703.89 R=   1.59 AvgR= 0.227
+LONG_REVERSAL            60-69     NO_SWEEP  AGE_3     Trades=  1 Win=100.00% PF= 0.00 P&L=  1765.96 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            60-69     SWEEP     AGE_0     Trades=  3 Win= 66.67% PF= 2.77 P&L=  1826.14 R=   1.88 AvgR= 0.627
+SHORT_CONTINUATION       70-79     NO_SWEEP  AGE_0     Trades= 14 Win= 35.71% PF= 1.12 P&L=   952.16 R=   1.04 AvgR= 0.074
+SHORT_REVERSAL           60-69     NO_SWEEP  AGE_0     Trades= 27 Win= 18.52% PF= 0.35 P&L=-14445.57 R= -15.05 AvgR=-0.557
+SHORT_REVERSAL           60-69     NO_SWEEP  AGE_2     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -941.32 R=  -1.05 AvgR=-1.050
+SHORT_REVERSAL           60-69     SWEEP     AGE_0     Trades=  3 Win= 33.33% PF= 0.40 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+
+========================================================================================================================
+SETUP × TREND × LIQUIDITY × BREAK AGE
+========================================================================================================================
+
+LONG_CONTINUATION        BULLISH     NO_SWEEP    AGE_0     Trades= 26 Win= 15.38% PF= 0.34 P&L=-14187.53 R= -14.98 AvgR=-0.576
+LONG_CONTINUATION        BULLISH     SWEEP       AGE_0     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -986.41 R=  -1.06 AvgR=-1.060
+LONG_CONTINUATION        BULLISH     SWEEP       AGE_1     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -987.58 R=  -1.07 AvgR=-1.070
+LONG_CONTINUATION        NEUTRAL     NO_SWEEP    AGE_0     Trades= 19 Win= 36.84% PF= 1.16 P&L=  2141.66 R=   1.85 AvgR= 0.097
+LONG_CONTINUATION        NEUTRAL     SWEEP       AGE_0     Trades=  3 Win=  0.00% PF= 0.00 P&L= -2639.75 R=  -3.20 AvgR=-1.067
+LONG_REVERSAL            BEARISH     NO_SWEEP    AGE_0     Trades=  1 Win=100.00% PF= 0.00 P&L=  1710.92 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     NO_SWEEP    AGE_0     Trades=  3 Win= 66.67% PF= 3.66 P&L=  2832.34 R=   2.82 AvgR= 0.940
+LONG_REVERSAL            BULLISH     NO_SWEEP    AGE_3     Trades=  1 Win=100.00% PF= 0.00 P&L=  1765.96 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            BULLISH     SWEEP       AGE_0     Trades=  1 Win=100.00% PF= 0.00 P&L=  1777.82 R=   1.94 AvgR= 1.940
+LONG_REVERSAL            NEUTRAL     NO_SWEEP    AGE_0     Trades=  3 Win=  0.00% PF= 0.00 P&L= -2839.37 R=  -3.17 AvgR=-1.057
+LONG_REVERSAL            NEUTRAL     SWEEP       AGE_0     Trades=  2 Win= 50.00% PF= 0.94 P&L=    48.32 R=  -0.06 AvgR=-0.030
+SHORT_CONTINUATION       BEARISH     NO_SWEEP    AGE_0     Trades= 11 Win= 45.45% PF= 1.76 P&L=  3989.79 R=   4.21 AvgR= 0.383
+SHORT_CONTINUATION       NEUTRAL     NO_SWEEP    AGE_0     Trades=  3 Win=  0.00% PF= 0.00 P&L= -3037.63 R=  -3.17 AvgR=-1.057
+SHORT_REVERSAL           BEARISH     NO_SWEEP    AGE_0     Trades= 11 Win= 18.18% PF= 0.25 P&L= -6976.19 R=  -7.10 AvgR=-0.645
+SHORT_REVERSAL           BEARISH     SWEEP       AGE_0     Trades=  3 Win= 33.33% PF= 0.40 P&L= -1164.88 R=  -1.27 AvgR=-0.423
+SHORT_REVERSAL           NEUTRAL     NO_SWEEP    AGE_0     Trades= 16 Win= 18.75% PF= 0.42 P&L= -7469.38 R=  -7.95 AvgR=-0.497
+SHORT_REVERSAL           NEUTRAL     NO_SWEEP    AGE_2     Trades=  1 Win=  0.00% PF= 0.00 P&L=  -941.32 R=  -1.05 AvgR=-1.050
+
+==============================================================================================================
+ENTRY CONTEXT × MFE THRESHOLD
+==============================================================================================================
+
+--------------------------------------------------------------------------------------------------------------
+SETUP × MFE THRESHOLD
+--------------------------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION
+  0.5R   Trades= 50 Reached= 28 Rate= 56.00% AvgR=  0.171
+  1.0R   Trades= 50 Reached= 22 Rate= 44.00% AvgR=  0.462
+  1.5R   Trades= 50 Reached= 15 Rate= 30.00% AvgR=  1.171
+
+LONG_REVERSAL
+  0.5R   Trades= 11 Reached=  8 Rate= 72.73% AvgR=  1.074
+  1.0R   Trades= 11 Reached=  7 Rate= 63.64% AvgR=  1.379
+  1.5R   Trades= 11 Reached=  6 Rate= 54.55% AvgR=  1.442
+
+SHORT_CONTINUATION
+  0.5R   Trades= 14 Reached=  8 Rate= 57.14% AvgR=  0.924
+  1.0R   Trades= 14 Reached=  6 Rate= 42.86% AvgR=  1.443
+  1.5R   Trades= 14 Reached=  5 Rate= 35.71% AvgR=  1.944
+
+SHORT_REVERSAL
+  0.5R   Trades= 31 Reached= 15 Rate= 48.39% AvgR= -0.029
+  1.0R   Trades= 31 Reached= 11 Rate= 35.48% AvgR=  0.347
+  1.5R   Trades= 31 Reached=  5 Rate= 16.13% AvgR=  1.652
+
+--------------------------------------------------------------------------------------------------------------
+TREND × MFE THRESHOLD
+--------------------------------------------------------------------------------------------------------------
+
+BEARISH
+  0.5R   Trades= 26 Reached= 12 Rate= 46.15% AvgR=  1.051
+  1.0R   Trades= 26 Reached=  9 Rate= 34.62% AvgR=  1.660
+  1.5R   Trades= 26 Reached=  8 Rate= 30.77% AvgR=  1.761
+
+BULLISH
+  0.5R   Trades= 33 Reached= 19 Rate= 57.58% AvgR=  0.229
+  1.0R   Trades= 33 Reached= 15 Rate= 45.45% AvgR=  0.572
+  1.5R   Trades= 33 Reached= 11 Rate= 33.33% AvgR=  1.164
+
+NEUTRAL
+  0.5R   Trades= 47 Reached= 28 Rate= 59.57% AvgR=  0.120
+  1.0R   Trades= 47 Reached= 22 Rate= 46.81% AvgR=  0.399
+  1.5R   Trades= 47 Reached= 12 Rate= 25.53% AvgR=  1.442
+
+--------------------------------------------------------------------------------------------------------------
+PRICE POSITION × MFE THRESHOLD
+--------------------------------------------------------------------------------------------------------------
+
+ABOVE_FAST
+  0.5R   Trades= 56 Reached= 32 Rate= 57.14% AvgR=  0.363
+  1.0R   Trades= 56 Reached= 25 Rate= 44.64% AvgR=  0.722
+  1.5R   Trades= 56 Reached= 19 Rate= 33.93% AvgR=  1.175
+
+BELOW_FAST
+  0.5R   Trades= 43 Reached= 23 Rate= 53.49% AvgR=  0.433
+  1.0R   Trades= 43 Reached= 17 Rate= 39.53% AvgR=  0.911
+  1.5R   Trades= 43 Reached= 11 Rate= 25.58% AvgR=  1.811
+
+NEUTRAL
+  0.5R   Trades=  7 Reached=  4 Rate= 57.14% AvgR= -0.308
+  1.0R   Trades=  7 Reached=  4 Rate= 57.14% AvgR= -0.308
+  1.5R   Trades=  7 Reached=  1 Rate= 14.29% AvgR=  1.940
+
+--------------------------------------------------------------------------------------------------------------
+SETUP × TREND × MFE THRESHOLD
+--------------------------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+  0.5R   Trades= 28 Reached= 15 Rate= 53.57% AvgR= -0.227
+  1.0R   Trades= 28 Reached= 11 Rate= 39.29% AvgR=  0.075
+  1.5R   Trades= 28 Reached=  7 Rate= 25.00% AvgR=  0.720
+
+LONG_CONTINUATION × NEUTRAL
+  0.5R   Trades= 22 Reached= 13 Rate= 59.09% AvgR=  0.630
+  1.0R   Trades= 22 Reached= 11 Rate= 50.00% AvgR=  0.849
+  1.5R   Trades= 22 Reached=  8 Rate= 36.36% AvgR=  1.565
+
+LONG_REVERSAL × BEARISH
+  0.5R   Trades=  1 Reached=  1 Rate=100.00% AvgR=  1.940
+  1.0R   Trades=  1 Reached=  1 Rate=100.00% AvgR=  1.940
+  1.5R   Trades=  1 Reached=  1 Rate=100.00% AvgR=  1.940
+
+LONG_REVERSAL × BULLISH
+  0.5R   Trades=  5 Reached=  4 Rate= 80.00% AvgR=  1.940
+  1.0R   Trades=  5 Reached=  4 Rate= 80.00% AvgR=  1.940
+  1.5R   Trades=  5 Reached=  4 Rate= 80.00% AvgR=  1.940
+
+LONG_REVERSAL × NEUTRAL
+  0.5R   Trades=  5 Reached=  3 Rate= 60.00% AvgR= -0.370
+  1.0R   Trades=  5 Reached=  2 Rate= 40.00% AvgR= -0.025
+  1.5R   Trades=  5 Reached=  1 Rate= 20.00% AvgR= -1.050
+
+SHORT_CONTINUATION × BEARISH
+  0.5R   Trades= 11 Reached=  7 Rate= 63.64% AvgR=  1.207
+  1.0R   Trades= 11 Reached=  5 Rate= 45.45% AvgR=  1.944
+  1.5R   Trades= 11 Reached=  5 Rate= 45.45% AvgR=  1.944
+
+SHORT_CONTINUATION × NEUTRAL
+  0.5R   Trades=  3 Reached=  1 Rate= 33.33% AvgR= -1.060
+  1.0R   Trades=  3 Reached=  1 Rate= 33.33% AvgR= -1.060
+  1.5R   Trades=  3 Reached=  0 Rate=  0.00% AvgR=  0.000
+
+SHORT_REVERSAL × BEARISH
+  0.5R   Trades= 14 Reached=  4 Rate= 28.57% AvgR=  0.555
+  1.0R   Trades= 14 Reached=  3 Rate= 21.43% AvgR=  1.093
+  1.5R   Trades= 14 Reached=  2 Rate= 14.29% AvgR=  1.215
+
+SHORT_REVERSAL × NEUTRAL
+  0.5R   Trades= 17 Reached= 11 Rate= 64.71% AvgR= -0.241
+  1.0R   Trades= 17 Reached=  8 Rate= 47.06% AvgR=  0.067
+  1.5R   Trades= 17 Reached=  3 Rate= 17.65% AvgR=  1.943
+
+========================================================================================================================
+INDIVIDUAL ENTRY VARIABLE × BAD PATH
+========================================================================================================================
+
+BAD PATH = MFE < 0.5R AND MAE >= 1R
+
+------------------------------------------------------------------------------------------------------------------------
+TREND STRENGTH
+------------------------------------------------------------------------------------------------------------------------
+STRENGTH_20-40      Trades= 29 BadPath= 11 BadRate= 37.93% AvgR= -0.376 PF= 0.52 AvgMFE=  0.93R AvgMAE=  0.95R
+STRENGTH_40-60      Trades= 19 BadPath=  8 BadRate= 42.11% AvgR= -0.136 PF= 0.81 AvgMFE=  1.07R AvgMAE=  0.91R
+STRENGTH_60+        Trades= 35 BadPath= 18 BadRate= 51.43% AvgR= -0.187 PF= 0.74 AvgMFE=  0.89R AvgMAE=  0.99R
+STRENGTH_<20        Trades= 23 BadPath= 10 BadRate= 43.48% AvgR= -0.406 PF= 0.51 AvgMFE=  0.93R AvgMAE=  0.98R
+
+------------------------------------------------------------------------------------------------------------------------
+TREND SLOPE
+------------------------------------------------------------------------------------------------------------------------
+SLOPE_NEG           Trades= 43 BadPath= 20 BadRate= 46.51% AvgR= -0.261 PF= 0.65 AvgMFE=  0.89R AvgMAE=  0.98R
+SLOPE_POS           Trades= 56 BadPath= 24 BadRate= 42.86% AvgR= -0.246 PF= 0.67 AvgMFE=  0.99R AvgMAE=  0.95R
+SLOPE_ZERO          Trades=  7 BadPath=  3 BadRate= 42.86% AvgR= -0.629 PF= 0.31 AvgMFE=  0.86R AvgMAE=  0.98R
+
+------------------------------------------------------------------------------------------------------------------------
+PRICE POSITION
+------------------------------------------------------------------------------------------------------------------------
+ABOVE_FAST          Trades= 56 BadPath= 24 BadRate= 42.86% AvgR= -0.246 PF= 0.67 AvgMFE=  0.99R AvgMAE=  0.95R
+BELOW_FAST          Trades= 43 BadPath= 20 BadRate= 46.51% AvgR= -0.261 PF= 0.65 AvgMFE=  0.89R AvgMAE=  0.98R
+NEUTRAL             Trades=  7 BadPath=  3 BadRate= 42.86% AvgR= -0.629 PF= 0.31 AvgMFE=  0.86R AvgMAE=  0.98R
+
+------------------------------------------------------------------------------------------------------------------------
+ENTRY TREND
+------------------------------------------------------------------------------------------------------------------------
+BEARISH             Trades= 26 BadPath= 14 BadRate= 53.85% AvgR= -0.085 PF= 0.87 AvgMFE=  0.89R AvgMAE=  0.93R
+BULLISH             Trades= 33 BadPath= 14 BadRate= 42.42% AvgR= -0.315 PF= 0.60 AvgMFE=  1.00R AvgMAE=  0.99R
+NEUTRAL             Trades= 47 BadPath= 19 BadRate= 40.43% AvgR= -0.356 PF= 0.55 AvgMFE=  0.93R AvgMAE=  0.96R
+
+------------------------------------------------------------------------------------------------------------------------
+SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION   Trades= 50 BadPath= 22 BadRate= 44.00% AvgR= -0.369 PF= 0.54 AvgMFE=  0.94R AvgMAE=  0.98R
+LONG_REVERSAL       Trades= 11 BadPath=  3 BadRate= 27.27% AvgR=  0.492 PF= 2.02 AvgMFE=  1.39R AvgMAE=  0.77R
+SHORT_CONTINUATION  Trades= 14 BadPath=  6 BadRate= 42.86% AvgR=  0.074 PF= 1.12 AvgMFE=  1.07R AvgMAE=  0.85R
+SHORT_REVERSAL      Trades= 31 BadPath= 16 BadRate= 51.61% AvgR= -0.560 PF= 0.34 AvgMFE=  0.73R AvgMAE=  1.05R
+
+========================================================================================================================
+ENTRY VARIABLE STABILITY ACROSS TIME PERIODS
+========================================================================================================================
+
+BAD PATH = MFE < 0.5R AND MAE >= 1R
+MINIMUM SAMPLE SIZE = 5 TRADES
+
+
+------------------------------------------------------------------------------------------------------------------------
+PERIOD: 2021-2023 (Trades=53)
+------------------------------------------------------------------------------------------------------------------------
+
+TREND STRENGTH
+------------------------------------------------------------------------------------------------------------------------
+STRENGTH_<20           Trades= 16 BadPath=  8 BadRate= 50.00% AvgR= -0.681 PF= 0.25 AvgMFE= 0.82R AvgMAE= 1.02R
+STRENGTH_20-40         Trades= 13 BadPath=  4 BadRate= 30.77% AvgR= -0.134 PF= 0.81 AvgMFE= 1.14R AvgMAE= 0.89R
+STRENGTH_40-60         Trades= 11 BadPath=  5 BadRate= 45.45% AvgR= -0.514 PF= 0.40 AvgMFE= 0.89R AvgMAE= 1.05R
+STRENGTH_60+           Trades= 13 BadPath=  9 BadRate= 69.23% AvgR= -0.365 PF= 0.54 AvgMFE= 0.74R AvgMAE= 1.08R
+
+TREND SLOPE
+------------------------------------------------------------------------------------------------------------------------
+SLOPE_NEG              Trades= 24 BadPath= 13 BadRate= 54.17% AvgR= -0.433 PF= 0.46 AvgMFE= 0.81R AvgMAE= 1.02R
+SLOPE_ZERO             Trades=  7 BadPath=  3 BadRate= 42.86% AvgR= -0.629 PF= 0.32 AvgMFE= 0.86R AvgMAE= 0.98R
+SLOPE_POS              Trades= 22 BadPath= 10 BadRate= 45.45% AvgR= -0.375 PF= 0.54 AvgMFE= 0.99R AvgMAE= 1.00R
+
+PRICE POSITION
+------------------------------------------------------------------------------------------------------------------------
+ABOVE_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+BELOW_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades= 53 BadPath= 26 BadRate= 49.06% AvgR= -0.435 PF= 0.47 AvgMFE= 0.89R AvgMAE= 1.01R
+
+ENTRY TREND
+------------------------------------------------------------------------------------------------------------------------
+BULLISH                Trades= 14 BadPath=  6 BadRate= 42.86% AvgR= -0.629 PF= 0.31 AvgMFE= 0.95R AvgMAE= 1.10R
+BEARISH                Trades= 14 BadPath= 10 BadRate= 71.43% AvgR= -0.415 PF= 0.48 AvgMFE= 0.67R AvgMAE= 1.06R
+NEUTRAL                Trades= 25 BadPath= 10 BadRate= 40.00% AvgR= -0.337 PF= 0.57 AvgMFE= 0.98R AvgMAE= 0.93R
+
+SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION      Trades= 25 BadPath= 11 BadRate= 44.00% AvgR= -0.337 PF= 0.58 AvgMFE= 0.99R AvgMAE= 0.99R
+LONG_REVERSAL          Trades=  2 INSUFFICIENT_SAMPLE
+SHORT_CONTINUATION     Trades=  6 BadPath=  4 BadRate= 66.67% AvgR= -0.055 PF= 0.91 AvgMFE= 0.92R AvgMAE= 0.97R
+SHORT_REVERSAL         Trades= 20 BadPath= 11 BadRate= 55.00% AvgR= -0.759 PF= 0.19 AvgMFE= 0.66R AvgMAE= 1.06R
+
+------------------------------------------------------------------------------------------------------------------------
+PERIOD: 2024 (Trades=26)
+------------------------------------------------------------------------------------------------------------------------
+
+TREND STRENGTH
+------------------------------------------------------------------------------------------------------------------------
+STRENGTH_<20           Trades=  3 INSUFFICIENT_SAMPLE
+STRENGTH_20-40         Trades=  7 BadPath=  3 BadRate= 42.86% AvgR= -0.203 PF= 0.78 AvgMFE= 1.03R AvgMAE= 1.00R
+STRENGTH_40-60         Trades=  4 INSUFFICIENT_SAMPLE
+STRENGTH_60+           Trades= 12 BadPath=  6 BadRate= 50.00% AvgR= -0.306 PF= 0.61 AvgMFE= 0.85R AvgMAE= 0.99R
+
+TREND SLOPE
+------------------------------------------------------------------------------------------------------------------------
+SLOPE_NEG              Trades=  7 BadPath=  3 BadRate= 42.86% AvgR= -0.631 PF= 0.31 AvgMFE= 0.76R AvgMAE= 1.12R
+SLOPE_ZERO             Trades=  0 INSUFFICIENT_SAMPLE
+SLOPE_POS              Trades= 19 BadPath=  9 BadRate= 47.37% AvgR=  0.047 PF= 1.10 AvgMFE= 1.05R AvgMAE= 0.85R
+
+PRICE POSITION
+------------------------------------------------------------------------------------------------------------------------
+ABOVE_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+BELOW_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades= 26 BadPath= 12 BadRate= 46.15% AvgR= -0.135 PF= 0.84 AvgMFE= 0.97R AvgMAE= 0.93R
+
+ENTRY TREND
+------------------------------------------------------------------------------------------------------------------------
+BULLISH                Trades= 14 BadPath=  7 BadRate= 50.00% AvgR=  0.016 PF= 1.03 AvgMFE= 1.02R AvgMAE= 0.87R
+BEARISH                Trades=  3 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades=  9 BadPath=  4 BadRate= 44.44% AvgR= -0.394 PF= 0.53 AvgMFE= 0.88R AvgMAE= 1.03R
+
+SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION      Trades= 13 BadPath=  7 BadRate= 53.85% AvgR= -0.365 PF= 0.54 AvgMFE= 0.82R AvgMAE= 0.99R
+LONG_REVERSAL          Trades=  6 BadPath=  2 BadRate= 33.33% AvgR=  0.940 PF= 4.12 AvgMFE= 1.56R AvgMAE= 0.56R
+SHORT_CONTINUATION     Trades=  3 INSUFFICIENT_SAMPLE
+SHORT_REVERSAL         Trades=  4 INSUFFICIENT_SAMPLE
+
+------------------------------------------------------------------------------------------------------------------------
+PERIOD: 2025 (Trades=16)
+------------------------------------------------------------------------------------------------------------------------
+
+TREND STRENGTH
+------------------------------------------------------------------------------------------------------------------------
+STRENGTH_<20           Trades=  3 INSUFFICIENT_SAMPLE
+STRENGTH_20-40         Trades=  6 BadPath=  3 BadRate= 50.00% AvgR= -1.063 PF= 0.00 AvgMFE= 0.59R AvgMAE= 1.12R
+STRENGTH_40-60         Trades=  3 INSUFFICIENT_SAMPLE
+STRENGTH_60+           Trades=  4 INSUFFICIENT_SAMPLE
+
+TREND SLOPE
+------------------------------------------------------------------------------------------------------------------------
+SLOPE_NEG              Trades=  5 BadPath=  2 BadRate= 40.00% AvgR=  0.140 PF= 1.11 AvgMFE= 1.10R AvgMAE= 0.85R
+SLOPE_ZERO             Trades=  0 INSUFFICIENT_SAMPLE
+SLOPE_POS              Trades= 11 BadPath=  4 BadRate= 36.36% AvgR= -0.475 PF= 0.47 AvgMFE= 0.96R AvgMAE= 1.06R
+
+PRICE POSITION
+------------------------------------------------------------------------------------------------------------------------
+ABOVE_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+BELOW_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades= 16 BadPath=  6 BadRate= 37.50% AvgR= -0.283 PF= 0.64 AvgMFE= 1.01R AvgMAE= 0.99R
+
+ENTRY TREND
+------------------------------------------------------------------------------------------------------------------------
+BULLISH                Trades=  4 INSUFFICIENT_SAMPLE
+BEARISH                Trades=  3 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades=  9 BadPath=  4 BadRate= 44.44% AvgR= -0.730 PF= 0.26 AvgMFE= 0.76R AvgMAE= 1.10R
+
+SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION      Trades= 10 BadPath=  4 BadRate= 40.00% AvgR= -0.416 PF= 0.53 AvgMFE= 0.99R AvgMAE= 1.01R
+LONG_REVERSAL          Trades=  1 INSUFFICIENT_SAMPLE
+SHORT_CONTINUATION     Trades=  2 INSUFFICIENT_SAMPLE
+SHORT_REVERSAL         Trades=  3 INSUFFICIENT_SAMPLE
+
+------------------------------------------------------------------------------------------------------------------------
+PERIOD: 2026 (Trades=11)
+------------------------------------------------------------------------------------------------------------------------
+
+TREND STRENGTH
+------------------------------------------------------------------------------------------------------------------------
+STRENGTH_<20           Trades=  1 INSUFFICIENT_SAMPLE
+STRENGTH_20-40         Trades=  3 INSUFFICIENT_SAMPLE
+STRENGTH_40-60         Trades=  1 INSUFFICIENT_SAMPLE
+STRENGTH_60+           Trades=  6 BadPath=  2 BadRate= 33.33% AvgR=  0.020 PF= 1.04 AvgMFE= 1.05R AvgMAE= 0.81R
+
+TREND SLOPE
+------------------------------------------------------------------------------------------------------------------------
+SLOPE_NEG              Trades=  7 BadPath=  2 BadRate= 28.57% AvgR=  0.414 PF= 2.30 AvgMFE= 1.16R AvgMAE= 0.78R
+SLOPE_ZERO             Trades=  0 INSUFFICIENT_SAMPLE
+SLOPE_POS              Trades=  4 INSUFFICIENT_SAMPLE
+
+PRICE POSITION
+------------------------------------------------------------------------------------------------------------------------
+ABOVE_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+BELOW_FAST             Trades=  0 INSUFFICIENT_SAMPLE
+NEUTRAL                Trades= 11 BadPath=  3 BadRate= 27.27% AvgR=  0.155 PF= 1.41 AvgMFE= 1.02R AvgMAE= 0.78R
+
+ENTRY TREND
+------------------------------------------------------------------------------------------------------------------------
+BULLISH                Trades=  1 INSUFFICIENT_SAMPLE
+BEARISH                Trades=  6 BadPath=  2 BadRate= 33.33% AvgR=  0.160 PF= 1.44 AvgMFE= 1.02R AvgMAE= 0.80R
+NEUTRAL                Trades=  4 INSUFFICIENT_SAMPLE
+
+SETUP
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION      Trades=  2 INSUFFICIENT_SAMPLE
+LONG_REVERSAL          Trades=  2 INSUFFICIENT_SAMPLE
+SHORT_CONTINUATION     Trades=  3 INSUFFICIENT_SAMPLE
+SHORT_REVERSAL         Trades=  4 INSUFFICIENT_SAMPLE
+
+========================================================================================================================
+SETUP × TREND × MFE THRESHOLD × TIMING / OUTCOME
+========================================================================================================================
+
+LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached= 15 Winners=  4 Losers= 11 AvgBars=  18.3 WinBars=  12.0 LoseBars=  20.5 WinAvgR=  1.938 LoseAvgR= -1.014
+1.0R   Reached= 11 Winners=  4 Losers=  7 AvgBars=  35.1 WinBars=  27.8 LoseBars=  39.3 WinAvgR=  1.938 LoseAvgR= -0.990
+1.5R   Reached=  7 Winners=  4 Losers=  3 AvgBars=  43.7 WinBars=  35.0 LoseBars=  55.3 WinAvgR=  1.938 LoseAvgR= -0.903
+
+LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached= 13 Winners=  7 Losers=  6 AvgBars=  14.2 WinBars=  15.6 LoseBars=  12.5 WinAvgR=  1.940 LoseAvgR= -0.898
+1.0R   Reached= 11 Winners=  7 Losers=  4 AvgBars=  20.6 WinBars=  21.1 LoseBars=  19.8 WinAvgR=  1.940 LoseAvgR= -1.060
+1.5R   Reached=  8 Winners=  7 Losers=  1 AvgBars=  40.5 WinBars=  36.6 LoseBars=  68.0 WinAvgR=  1.940 LoseAvgR= -1.060
+
+LONG_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  1 Winners=  1 Losers=  0 AvgBars=  36.0 WinBars=  36.0 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+1.0R   Reached=  1 Winners=  1 Losers=  0 AvgBars=  70.0 WinBars=  70.0 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+1.5R   Reached=  1 Winners=  1 Losers=  0 AvgBars= 111.0 WinBars= 111.0 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+
+LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  4 Winners=  4 Losers=  0 AvgBars=  13.2 WinBars=  13.2 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+1.0R   Reached=  4 Winners=  4 Losers=  0 AvgBars=  35.8 WinBars=  35.8 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+1.5R   Reached=  4 Winners=  4 Losers=  0 AvgBars=  61.2 WinBars=  61.2 LoseBars=   0.0 WinAvgR=  1.940 LoseAvgR=  0.000
+
+LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  3 Winners=  1 Losers=  2 AvgBars=   6.0 WinBars=   4.0 LoseBars=   7.0 WinAvgR=  1.000 LoseAvgR= -1.055
+1.0R   Reached=  2 Winners=  1 Losers=  1 AvgBars=  41.5 WinBars=  62.0 LoseBars=  21.0 WinAvgR=  1.000 LoseAvgR= -1.050
+1.5R   Reached=  1 Winners=  0 Losers=  1 AvgBars=  26.0 WinBars=   0.0 LoseBars=  26.0 WinAvgR=  0.000 LoseAvgR= -1.050
+
+SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  7 Winners=  5 Losers=  2 AvgBars=  16.0 WinBars=   9.4 LoseBars=  32.5 WinAvgR=  1.944 LoseAvgR= -0.635
+1.0R   Reached=  5 Winners=  5 Losers=  0 AvgBars=  33.0 WinBars=  33.0 LoseBars=   0.0 WinAvgR=  1.944 LoseAvgR=  0.000
+1.5R   Reached=  5 Winners=  5 Losers=  0 AvgBars=  84.0 WinBars=  84.0 LoseBars=   0.0 WinAvgR=  1.944 LoseAvgR=  0.000
+
+SHORT_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  1 Winners=  0 Losers=  1 AvgBars=   3.0 WinBars=   0.0 LoseBars=   3.0 WinAvgR=  0.000 LoseAvgR= -1.060
+1.0R   Reached=  1 Winners=  0 Losers=  1 AvgBars=   6.0 WinBars=   0.0 LoseBars=   6.0 WinAvgR=  0.000 LoseAvgR= -1.060
+1.5R   Reached=  0
+
+SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached=  4 Winners=  3 Losers=  1 AvgBars=  11.0 WinBars=   9.7 LoseBars=  15.0 WinAvgR=  1.093 LoseAvgR= -1.060
+1.0R   Reached=  2 Winners=  2 Losers=  0 AvgBars=  28.5 WinBars=  28.5 LoseBars=   0.0 WinAvgR=  1.215 LoseAvgR=  0.000
+1.5R   Reached=  2 Winners=  2 Losers=  0 AvgBars=  32.0 WinBars=  32.0 LoseBars=   0.0 WinAvgR=  1.215 LoseAvgR=  0.000
+
+SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0.5R   Reached= 11 Winners=  3 Losers=  8 AvgBars=  24.6 WinBars=  12.0 LoseBars=  29.4 WinAvgR=  1.943 LoseAvgR= -1.060
+1.0R   Reached=  8 Winners=  3 Losers=  5 AvgBars=  47.9 WinBars=  32.0 LoseBars=  57.4 WinAvgR=  1.943 LoseAvgR= -1.058
+1.5R   Reached=  3 Winners=  3 Losers=  0 AvgBars=  36.7 WinBars=  36.7 LoseBars=   0.0 WinAvgR=  1.943 LoseAvgR=  0.000
+
+========================================================================================================================
+TIME-TO-0.5R EXECUTABLE TIMEOUT WALK-FORWARD
+========================================================================================================================
+
+YEAR 2023
+------------------------------------------------------------------------------------------------------------------------
+Selected=TIMEOUT_5    TrainTrades= 31 TrainR=   -4.58 ValidationTrades= 22 BaselineR=  -11.33 FilteredR=   -6.57 DeltaR=    4.76
+
+YEAR 2024
+------------------------------------------------------------------------------------------------------------------------
+Selected=TIMEOUT_5    TrainTrades= 53 TrainR=  -11.15 ValidationTrades= 26 BaselineR=   -3.52 FilteredR=    2.82 DeltaR=    6.34
+
+YEAR 2025
+------------------------------------------------------------------------------------------------------------------------
+Selected=TIMEOUT_5    TrainTrades= 79 TrainR=   -8.32 ValidationTrades= 16 BaselineR=   -4.52 FilteredR=   -7.32 DeltaR=   -2.80
+
+YEAR 2026
+------------------------------------------------------------------------------------------------------------------------
+Selected=TIMEOUT_5    TrainTrades= 95 TrainR=  -15.65 ValidationTrades= 11 BaselineR=    1.70 FilteredR=    2.59 DeltaR=    0.89
+
+========================================================================================================================
+WALK-FORWARD SUMMARY
+========================================================================================================================
+Eligible years: 4
+Baseline validation total: -17.67R
+Filtered validation total: -8.48R
+Total DeltaR: 9.19R
+Improved years: 3/4
+RESEARCH RULE: PROMISING — executable time-to-0.5R timeout improved at least 2 validation years. DO NOT DEPLOY YET; continue research.
+
+========================================================================================================================
+SETUP × TREND × TIME-TO-0.5R BUCKET
+========================================================================================================================
+
+LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades= 20 Wins=  1 Losses= 19 Win=  5.00% PF=  0.10 R= -17.62 AvgR= -0.881
+6-10   Trades=  3 Wins=  2 Losses=  1 Win= 66.67% PF=  3.73 R=   2.81 AvgR=  0.937
+11-20  Trades=  1 Wins=  0 Losses=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+21-40  Trades=  2 Wins=  1 Losses=  1 Win= 50.00% PF=  1.93 R=   0.87 AvgR=  0.435
+40+    Trades=  2 Wins=  0 Losses=  2 Win=  0.00% PF=  0.00 R=  -2.11 AvgR= -1.055
+
+LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades= 13 Wins=  3 Losses= 10 Win= 23.08% PF=  0.63 R=  -3.82 AvgR= -0.294
+6-10   Trades=  1 Wins=  0 Losses=  1 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+11-20  Trades=  6 Wins=  2 Losses=  4 Win= 33.33% PF=  0.94 R=  -0.37 AvgR= -0.062
+21-40  Trades=  2 Wins=  2 Losses=  0 Win=100.00% PF=  0.00 R=   3.89 AvgR=  1.945
+
+LONG_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+21-40  Trades=  1 Wins=  1 Losses=  0 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  2 Wins=  1 Losses=  1 Win= 50.00% PF=  1.98 R=   0.88 AvgR=  0.440
+6-10   Trades=  2 Wins=  2 Losses=  0 Win=100.00% PF=  0.00 R=   3.88 AvgR=  1.940
+21-40  Trades=  1 Wins=  1 Losses=  0 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  4 Wins=  1 Losses=  3 Win= 25.00% PF=  0.35 R=  -2.17 AvgR= -0.542
+6-10   Trades=  1 Wins=  0 Losses=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  5 Wins=  1 Losses=  4 Win= 20.00% PF=  0.50 R=  -2.29 AvgR= -0.458
+6-10   Trades=  2 Wins=  2 Losses=  0 Win=100.00% PF=  0.00 R=   3.88 AvgR=  1.940
+11-20  Trades=  2 Wins=  2 Losses=  0 Win=100.00% PF=  0.00 R=   3.89 AvgR=  1.945
+21-40  Trades=  2 Wins=  0 Losses=  2 Win=  0.00% PF=  0.00 R=  -1.27 AvgR= -0.635
+
+SHORT_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  3 Wins=  0 Losses=  3 Win=  0.00% PF=  0.00 R=  -3.17 AvgR= -1.057
+
+SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades= 11 Wins=  1 Losses= 10 Win=  9.09% PF=  0.07 R=  -9.74 AvgR= -0.885
+11-20  Trades=  3 Wins=  2 Losses=  1 Win= 66.67% PF=  1.96 R=   1.37 AvgR=  0.457
+
+SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  9 Wins=  2 Losses=  7 Win= 22.22% PF=  0.50 R=  -3.52 AvgR= -0.391
+6-10   Trades=  4 Wins=  0 Losses=  4 Win=  0.00% PF=  0.00 R=  -4.25 AvgR= -1.062
+11-20  Trades=  1 Wins=  0 Losses=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+21-40  Trades=  2 Wins=  1 Losses=  1 Win= 50.00% PF=  1.87 R=   0.88 AvgR=  0.440
+40+    Trades=  1 Wins=  0 Losses=  1 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+
+========================================================================================================================
+SETUP × TREND × TIME-TO-0.5R COUNTERFACTUAL FILTER
+========================================================================================================================
+
+LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades= 28 Wins=  4 Win= 14.29% PF=  0.31 R= -17.11 AvgR= -0.611
+EXCLUDE <=5      Trades=  8 Wins=  3 Win= 37.50% PF=  1.12 R=   0.51 AvgR=  0.064
+EXCLUDE <=10     Trades=  5 Wins=  1 Win= 20.00% PF=  0.46 R=  -2.30 AvgR= -0.460
+EXCLUDE <=20     Trades=  4 Wins=  1 Win= 25.00% PF=  0.60 R=  -1.24 AvgR= -0.310
+
+LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades= 22 Wins=  7 Win= 31.82% PF=  0.96 R=  -1.35 AvgR= -0.061
+EXCLUDE <=5      Trades=  9 Wins=  4 Win= 44.44% PF=  1.53 R=   2.47 AvgR=  0.274
+EXCLUDE <=10     Trades=  8 Wins=  4 Win= 50.00% PF=  1.94 R=   3.52 AvgR=  0.440
+EXCLUDE <=20     Trades=  2 Wins=  2 Win=100.00% PF=  0.00 R=   3.89 AvgR=  1.945
+
+LONG_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+EXCLUDE <=5      Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+EXCLUDE <=10     Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+EXCLUDE <=20     Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades=  5 Wins=  4 Win= 80.00% PF=  8.16 R=   6.70 AvgR=  1.340
+EXCLUDE <=5      Trades=  3 Wins=  3 Win=100.00% PF=  0.00 R=   5.82 AvgR=  1.940
+EXCLUDE <=10     Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+EXCLUDE <=20     Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades=  5 Wins=  1 Win= 20.00% PF=  0.26 R=  -3.23 AvgR= -0.646
+EXCLUDE <=5      Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades= 11 Wins=  5 Win= 45.45% PF=  1.84 R=   4.21 AvgR=  0.383
+EXCLUDE <=5      Trades=  6 Wins=  4 Win= 66.67% PF=  5.98 R=   6.50 AvgR=  1.083
+EXCLUDE <=10     Trades=  4 Wins=  2 Win= 50.00% PF=  3.02 R=   2.62 AvgR=  0.655
+EXCLUDE <=20     Trades=  2 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.27 AvgR= -0.635
+
+SHORT_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades=  3 Wins=  0 Win=  0.00% PF=  0.00 R=  -3.17 AvgR= -1.057
+
+SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades= 14 Wins=  3 Win= 21.43% PF=  0.25 R=  -8.37 AvgR= -0.598
+EXCLUDE <=5      Trades=  3 Wins=  2 Win= 66.67% PF=  1.96 R=   1.37 AvgR=  0.457
+EXCLUDE <=10     Trades=  3 Wins=  2 Win= 66.67% PF=  1.96 R=   1.37 AvgR=  0.457
+
+SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+NO FILTER        Trades= 17 Wins=  3 Win= 17.65% PF=  0.38 R=  -9.00 AvgR= -0.529
+EXCLUDE <=5      Trades=  8 Wins=  1 Win= 12.50% PF=  0.26 R=  -5.48 AvgR= -0.685
+EXCLUDE <=10     Trades=  4 Wins=  1 Win= 25.00% PF=  0.64 R=  -1.23 AvgR= -0.308
+EXCLUDE <=20     Trades=  3 Wins=  1 Win= 33.33% PF=  0.94 R=  -0.17 AvgR= -0.057
+
+========================================================================================================================
+STOCK × SETUP × TREND × TIME-TO-0.5R
+========================================================================================================================
+
+HDFCBANK.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  6 Wins=  0 Win=  0.00% PF=  0.00 R=  -6.35 AvgR= -1.058
+
+HDFCBANK.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+11-20  Trades=  2 Wins=  0 Win=  0.00% PF=  0.00 R=  -2.13 AvgR= -1.065
+
+HDFCBANK.NS × LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+HDFCBANK.NS × LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+HDFCBANK.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+11-20  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+HDFCBANK.NS × SHORT_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  2 Wins=  0 Win=  0.00% PF=  0.00 R=  -2.12 AvgR= -1.060
+
+HDFCBANK.NS × SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  4 Wins=  1 Win= 25.00% PF=  0.25 R=  -2.32 AvgR= -0.580
+
+HDFCBANK.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+ICICIBANK.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  4 Wins=  0 Win=  0.00% PF=  0.00 R=  -4.20 AvgR= -1.050
+6-10   Trades=  2 Wins=  2 Win=100.00% PF=  0.00 R=   3.88 AvgR=  1.940
+40+    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+ICICIBANK.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  2 Wins=  1 Win= 50.00% PF=  1.77 R=   0.88 AvgR=  0.440
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+ICICIBANK.NS × LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+6-10   Trades=  2 Wins=  2 Win=100.00% PF=  0.00 R=   3.88 AvgR=  1.940
+
+ICICIBANK.NS × LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.00 AvgR=  1.000
+
+ICICIBANK.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+
+ICICIBANK.NS × SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+11-20  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+ICICIBANK.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+6-10   Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+INFY.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  5 Wins=  1 Win= 20.00% PF=  0.47 R=  -2.28 AvgR= -0.456
+6-10   Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.07 AvgR= -1.070
+21-40  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+INFY.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+11-20  Trades=  2 Wins=  1 Win= 50.00% PF=  1.99 R=   0.88 AvgR=  0.440
+
+INFY.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+11-20  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.95 AvgR=  1.950
+21-40  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+INFY.NS × SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  4 Wins=  0 Win=  0.00% PF=  0.00 R=  -4.24 AvgR= -1.060
+11-20  Trades=  2 Wins=  2 Win=100.00% PF=  0.00 R=   2.43 AvgR=  1.215
+
+INFY.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  3 Wins=  1 Win= 33.33% PF=  0.96 R=  -0.16 AvgR= -0.053
+
+RELIANCE.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -0.58 AvgR= -0.580
+40+    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+
+RELIANCE.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  2 Wins=  0 Win=  0.00% PF=  0.00 R=  -2.11 AvgR= -1.055
+11-20  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+RELIANCE.NS × LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+6-10   Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+RELIANCE.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+6-10   Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+RELIANCE.NS × SHORT_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+
+RELIANCE.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+21-40  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+SBIN.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  3 Wins=  0 Win=  0.00% PF=  0.00 R=  -3.16 AvgR= -1.053
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.93 AvgR=  1.930
+
+SBIN.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  2 Wins=  0 Win=  0.00% PF=  0.00 R=  -2.10 AvgR= -1.050
+6-10   Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.95 AvgR=  1.950
+
+SBIN.NS × LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+SBIN.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+21-40  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -0.21 AvgR= -0.210
+
+SBIN.NS × SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+SBIN.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+6-10   Trades=  3 Wins=  0 Win=  0.00% PF=  0.00 R=  -3.19 AvgR= -1.063
+40+    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+
+TCS.NS × LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+11-20  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+TCS.NS × LONG_CONTINUATION × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  6 Wins=  1 Win= 16.67% PF=  0.50 R=  -2.43 AvgR= -0.405
+11-20  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+TCS.NS × LONG_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+21-40  Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+TCS.NS × LONG_REVERSAL × BULLISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+TCS.NS × LONG_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+TCS.NS × SHORT_CONTINUATION × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  4 Wins=  1 Win= 25.00% PF=  0.69 R=  -1.24 AvgR= -0.310
+6-10   Trades=  1 Wins=  1 Win=100.00% PF=  0.00 R=   1.94 AvgR=  1.940
+
+TCS.NS × SHORT_REVERSAL × BEARISH
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+TCS.NS × SHORT_REVERSAL × NEUTRAL
+------------------------------------------------------------------------------------------------------------------------
+0-5    Trades=  3 Wins=  1 Win= 33.33% PF=  0.79 R=  -0.18 AvgR= -0.060
+11-20  Trades=  1 Wins=  0 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+
+========================================================================================================================
+EARLY POST-ENTRY FAILURE DIAGNOSTIC
+========================================================================================================================
+
+IMMEDIATE_FAILURE = adverse movement >= 0.5R within first 2 bars after entry
+
+------------------------------------------------------------------------------------------------------------------------
+OVERALL
+------------------------------------------------------------------------------------------------------------------------
+IMMEDIATE_FAILURE             Trades=  4 Win=  0.00% PF=  0.00 R=  -4.23 AvgR= -1.058
+NO_IMMEDIATE_FAILURE          Trades=102 Win= 27.45% PF=  0.67 R= -25.15 AvgR= -0.247
+
+------------------------------------------------------------------------------------------------------------------------
+SETUP × EARLY FAILURE
+------------------------------------------------------------------------------------------------------------------------
+LONG_CONTINUATION         NO_IMMEDIATE_FAILURETrades= 46 Win= 23.91% PF=  0.60 R= -14.23 AvgR= -0.309
+SHORT_REVERSAL            NO_IMMEDIATE_FAILURETrades= 31 Win= 19.35% PF=  0.34 R= -17.37 AvgR= -0.560
+SHORT_CONTINUATION        NO_IMMEDIATE_FAILURETrades= 14 Win= 35.71% PF=  1.12 R=   1.04 AvgR=  0.074
+LONG_REVERSAL             NO_IMMEDIATE_FAILURETrades= 11 Win= 54.55% PF=  2.02 R=   5.41 AvgR=  0.492
+LONG_CONTINUATION         IMMEDIATE_FAILURETrades=  4 Win=  0.00% PF=  0.00 R=  -4.23 AvgR= -1.058
+
+------------------------------------------------------------------------------------------------------------------------
+ENTRY TREND × EARLY FAILURE
+------------------------------------------------------------------------------------------------------------------------
+NEUTRAL                   NO_IMMEDIATE_FAILURETrades= 45 Win= 24.44% PF=  0.58 R= -14.63 AvgR= -0.325
+BULLISH                   NO_IMMEDIATE_FAILURETrades= 31 Win= 25.81% PF=  0.65 R=  -8.30 AvgR= -0.268
+BEARISH                   NO_IMMEDIATE_FAILURETrades= 26 Win= 34.62% PF=  0.87 R=  -2.22 AvgR= -0.085
+BULLISH                   IMMEDIATE_FAILURETrades=  2 Win=  0.00% PF=  0.00 R=  -2.11 AvgR= -1.055
+NEUTRAL                   IMMEDIATE_FAILURETrades=  2 Win=  0.00% PF=  0.00 R=  -2.12 AvgR= -1.060
+
+------------------------------------------------------------------------------------------------------------------------
+YEAR × EARLY FAILURE
+------------------------------------------------------------------------------------------------------------------------
+2021       IMMEDIATE_FAILURE  Trades=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+2021       NO_IMMEDIATE_FAILURETrades=  8 Win= 25.00% PF=  0.61 R=  -2.45 AvgR= -0.306
+2022       IMMEDIATE_FAILURE  Trades=  1 Win=  0.00% PF=  0.00 R=  -1.05 AvgR= -1.050
+2022       NO_IMMEDIATE_FAILURETrades= 21 Win= 23.81% PF=  0.58 R=  -7.15 AvgR= -0.340
+2023       NO_IMMEDIATE_FAILURETrades= 22 Win= 18.18% PF=  0.41 R= -11.33 AvgR= -0.515
+2024       IMMEDIATE_FAILURE  Trades=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+2024       NO_IMMEDIATE_FAILURETrades= 25 Win= 32.00% PF=  0.86 R=  -2.46 AvgR= -0.098
+2025       IMMEDIATE_FAILURE  Trades=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+2025       NO_IMMEDIATE_FAILURETrades= 15 Win= 26.67% PF=  0.69 R=  -3.46 AvgR= -0.231
+2026       NO_IMMEDIATE_FAILURETrades= 11 Win= 45.45% PF=  1.38 R=   1.70 AvgR=  0.155
+
+------------------------------------------------------------------------------------------------------------------------
+TRAINING VS HOLDOUT
+------------------------------------------------------------------------------------------------------------------------
+
+TRAINING < 2025
+IMMEDIATE_FAILURE             Trades=  3 Win=  0.00% PF=  0.00 R=  -3.17 AvgR= -1.057
+NO_IMMEDIATE_FAILURE          Trades= 76 Win= 25.00% PF=  0.61 R= -23.39 AvgR= -0.308
+
+HOLDOUT >= 2025
+IMMEDIATE_FAILURE             Trades=  1 Win=  0.00% PF=  0.00 R=  -1.06 AvgR= -1.060
+NO_IMMEDIATE_FAILURE          Trades= 26 Win= 34.62% PF=  0.89 R=  -1.76 AvgR= -0.068
+
+------------------------------------------------------------------------------------------------------------------------
+EARLY FAILURE REMOVAL — RESEARCH ONLY
+------------------------------------------------------------------------------------------------------------------------
+
+BASELINE
+ALL TRADES                    Trades=106 Win= 26.42% PF=  0.63 R= -29.38 AvgR= -0.277
+
+REMOVE IMMEDIATE_FAILURE
+REMAINING TRADES              Trades=102 Win= 27.45% PF=  0.67 R= -25.15 AvgR= -0.247
+
+Trades removed: 4
+
+======================================================================================================================================================
+SETUP × TREND × EARLY ADVERSE-R
+======================================================================================================================================================
+
+Research question: Does early adverse movement remain informative after controlling for SETUP + TREND?
+
+Flagged = trade whose cumulative maximum adverse movement reached the threshold within the specified number of bars.
+
+======================================================================================================================================================
+LONG_CONTINUATION × BULLISH
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     9        1         8          19       3        15.79    0.35     -10.61     -0.558   
+2        0.35     4        0         4          24       4        16.67    0.38     -12.89     -0.537   
+2        0.50     2        0         2          26       4        15.38    0.34     -15.00     -0.577   
+3        0.25     12       2         10         16       2        12.50    0.27     -10.43     -0.652   
+3        0.35     7        1         6          21       3        14.29    0.31     -12.70     -0.605   
+3        0.50     4        0         4          24       4        16.67    0.38     -12.88     -0.537   
+5        0.25     14       2         12         14       2        14.29    0.32     -8.33      -0.595   
+5        0.35     7        1         6          21       3        14.29    0.31     -12.71     -0.605   
+5        0.50     4        0         4          24       4        16.67    0.38     -12.88     -0.537   
+
+======================================================================================================================================================
+LONG_CONTINUATION × NEUTRAL
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     9        2         7          13       5        38.46    1.29     2.20       0.169    
+2        0.35     6        0         6          16       7        43.75    1.59     5.02       0.314    
+2        0.50     2        0         2          20       7        35.00    1.06     0.77       0.038    
+3        0.25     12       2         10         10       5        50.00    2.26     5.40       0.540    
+3        0.35     5        0         5          17       7        41.18    1.41     3.96       0.233    
+3        0.50     3        0         3          19       7        36.84    1.16     1.83       0.096    
+5        0.25     14       3         11         8        4        50.00    2.38     4.50       0.562    
+5        0.35     10       0         10         12       7        58.33    3.15     9.27       0.772    
+5        0.50     7        0         7          15       7        46.67    1.81     6.07       0.405    
+
+======================================================================================================================================================
+LONG_REVERSAL × BEARISH
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     1        1         0          0        0        0.00     0.00     0.00       0.000    
+3        0.25     1        1         0          0        0        0.00     0.00     0.00       0.000    
+5        0.25     1        1         0          0        0        0.00     0.00     0.00       0.000    
+
+======================================================================================================================================================
+LONG_REVERSAL × BULLISH
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     4        3         1          1        1        100.00   0.00     1.94       1.940    
+2        0.35     1        1         0          4        3        75.00    5.49     4.76       1.190    
+3        0.25     4        3         1          1        1        100.00   0.00     1.94       1.940    
+3        0.35     1        1         0          4        3        75.00    5.49     4.76       1.190    
+5        0.25     4        3         1          1        1        100.00   0.00     1.94       1.940    
+5        0.35     2        2         0          3        2        66.67    3.66     2.82       0.940    
+
+======================================================================================================================================================
+LONG_REVERSAL × NEUTRAL
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+5        0.25     1        0         1          4        1        25.00    0.32     -2.17      -0.542   
+5        0.35     1        0         1          4        1        25.00    0.32     -2.17      -0.542   
+
+======================================================================================================================================================
+SHORT_CONTINUATION × BEARISH
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     4        1         3          7        4        57.14    3.35     5.46       0.780    
+2        0.35     3        1         2          8        4        50.00    2.30     4.40       0.550    
+3        0.25     4        1         3          7        4        57.14    3.35     5.46       0.780    
+3        0.35     3        1         2          8        4        50.00    2.30     4.40       0.550    
+5        0.25     7        1         6          4        4        100.00   0.00     7.78       1.945    
+5        0.35     5        1         4          6        4        66.67    6.13     6.51       1.085    
+5        0.50     2        0         2          9        5        55.56    2.88     6.34       0.704    
+
+======================================================================================================================================================
+SHORT_CONTINUATION × NEUTRAL
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+2        0.35     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+3        0.25     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+3        0.35     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+3        0.50     1        0         1          2        0        0.00     0.00     -2.12      -1.060   
+5        0.25     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+5        0.35     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+5        0.50     2        0         2          1        0        0.00     0.00     -1.06      -1.060   
+
+======================================================================================================================================================
+SHORT_REVERSAL × BEARISH
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     3        0         3          11       3        27.27    0.39     -5.19      -0.472   
+2        0.35     2        0         2          12       3        25.00    0.34     -6.25      -0.521   
+3        0.25     7        0         7          7        3        42.86    0.78     -0.95      -0.136   
+3        0.35     5        0         5          9        3        33.33    0.52     -3.07      -0.341   
+5        0.25     7        0         7          7        3        42.86    0.78     -0.95      -0.136   
+5        0.35     6        0         6          8        3        37.50    0.62     -2.01      -0.251   
+5        0.50     3        0         3          11       3        27.27    0.39     -5.19      -0.472   
+
+======================================================================================================================================================
+SHORT_REVERSAL × NEUTRAL
+======================================================================================================================================================
+WINDOW   THRESH   FLAGGED  FLAG WIN  FLAG LOSS  REMAIN   REM WIN  WIN%     PF       TOTAL R    AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2        0.25     7        0         7          10       3        30.00    0.79     -1.57      -0.157   
+2        0.35     2        0         2          15       3        20.00    0.46     -6.88      -0.459   
+3        0.25     9        0         9          8        3        37.50    1.10     0.55       0.069    
+3        0.35     3        0         3          14       3        21.43    0.50     -5.82      -0.416   
+5        0.25     12       0         12         5        3        60.00    2.76     3.72       0.744    
+5        0.35     5        0         5          12       3        25.00    0.61     -3.71      -0.309   
+5        0.50     2        0         2          15       3        20.00    0.46     -6.88      -0.459   
+
+======================================================================================================================================================
+SETUP × TREND × EARLY ADVERSE-R × TIME VALIDATION
+======================================================================================================================================================
+
+Training = before 2025
+Holdout = 2025 onward
+2026 = calendar year 2026
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+TRAINING < 2025
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     6        17       17.65    0.39     -8.98      -0.528   
+2        0.35     3        20       15.00    0.32     -12.13     -0.607   
+2        0.50     2        21       14.29    0.31     -13.18     -0.628   
+3        0.25     9        14       14.29    0.31     -8.80      -0.629   
+3        0.35     5        18       16.67    0.37     -10.01     -0.556   
+3        0.50     3        20       15.00    0.32     -12.12     -0.606   
+5        0.25     11       12       16.67    0.37     -6.70      -0.558   
+5        0.35     5        18       16.67    0.37     -10.02     -0.557   
+5        0.50     3        20       15.00    0.32     -12.12     -0.606   
+
+LONG_CONTINUATION × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     5        10       50.00    1.84     4.42       0.442    
+2        0.35     3        12       50.00    1.84     5.30       0.442    
+2        0.50     1        14       42.86    1.38     3.19       0.228    
+3        0.25     7        8        62.50    3.08     6.55       0.819    
+3        0.35     3        12       50.00    1.84     5.30       0.442    
+3        0.50     2        13       46.15    1.57     4.24       0.326    
+5        0.25     9        6        66.67    3.69     5.65       0.942    
+5        0.35     6        9        66.67    3.68     8.48       0.942    
+5        0.50     5        10       60.00    2.75     7.41       0.741    
+
+LONG_REVERSAL × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     1        0        0.00     0.00     0.00       0.000    
+2        0.35     0        1        100.00   0.00     1.94       1.940    
+2        0.50     0        1        100.00   0.00     1.94       1.940    
+3        0.25     1        0        0.00     0.00     0.00       0.000    
+3        0.35     0        1        100.00   0.00     1.94       1.940    
+3        0.50     0        1        100.00   0.00     1.94       1.940    
+5        0.25     1        0        0.00     0.00     0.00       0.000    
+5        0.35     0        1        100.00   0.00     1.94       1.940    
+5        0.50     0        1        100.00   0.00     1.94       1.940    
+
+LONG_REVERSAL × BULLISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     4        1        100.00   0.00     1.94       1.940    
+2        0.35     1        4        75.00    5.49     4.76       1.190    
+2        0.50     0        5        80.00    7.32     6.70       1.340    
+3        0.25     4        1        100.00   0.00     1.94       1.940    
+3        0.35     1        4        75.00    5.49     4.76       1.190    
+3        0.50     0        5        80.00    7.32     6.70       1.340    
+5        0.25     4        1        100.00   0.00     1.94       1.940    
+5        0.35     2        3        66.67    3.66     2.82       0.940    
+5        0.50     0        5        80.00    7.32     6.70       1.340    
+
+LONG_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        2        0.00     0.00     -2.11      -1.055   
+2        0.35     0        2        0.00     0.00     -2.11      -1.055   
+2        0.50     0        2        0.00     0.00     -2.11      -1.055   
+3        0.25     0        2        0.00     0.00     -2.11      -1.055   
+3        0.35     0        2        0.00     0.00     -2.11      -1.055   
+3        0.50     0        2        0.00     0.00     -2.11      -1.055   
+5        0.25     0        2        0.00     0.00     -2.11      -1.055   
+5        0.35     0        2        0.00     0.00     -2.11      -1.055   
+5        0.50     0        2        0.00     0.00     -2.11      -1.055   
+
+SHORT_CONTINUATION × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     3        4        50.00    1.84     1.78       0.445    
+2        0.35     2        5        40.00    1.23     0.72       0.144    
+2        0.50     0        7        42.86    1.38     1.59       0.227    
+3        0.25     3        4        50.00    1.84     1.78       0.445    
+3        0.35     2        5        40.00    1.23     0.72       0.144    
+3        0.50     0        7        42.86    1.38     1.59       0.227    
+5        0.25     5        2        100.00   0.00     3.89       1.945    
+5        0.35     4        3        66.67    3.67     2.83       0.943    
+5        0.50     2        5        60.00    2.76     3.72       0.744    
+
+SHORT_CONTINUATION × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     2        0        0.00     0.00     0.00       0.000    
+2        0.35     2        0        0.00     0.00     0.00       0.000    
+2        0.50     0        2        0.00     0.00     -2.11      -1.055   
+3        0.25     2        0        0.00     0.00     0.00       0.000    
+3        0.35     2        0        0.00     0.00     0.00       0.000    
+3        0.50     1        1        0.00     0.00     -1.06      -1.060   
+5        0.25     2        0        0.00     0.00     0.00       0.000    
+5        0.35     2        0        0.00     0.00     0.00       0.000    
+5        0.50     2        0        0.00     0.00     0.00       0.000    
+
+SHORT_REVERSAL × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     3        6        0.00     0.00     -6.35      -1.058   
+2        0.35     2        7        0.00     0.00     -7.41      -1.059   
+2        0.50     0        9        0.00     0.00     -9.53      -1.059   
+3        0.25     6        3        0.00     0.00     -3.17      -1.057   
+3        0.35     5        4        0.00     0.00     -4.23      -1.058   
+3        0.50     0        9        0.00     0.00     -9.53      -1.059   
+5        0.25     5        4        0.00     0.00     -4.23      -1.058   
+5        0.35     5        4        0.00     0.00     -4.23      -1.058   
+5        0.50     2        7        0.00     0.00     -7.41      -1.059   
+
+SHORT_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     7        8        25.00    0.61     -2.45      -0.306   
+2        0.35     2        13       15.38    0.33     -7.76      -0.597   
+2        0.50     0        15       13.33    0.28     -9.88      -0.659   
+3        0.25     8        7        28.57    0.74     -1.39      -0.199   
+3        0.35     2        13       15.38    0.33     -7.76      -0.597   
+3        0.50     0        15       13.33    0.28     -9.88      -0.659   
+5        0.25     11       4        50.00    1.84     1.78       0.445    
+5        0.35     4        11       18.18    0.41     -5.65      -0.514   
+5        0.50     1        14       14.29    0.31     -8.82      -0.630   
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+HOLDOUT >= 2025
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     3        2        0.00     0.00     -1.63      -0.815   
+2        0.35     1        4        25.00    0.72     -0.76      -0.190   
+2        0.50     0        5        20.00    0.51     -1.82      -0.364   
+3        0.25     3        2        0.00     0.00     -1.63      -0.815   
+3        0.35     2        3        0.00     0.00     -2.69      -0.897   
+3        0.50     1        4        25.00    0.72     -0.76      -0.190   
+5        0.25     3        2        0.00     0.00     -1.63      -0.815   
+5        0.35     2        3        0.00     0.00     -2.69      -0.897   
+5        0.50     1        4        25.00    0.72     -0.76      -0.190   
+
+LONG_CONTINUATION × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     4        3        0.00     0.00     -2.22      -0.740   
+2        0.35     3        4        25.00    0.87     -0.28      -0.070   
+2        0.50     1        6        16.67    0.44     -2.42      -0.403   
+3        0.25     5        2        0.00     0.00     -1.15      -0.575   
+3        0.35     2        5        20.00    0.59     -1.34      -0.268   
+3        0.50     1        6        16.67    0.45     -2.41      -0.402   
+5        0.25     5        2        0.00     0.00     -1.15      -0.575   
+5        0.35     4        3        33.33    1.69     0.79       0.263    
+5        0.50     2        5        20.00    0.59     -1.34      -0.268   
+
+LONG_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        3        33.33    0.47     -1.12      -0.373   
+2        0.35     0        3        33.33    0.47     -1.12      -0.373   
+2        0.50     0        3        33.33    0.47     -1.12      -0.373   
+3        0.25     0        3        33.33    0.47     -1.12      -0.373   
+3        0.35     0        3        33.33    0.47     -1.12      -0.373   
+3        0.50     0        3        33.33    0.47     -1.12      -0.373   
+5        0.25     1        2        50.00    0.94     -0.06      -0.030   
+5        0.35     1        2        50.00    0.94     -0.06      -0.030   
+5        0.50     0        3        33.33    0.47     -1.12      -0.373   
+
+SHORT_CONTINUATION × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     1        3        66.67    18.52    3.68       1.227    
+2        0.35     1        3        66.67    18.52    3.68       1.227    
+2        0.50     0        4        50.00    3.06     2.62       0.655    
+3        0.25     1        3        66.67    18.52    3.68       1.227    
+3        0.35     1        3        66.67    18.52    3.68       1.227    
+3        0.50     0        4        50.00    3.06     2.62       0.655    
+5        0.25     2        2        100.00   0.00     3.89       1.945    
+5        0.35     1        3        66.67    18.52    3.68       1.227    
+5        0.50     0        4        50.00    3.06     2.62       0.655    
+
+SHORT_CONTINUATION × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        1        0.00     0.00     -1.06      -1.060   
+2        0.35     0        1        0.00     0.00     -1.06      -1.060   
+2        0.50     0        1        0.00     0.00     -1.06      -1.060   
+3        0.25     0        1        0.00     0.00     -1.06      -1.060   
+3        0.35     0        1        0.00     0.00     -1.06      -1.060   
+3        0.50     0        1        0.00     0.00     -1.06      -1.060   
+5        0.25     0        1        0.00     0.00     -1.06      -1.060   
+5        0.35     0        1        0.00     0.00     -1.06      -1.060   
+5        0.50     0        1        0.00     0.00     -1.06      -1.060   
+
+SHORT_REVERSAL × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        5        60.00    1.55     1.16       0.232    
+2        0.35     0        5        60.00    1.55     1.16       0.232    
+2        0.50     0        5        60.00    1.55     1.16       0.232    
+3        0.25     1        4        75.00    3.09     2.22       0.555    
+3        0.35     0        5        60.00    1.55     1.16       0.232    
+3        0.50     0        5        60.00    1.55     1.16       0.232    
+5        0.25     2        3        100.00   0.00     3.28       1.093    
+5        0.35     1        4        75.00    3.09     2.22       0.555    
+5        0.50     1        4        75.00    3.09     2.22       0.555    
+
+SHORT_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        2        50.00    1.83     0.88       0.440    
+2        0.35     0        2        50.00    1.83     0.88       0.440    
+2        0.50     0        2        50.00    1.83     0.88       0.440    
+3        0.25     1        1        100.00   0.00     1.94       1.940    
+3        0.35     1        1        100.00   0.00     1.94       1.940    
+3        0.50     0        2        50.00    1.83     0.88       0.440    
+5        0.25     1        1        100.00   0.00     1.94       1.940    
+5        0.35     1        1        100.00   0.00     1.94       1.940    
+5        0.50     1        1        100.00   0.00     1.94       1.940    
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2026
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        1        0.00     0.00     -1.05      -1.050   
+2        0.35     0        1        0.00     0.00     -1.05      -1.050   
+2        0.50     0        1        0.00     0.00     -1.05      -1.050   
+3        0.25     0        1        0.00     0.00     -1.05      -1.050   
+3        0.35     0        1        0.00     0.00     -1.05      -1.050   
+3        0.50     0        1        0.00     0.00     -1.05      -1.050   
+5        0.25     0        1        0.00     0.00     -1.05      -1.050   
+5        0.35     0        1        0.00     0.00     -1.05      -1.050   
+5        0.50     0        1        0.00     0.00     -1.05      -1.050   
+
+LONG_CONTINUATION × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        1        0.00     0.00     -0.09      -0.090   
+2        0.35     0        1        0.00     0.00     -0.09      -0.090   
+2        0.50     0        1        0.00     0.00     -0.09      -0.090   
+3        0.25     0        1        0.00     0.00     -0.09      -0.090   
+3        0.35     0        1        0.00     0.00     -0.09      -0.090   
+3        0.50     0        1        0.00     0.00     -0.09      -0.090   
+5        0.25     0        1        0.00     0.00     -0.09      -0.090   
+5        0.35     0        1        0.00     0.00     -0.09      -0.090   
+5        0.50     0        1        0.00     0.00     -0.09      -0.090   
+
+LONG_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        2        50.00    0.94     -0.06      -0.030   
+2        0.35     0        2        50.00    0.94     -0.06      -0.030   
+2        0.50     0        2        50.00    0.94     -0.06      -0.030   
+3        0.25     0        2        50.00    0.94     -0.06      -0.030   
+3        0.35     0        2        50.00    0.94     -0.06      -0.030   
+3        0.50     0        2        50.00    0.94     -0.06      -0.030   
+5        0.25     1        1        100.00   0.00     1.00       1.000    
+5        0.35     1        1        100.00   0.00     1.00       1.000    
+5        0.50     0        2        50.00    0.94     -0.06      -0.030   
+
+SHORT_CONTINUATION × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     1        2        50.00    9.29     1.74       0.870    
+2        0.35     1        2        50.00    9.29     1.74       0.870    
+2        0.50     0        3        33.33    1.54     0.68       0.227    
+3        0.25     1        2        50.00    9.29     1.74       0.870    
+3        0.35     1        2        50.00    9.29     1.74       0.870    
+3        0.50     0        3        33.33    1.54     0.68       0.227    
+5        0.25     2        1        100.00   0.00     1.95       1.950    
+5        0.35     1        2        50.00    9.29     1.74       0.870    
+5        0.50     0        3        33.33    1.54     0.68       0.227    
+
+SHORT_REVERSAL × BEARISH
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        3        66.67    1.26     0.28       0.093    
+2        0.35     0        3        66.67    1.26     0.28       0.093    
+2        0.50     0        3        66.67    1.26     0.28       0.093    
+3        0.25     0        3        66.67    1.26     0.28       0.093    
+3        0.35     0        3        66.67    1.26     0.28       0.093    
+3        0.50     0        3        66.67    1.26     0.28       0.093    
+5        0.25     1        2        100.00   0.00     1.34       0.670    
+5        0.35     0        3        66.67    1.26     0.28       0.093    
+5        0.50     0        3        66.67    1.26     0.28       0.093    
+
+SHORT_REVERSAL × NEUTRAL
+WINDOW   THRESH   FLAGGED  REMAIN   WIN%     PF       TOTAL R    AVG R    
+----------------------------------------------------------------------------------------------------
+2        0.25     0        1        100.00   0.00     1.94       1.940    
+2        0.35     0        1        100.00   0.00     1.94       1.940    
+2        0.50     0        1        100.00   0.00     1.94       1.940    
+3        0.25     0        1        100.00   0.00     1.94       1.940    
+3        0.35     0        1        100.00   0.00     1.94       1.940    
+3        0.50     0        1        100.00   0.00     1.94       1.940    
+5        0.25     0        1        100.00   0.00     1.94       1.940    
+5        0.35     0        1        100.00   0.00     1.94       1.940    
+5        0.50     0        1        100.00   0.00     1.94       1.940    
+
+======================================================================================================================================================
+EARLY ADVERSE-R WALK-FORWARD VALIDATION
+======================================================================================================================================================
+
+IMPORTANT: each validation year is evaluated using parameters selected ONLY from prior years.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+TRAINING: < 2024 → VALIDATION: 2024
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Training trades   : 53
+Validation trades : 26
+
+TRAINING SELECTION
+Selected filter   : 4B_0.25R
+Training result   : Trades=22 Win=31.82% PF=0.86 R=-2.24
+Training baseline : Trades=53 Win=20.75% PF=0.48 R=-23.04
+
+UNSEEN VALIDATION
+Baseline          : Trades=26 Win=30.77% PF=0.82 R=-3.52
+Selected filter   : Trades=13 Win=38.46% PF=1.15 R=1.24
+Validation ΔR     : 4.76
+Validation verdict: IMPROVED
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+TRAINING: < 2025 → VALIDATION: 2025
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Training trades   : 79
+Validation trades : 16
+
+TRAINING SELECTION
+Selected filter   : 5B_0.25R
+Training result   : Trades=31 Win=35.48% PF=1.01 R=0.22
+Training baseline : Trades=79 Win=24.05% PF=0.58 R=-26.56
+
+UNSEEN VALIDATION
+Baseline          : Trades=16 Win=25.00% PF=0.63 R=-4.52
+Selected filter   : Trades=6 Win=33.33% PF=1.03 R=0.12
+Validation ΔR     : 4.64
+Validation verdict: IMPROVED
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+TRAINING: < 2026 → VALIDATION: 2026
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Training trades   : 95
+Validation trades : 11
+
+TRAINING SELECTION
+Selected filter   : 5B_0.25R
+Training result   : Trades=37 Win=35.14% PF=1.01 R=0.34
+Training baseline : Trades=95 Win=24.21% PF=0.59 R=-31.08
+
+UNSEEN VALIDATION
+Baseline          : Trades=11 Win=45.45% PF=1.38 R=1.70
+Selected filter   : Trades=7 Win=71.43% PF=5.46 R=5.09
+Validation ΔR     : 3.39
+Validation verdict: IMPROVED
+
+======================================================================================================================================================
+WALK-FORWARD SUMMARY
+======================================================================================================================================================
+
+2024 | Selected=4B_0.25R     BaselineR=  -3.52 FilteredR=   1.24 ΔR=   4.76
+2025 | Selected=5B_0.25R     BaselineR=  -4.52 FilteredR=   0.12 ΔR=   4.64
+2026 | Selected=5B_0.25R     BaselineR=   1.70 FilteredR=   5.09 ΔR=   3.39
+
+Validation baseline total R : -6.34
+Validation filtered total R : 6.45
+Total validation ΔR         : 12.79
+Years improved              : 3/3
+
+RESEARCH RULE:
+PROMISING — filter improved at least 2 validation years.
+Do NOT deploy yet; continue with setup-level walk-forward validation.
+
+==========================================================================================
+SETUP × TREND EARLY ADVERSE-R WALK-FORWARD VALIDATION
+==========================================================================================
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2024
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+  Training: 14 trades
+  Validation: 9 trades
+  Selected filter: NO_FILTER
+  Training selected: 14 trades | Win 14.29% | PF 0.31 | R -8.81
+  Validation baseline: 9 trades | Win 11.11% | PF 0.23 | R -6.48
+  Validation filtered: 9 trades | Win 11.11% | PF 0.23 | R -6.48
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+LONG_CONTINUATION × NEUTRAL
+  Training: 11 trades
+  Validation: 4 trades
+  Selected filter: NO_FILTER
+  Training selected: 11 trades | Win 36.36% | PF 1.05 | R +0.39
+  Validation baseline: 4 trades | Win 50.00% | PF 1.82 | R +1.74
+  Validation filtered: 4 trades | Win 50.00% | PF 1.82 | R +1.74
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL × NEUTRAL
+  Training: 11 trades
+  Validation: 4 trades
+  Selected filter: NO_FILTER
+  Training selected: 11 trades | Win 18.18% | PF 0.41 | R -5.65
+  Validation baseline: 4 trades | Win 0.00% | PF 0.00 | R -4.23
+  Validation filtered: 4 trades | Win 0.00% | PF 0.00 | R -4.23
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2024 SUMMARY
+  Baseline R: -8.97
+  Filtered R: -8.97
+  ΔR: +0.00
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2025
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+  Training: 23 trades
+  Validation: 4 trades
+  Selected filter: NO_FILTER
+  Training selected: 23 trades | Win 13.04% | PF 0.28 | R -15.29
+  Validation baseline: 4 trades | Win 25.00% | PF 0.71 | R -0.77
+  Validation filtered: 4 trades | Win 25.00% | PF 0.71 | R -0.77
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+LONG_CONTINUATION × NEUTRAL
+  Training: 15 trades
+  Validation: 6 trades
+  Selected filter: NO_FILTER
+  Training selected: 15 trades | Win 40.00% | PF 1.22 | R +2.13
+  Validation baseline: 6 trades | Win 16.67% | PF 0.36 | R -3.39
+  Validation filtered: 6 trades | Win 16.67% | PF 0.36 | R -3.39
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL × NEUTRAL
+  Training: 15 trades
+  Validation: 1 trades
+  Selected filter: NO_FILTER
+  Training selected: 15 trades | Win 13.33% | PF 0.28 | R -9.88
+  Validation baseline: 1 trades | Win 0.00% | PF 0.00 | R -1.06
+  Validation filtered: 1 trades | Win 0.00% | PF 0.00 | R -1.06
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2025 SUMMARY
+  Baseline R: -5.22
+  Filtered R: -5.22
+  ΔR: +0.00
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2026
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION × BULLISH
+  Training: 27 trades
+  Validation: 1 trades
+  Selected filter: NO_FILTER
+  Training selected: 27 trades | Win 14.81% | PF 0.33 | R -16.06
+  Validation baseline: 1 trades | Win 0.00% | PF 0.00 | R -1.05
+  Validation filtered: 1 trades | Win 0.00% | PF 0.00 | R -1.05
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+LONG_CONTINUATION × NEUTRAL
+  Training: 21 trades
+  Validation: 1 trades
+  Selected filter: NO_FILTER
+  Training selected: 21 trades | Win 33.33% | PF 0.92 | R -1.26
+  Validation baseline: 1 trades | Win 0.00% | PF 0.00 | R -0.09
+  Validation filtered: 1 trades | Win 0.00% | PF 0.00 | R -0.09
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL × BEARISH
+  Training: 11 trades
+  Validation: 3 trades
+  Selected filter: NO_FILTER
+  Training selected: 11 trades | Win 9.09% | PF 0.18 | R -8.65
+  Validation baseline: 3 trades | Win 66.67% | PF 1.26 | R +0.28
+  Validation filtered: 3 trades | Win 66.67% | PF 1.26 | R +0.28
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL × NEUTRAL
+  Training: 16 trades
+  Validation: 1 trades
+  Selected filter: NO_FILTER
+  Training selected: 16 trades | Win 12.50% | PF 0.26 | R -10.94
+  Validation baseline: 1 trades | Win 100.00% | PF inf | R +1.94
+  Validation filtered: 1 trades | Win 100.00% | PF inf | R +1.94
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2026 SUMMARY
+  Baseline R: +1.08
+  Filtered R: +1.08
+  ΔR: +0.00
+
+==========================================================================================
+SETUP × TREND WALK-FORWARD SUMMARY
+==========================================================================================
+Eligible group-years: 10
+Baseline validation total R: -13.11
+Filtered validation total R: -13.11
+Total ΔR: +0.00
+Improved group-years: 0/10
+
+LONG_CONTINUATION × BULLISH
+------------------------------------------------------------------------------------------
+Validation years tested: 3
+  2024: train 14 | validation 9 | NO_FILTER | baseline -6.48R | filtered -6.48R | Δ +0.00R
+  2025: train 23 | validation 4 | NO_FILTER | baseline -0.77R | filtered -0.77R | Δ +0.00R
+  2026: train 27 | validation 1 | NO_FILTER | baseline -1.05R | filtered -1.05R | Δ +0.00R
+
+  LC × Bullish baseline total: -8.30R
+  LC × Bullish filtered total: -8.30R
+  LC × Bullish total ΔR: +0.00R
+
+RESEARCH RULE
+NOT ROBUST ENOUGH — setup × trend walk-forward does not yet provide sufficient out-of-sample evidence. Do NOT deploy; continue research.
+
+==========================================================================================
+SETUP EARLY ADVERSE-R WALK-FORWARD VALIDATION
+==========================================================================================
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2024
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION
+  Training: 25 trades
+  Validation: 13 trades
+  Selected filter: NO_FILTER
+  Training selected: 25 trades | Win 24.00% | PF 0.58 | R -8.42
+  Validation baseline: 13 trades | Win 23.08% | PF 0.55 | R -4.74
+  Validation filtered: 13 trades | Win 23.08% | PF 0.55 | R -4.74
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL
+  Training: 20 trades
+  Validation: 4 trades
+  Selected filter: NO_FILTER
+  Training selected: 20 trades | Win 10.00% | PF 0.20 | R -15.18
+  Validation baseline: 4 trades | Win 0.00% | PF 0.00 | R -4.23
+  Validation filtered: 4 trades | Win 0.00% | PF 0.00 | R -4.23
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2024 SUMMARY
+  Baseline R: -8.97
+  Filtered R: -8.97
+  ΔR: +0.00
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2025
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION
+  Training: 38 trades
+  Validation: 10 trades
+  Selected filter: NO_FILTER
+  Training selected: 38 trades | Win 23.68% | PF 0.57 | R -13.16
+  Validation baseline: 10 trades | Win 20.00% | PF 0.48 | R -4.16
+  Validation filtered: 10 trades | Win 20.00% | PF 0.48 | R -4.16
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL
+  Training: 24 trades
+  Validation: 3 trades
+  Selected filter: NO_FILTER
+  Training selected: 24 trades | Win 8.33% | PF 0.17 | R -19.41
+  Validation baseline: 3 trades | Win 33.33% | PF 0.92 | R -0.18
+  Validation filtered: 3 trades | Win 33.33% | PF 0.92 | R -0.18
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2025 SUMMARY
+  Baseline R: -4.34
+  Filtered R: -4.34
+  ΔR: +0.00
+
+------------------------------------------------------------------------------------------
+VALIDATION YEAR: 2026
+------------------------------------------------------------------------------------------
+
+LONG_CONTINUATION
+  Training: 48 trades
+  Validation: 2 trades
+  Selected filter: NO_FILTER
+  Training selected: 48 trades | Win 22.92% | PF 0.55 | R -17.32
+  Validation baseline: 2 trades | Win 0.00% | PF 0.00 | R -1.14
+  Validation filtered: 2 trades | Win 0.00% | PF 0.00 | R -1.14
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_CONTINUATION
+  Training: 11 trades
+  Validation: 3 trades
+  Selected filter: NO_FILTER
+  Training selected: 11 trades | Win 36.36% | PF 1.05 | R +0.36
+  Validation baseline: 3 trades | Win 33.33% | PF 1.54 | R +0.68
+  Validation filtered: 3 trades | Win 33.33% | PF 1.54 | R +0.68
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+SHORT_REVERSAL
+  Training: 27 trades
+  Validation: 4 trades
+  Selected filter: NO_FILTER
+  Training selected: 27 trades | Win 11.11% | PF 0.23 | R -19.59
+  Validation baseline: 4 trades | Win 75.00% | PF 3.09 | R +2.22
+  Validation filtered: 4 trades | Win 75.00% | PF 3.09 | R +2.22
+  ΔR: +0.00 | Verdict: NOT IMPROVED
+
+YEAR 2026 SUMMARY
+  Baseline R: +1.76
+  Filtered R: +1.76
+  ΔR: +0.00
+
+==========================================================================================
+SETUP WALK-FORWARD SUMMARY
+==========================================================================================
+Eligible setup-years: 7
+Validation baseline total R : -11.55
+Validation filtered total R : -11.55
+Total validation ΔR         : 0.00
+Improved setup-years        : 0/7
+
+SETUP-LEVEL RESULTS
+LONG_CONTINUATION      Years=3  BaselineR= -10.04 FilteredR= -10.04 ΔR=   0.00 Improved=0/3
+SHORT_CONTINUATION     Years=1  BaselineR=   0.68 FilteredR=   0.68 ΔR=   0.00 Improved=0/1
+SHORT_REVERSAL         Years=3  BaselineR=  -2.19 FilteredR=  -2.19 ΔR=   0.00 Improved=0/3
+
+RESEARCH RULE:
+NOT ROBUST ENOUGH — setup-level walk-forward does not yet provide sufficient out-of-sample evidence.
+Do NOT modify engine logic.
+
+======================================================================================================================================================
+EARLY ADVERSE-R SENSITIVITY / COUNTERFACTUAL FILTER
+======================================================================================================================================================
+
+Interpretation: exclude a trade if cumulative maximum adverse movement reaches the threshold within the first N bars.
+
+This is research-only. No engine logic or historical trade execution has been changed.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OVERALL SENSITIVITY GRID
+------------------------------------------------------------------------------------------------------------------------------------------------------
+WINDOW  THRESH   FLAGGED  FLAGGED WIN  FLAGGED LOSS  WIN REMOVED  LOSS REMOVED  REMAIN   WIN%    PF      TOTAL R   AVG R    
+------------------------------------------------------------------------------------------------------------------------------------------------------
+1       0.25     24       6            18            6            18            82       26.83   0.64    -21.93    -0.267   
+1       0.35     8        1            7             1            7             98       27.55   0.67    -23.90    -0.244   
+1       0.50     1        0            1             0            1             105      26.67   0.64    -28.32    -0.270   
+1       0.65     1        0            1             0            1             105      26.67   0.64    -28.32    -0.270   
+1       0.75     1        0            1             0            1             105      26.67   0.64    -28.32    -0.270   
+2       0.25     39       8            31            8            31            67       29.85   0.75    -12.06    -0.180   
+2       0.35     20       2            18            2            18            86       30.23   0.77    -14.19    -0.165   
+2       0.50     4        0            4             0            4             102      27.45   0.67    -25.15    -0.247   
+2       0.65     4        0            4             0            4             102      27.45   0.67    -25.15    -0.247   
+2       0.75     1        0            1             0            1             105      26.67   0.64    -28.32    -0.270   
+3       0.25     51       9            42            9            42            55       34.55   0.94    -2.32     -0.042   
+3       0.35     26       3            23            3            23            80       31.25   0.81    -10.82    -0.135   
+3       0.50     8        0            8             0            8             98       28.57   0.71    -20.92    -0.213   
+3       0.65     4        0            4             0            4             102      27.45   0.67    -25.16    -0.247   
+3       0.75     3        0            3             0            3             103      27.18   0.66    -26.22    -0.255   
+4       0.25     58       9            49            9            49            48       39.58   1.14    4.21      0.088    
+4       0.35     35       4            31            4            31            71       33.80   0.91    -4.29     -0.060   
+4       0.50     15       0            15            0            15            91       30.77   0.79    -13.49    -0.148   
+4       0.65     7        0            7             0            7             99       28.28   0.70    -21.97    -0.222   
+4       0.75     7        0            7             0            7             99       28.28   0.70    -21.97    -0.222   
+5       0.25     62       10           52            10           52            44       40.91   1.21    5.43      0.123    
+5       0.35     38       4            34            4            34            68       35.29   0.97    -1.12     -0.016   
+5       0.50     20       0            20            0            20            86       32.56   0.86    -8.19     -0.095   
+5       0.65     9        0            9             0            9             97       28.87   0.72    -19.86    -0.205   
+5       0.75     8        0            8             0            8             98       28.57   0.71    -20.92    -0.213   
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+BEST COUNTERFACTUAL RESULTS BY TOTAL R
+------------------------------------------------------------------------------------------------------------------------------------------------------
+Window=5 Threshold=0.25R Flagged=62 Remaining=44 Win=40.91% PF=1.21 R=5.43 AvgR=0.123
+Window=4 Threshold=0.25R Flagged=58 Remaining=48 Win=39.58% PF=1.14 R=4.21 AvgR=0.088
+Window=5 Threshold=0.35R Flagged=38 Remaining=68 Win=35.29% PF=0.97 R=-1.12 AvgR=-0.016
+Window=3 Threshold=0.25R Flagged=51 Remaining=55 Win=34.55% PF=0.94 R=-2.32 AvgR=-0.042
+Window=4 Threshold=0.35R Flagged=35 Remaining=71 Win=33.80% PF=0.91 R=-4.29 AvgR=-0.060
+Window=5 Threshold=0.50R Flagged=20 Remaining=86 Win=32.56% PF=0.86 R=-8.19 AvgR=-0.095
+Window=3 Threshold=0.35R Flagged=26 Remaining=80 Win=31.25% PF=0.81 R=-10.82 AvgR=-0.135
+Window=2 Threshold=0.25R Flagged=39 Remaining=67 Win=29.85% PF=0.75 R=-12.06 AvgR=-0.180
+Window=4 Threshold=0.50R Flagged=15 Remaining=91 Win=30.77% PF=0.79 R=-13.49 AvgR=-0.148
+Window=2 Threshold=0.35R Flagged=20 Remaining=86 Win=30.23% PF=0.77 R=-14.19 AvgR=-0.165
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+TRAINING / HOLDOUT / 2026 VALIDATION
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TRAINING
+WINDOW  THRESH   FLAGGED  REMAIN   WIN%    PF      TOTAL R   AVG R    
+------------------------------------------------------------------------------------------
+1       0.25     19       60       23.33   0.56    -21.43    -0.357   
+1       0.35     5        74       24.32   0.59    -24.28    -0.328   
+1       0.50     0        79       24.05   0.58    -26.56    -0.336   
+1       0.65     0        79       24.05   0.58    -26.56    -0.336   
+1       0.75     0        79       24.05   0.58    -26.56    -0.336   
+2       0.25     31       48       27.08   0.68    -11.75    -0.245   
+2       0.35     15       64       26.56   0.66    -16.69    -0.261   
+2       0.50     3        76       25.00   0.61    -23.39    -0.308   
+2       0.65     3        76       25.00   0.61    -23.39    -0.308   
+2       0.75     0        79       24.05   0.58    -26.56    -0.336   
+3       0.25     40       39       30.77   0.82    -5.20     -0.133   
+3       0.35     20       59       28.81   0.74    -11.39    -0.193   
+3       0.50     6        73       26.03   0.65    -20.23    -0.277   
+3       0.65     4        75       25.33   0.62    -22.34    -0.298   
+3       0.75     3        76       25.00   0.61    -23.40    -0.308   
+4       0.25     44       35       34.29   0.96    -1.00     -0.029   
+4       0.35     27       52       30.77   0.82    -6.99     -0.134   
+4       0.50     11       68       27.94   0.71    -14.93    -0.220   
+4       0.65     5        74       25.68   0.63    -21.28    -0.288   
+4       0.75     5        74       25.68   0.63    -21.28    -0.288   
+5       0.25     48       31       35.48   1.01    0.22      0.007    
+5       0.35     28       51       31.37   0.84    -5.94     -0.116   
+5       0.50     15       64       29.69   0.78    -10.69    -0.167   
+5       0.65     6        73       26.03   0.65    -20.23    -0.277   
+5       0.75     5        74       25.68   0.63    -21.29    -0.288   
+
+HOLDOUT
+WINDOW  THRESH   FLAGGED  REMAIN   WIN%    PF      TOTAL R   AVG R    
+------------------------------------------------------------------------------------------
+1       0.25     5        22       36.36   0.96    -0.50     -0.023   
+1       0.35     3        24       37.50   1.03    0.38      0.016    
+1       0.50     1        26       34.62   0.89    -1.76     -0.068   
+1       0.65     1        26       34.62   0.89    -1.76     -0.068   
+1       0.75     1        26       34.62   0.89    -1.76     -0.068   
+2       0.25     8        19       36.84   0.97    -0.31     -0.016   
+2       0.35     5        22       40.91   1.22    2.50      0.114    
+2       0.50     1        26       34.62   0.89    -1.76     -0.068   
+2       0.65     1        26       34.62   0.89    -1.76     -0.068   
+2       0.75     1        26       34.62   0.89    -1.76     -0.068   
+3       0.25     11       16       43.75   1.40    2.88      0.180    
+3       0.35     6        21       38.10   1.05    0.57      0.027    
+3       0.50     2        25       36.00   0.95    -0.69     -0.028   
+3       0.65     0        27       33.33   0.83    -2.82     -0.104   
+3       0.75     0        27       33.33   0.83    -2.82     -0.104   
+4       0.25     14       13       53.85   2.06    5.21      0.401    
+4       0.35     8        19       42.11   1.29    2.70      0.142    
+4       0.50     4        23       39.13   1.11    1.44      0.063    
+4       0.65     2        25       36.00   0.95    -0.69     -0.028   
+4       0.75     2        25       36.00   0.95    -0.69     -0.028   
+5       0.25     14       13       53.85   2.06    5.21      0.401    
+5       0.35     10       17       47.06   1.67    4.82      0.284    
+5       0.50     5        22       40.91   1.22    2.50      0.114    
+5       0.65     3        24       37.50   1.03    0.37      0.015    
+5       0.75     3        24       37.50   1.03    0.37      0.015    
+
+2026
+WINDOW  THRESH   FLAGGED  REMAIN   WIN%    PF      TOTAL R   AVG R    
+------------------------------------------------------------------------------------------
+1       0.25     1        10       50.00   1.80    2.76      0.276    
+1       0.35     0        11       45.45   1.38    1.70      0.155    
+1       0.50     0        11       45.45   1.38    1.70      0.155    
+1       0.65     0        11       45.45   1.38    1.70      0.155    
+1       0.75     0        11       45.45   1.38    1.70      0.155    
+2       0.25     1        10       50.00   1.80    2.76      0.276    
+2       0.35     1        10       50.00   1.80    2.76      0.276    
+2       0.50     0        11       45.45   1.38    1.70      0.155    
+2       0.65     0        11       45.45   1.38    1.70      0.155    
+2       0.75     0        11       45.45   1.38    1.70      0.155    
+3       0.25     1        10       50.00   1.80    2.76      0.276    
+3       0.35     1        10       50.00   1.80    2.76      0.276    
+3       0.50     0        11       45.45   1.38    1.70      0.155    
+3       0.65     0        11       45.45   1.38    1.70      0.155    
+3       0.75     0        11       45.45   1.38    1.70      0.155    
+4       0.25     4        7        71.43   5.46    5.09      0.727    
+4       0.35     1        10       50.00   1.80    2.76      0.276    
+4       0.50     0        11       45.45   1.38    1.70      0.155    
+4       0.65     0        11       45.45   1.38    1.70      0.155    
+4       0.75     0        11       45.45   1.38    1.70      0.155    
+5       0.25     4        7        71.43   5.46    5.09      0.727    
+5       0.35     2        9        55.56   2.59    3.82      0.424    
+5       0.50     0        11       45.45   1.38    1.70      0.155    
+5       0.65     0        11       45.45   1.38    1.70      0.155    
+5       0.75     0        11       45.45   1.38    1.70      0.155    
