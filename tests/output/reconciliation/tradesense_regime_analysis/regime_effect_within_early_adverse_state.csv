@@ -1,0 +1,3 @@
+early_adverse_state,best_regime,best_regime_trades,best_regime_total_r,worst_regime,worst_regime_trades,worst_regime_total_r,regime_spread_r
+TRIGGERED,UPTREND_HIGH_VOL,14,-5.8100000000000005,UPTREND_LOW_VOL,27,-19.62,13.81
+NOT_TRIGGERED,DOWNTREND_HIGH_VOL,10,7.21,UPTREND_LOW_VOL,12,-0.6800000000000008,7.890000000000001

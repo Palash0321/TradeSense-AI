@@ -1,0 +1,6 @@
+stream,description,oos_start_date,file,file_exists,ledger_state,trade_rows,genuine_oos_rows,pre_start_rows,invalid_date_rows,missing_required_fields,missing_hypothesis_fields,status,failure_reasons
+STOCK_HOLDOUT,Frozen stock holdout,2026-09-09,tests\output\tradesense_holdout_trades.csv,False,NOT_CREATED,0,0,0,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,No genuine OOS trade has been persisted yet.
+NIFTY_50_FORWARD,NIFTY 50 genuine forward holdout,2026-09-14,tests\output\index_backtests\nifty50_forward_holdout.csv,False,NOT_CREATED,0,0,0,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,No genuine OOS trade has been persisted yet.
+SENSEX_FORWARD,SENSEX genuine forward holdout,2026-09-14,tests\output\index_backtests\sensex_forward_holdout.csv,False,NOT_CREATED,0,0,0,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,No genuine OOS trade has been persisted yet.
+BANK_NIFTY_FORWARD,BANK NIFTY genuine forward SHORT_CONTINUATION holdout,2026-09-14,tests\output\index_backtests\banknifty_short_continuation_forward_holdout.csv,False,NOT_CREATED,0,0,0,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,No genuine OOS trade has been persisted yet.
+MIDSELECT_FORWARD,NIFTY MIDCAP SELECT genuine forward holdout,2026-09-14,tests\output\index_backtests\midselect_forward_holdout.csv,False,NOT_CREATED,0,0,0,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,No genuine OOS trade has been persisted yet.
