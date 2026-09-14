@@ -1,0 +1,39 @@
+NIFTY 50 LC FIXED EXIT-RULE ROBUSTNESS
+
+FIXED RULE:
++1.5R trigger -> +1R protection -> +2R target
+
+ACCOUNTING:
+NO_TRIGGER trades retain actual R.
+
+Trades: 12
+Baseline R: 2.27
+Triggered CF R: 10.00
+Full CF R: 4.97
+Full Delta R: +2.70
+
+TIME SLICES:
+2021-2023: 7 trades, baseline +7.34R, CF +5.84R, delta -1.50R
+2024-2026: 5 trades, baseline -5.07R, CF -0.87R, delta +4.20R
+2021: 2 trades, baseline +0.82R, CF +0.94R, delta +0.12R
+2022: 2 trades, baseline +0.81R, CF -0.10R, delta -0.91R
+2023: 3 trades, baseline +5.71R, CF +5.00R, delta -0.71R
+2024: 2 trades, baseline -2.17R, CF -0.07R, delta +2.10R
+2025: 2 trades, baseline -2.18R, CF -0.08R, delta +2.10R
+2026: 1 trades, baseline -0.72R, CF -0.72R, delta +0.00R
+
+LATE REVERSALS:
+Late reversal delta: +4.20R
+All other LC delta: -1.50R
+
+LEAVE ONE OUT:
+Positive: 12
+Negative: 0
+Unchanged: 0
+
+ACCOUNTING:
+NO_TRIGGER retention: PASS
+
+Verdict: ROBUSTNESS_NOT_ESTABLISHED
+
+No production/frozen/holdout modifications.

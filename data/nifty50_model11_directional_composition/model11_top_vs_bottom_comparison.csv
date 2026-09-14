@@ -1,0 +1,2 @@
+comparison,observations_top,observations_bottom,positive_pct_delta,negative_pct_delta,avg_t1_return_delta,avg_absolute_return_delta,large_move_rate_delta,avg_probability_delta
+TOP_20_MINUS_BOTTOM_20,224.0,224.0,-0.017857142857142794,0.017857142857142905,0.0005150891847187167,0.0040329704820624025,0.2142857142857143,0.38462332028999646

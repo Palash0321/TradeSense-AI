@@ -1,0 +1,2 @@
+model,target,holdout_start_date,historical_prediction_start,historical_prediction_end,historical_prediction_rows,accidental_holdout_rows_present,ranking_method,top_fraction,bottom_fraction,model_frozen,features_frozen,threshold_optimization_allowed,future_retraining_allowed_before_holdout_evaluation,status
+Model 10,ABS_T1_RETURN_GE_1_PERCENT,2026-09-11,2022-03-07,2026-09-10,1116,0,GLOBAL_TOP_BOTTOM_20_PERCENT,0.2,0.2,True,True,False,False,PASS

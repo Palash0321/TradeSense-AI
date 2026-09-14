@@ -1,0 +1,30 @@
+NIFTY 50 LC EXIT COUNTERFACTUAL REPORT
+
+Ticker: ^NSEI
+LC trades: 12
+Resolved: 7
+Ambiguous: 0
+Unresolved: 0
+No trigger: 5
+
+Baseline R: 2.27
+Counterfactual R: 10.00
+Delta R: +7.73
+
+Improved: 5
+Worsened: 2
+Unchanged: 0
+
+Actual winner baseline R: +9.50
+Actual winner CF R: +8.00
+Actual loser baseline R: -7.23
+Actual loser CF R: +2.00
+
+Verdict: COUNTERFACTUAL_POSITIVE_RESEARCH_SIGNAL
+
+RULE:
+Entry -> actual exit date only -> first +1.5R trigger
+-> later +1R protection / +2R target.
+
+Daily OHLC ambiguity is explicitly marked.
+No production/frozen/holdout files modified.

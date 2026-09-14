@@ -24118,15 +24118,15 @@ def frozen_early_adverse_future_holdout_test(trades):
 
             fieldnames = [
                 "trade_key",
-                "rule_version",
                 "entry_date",
                 "symbol",
                 "direction",
                 "entry_price",
                 "initial_risk",
                 "early_adverse_r_bar_5",
-                "r_multiple",
                 "decision",
+                "r_multiple",
+                "rule_version",
             ]
 
             writer = csv.DictWriter(

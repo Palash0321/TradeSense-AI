@@ -1,0 +1,7 @@
+symbol,stable_start_date,overlap_start,overlap_end,overlap_rows,state_difference_rows,state_match_rows,divergence_percentage,first_divergence,last_divergence,divergence_period_count,longest_divergence_start,longest_divergence_end,longest_divergence_rows,longest_divergence_calendar_days,difference_count_Structure_Bias,difference_count_Structure,difference_count_BOS,difference_count_CHOCH,difference_count_Break_Direction,difference_count_Break_Confirmed,difference_count_Break_Age,difference_count_Setup,difference_count_Setup_Direction,difference_count_Setup_Confidence,difference_count_Setup_Reason,difference_count_Trend,difference_count_Trend_Strength
+RELIANCE.NS,2021-01-01,2021-09-13,2026-09-11,1241,248,993,19.9839,2021-09-13,2023-03-24,14,2021-09-13,2022-04-26,154,226,23,32,6,0,0,0,0,1,1,2,8,42,248
+TCS.NS,2021-01-01,2021-09-13,2026-09-11,1241,270,971,21.7566,2021-09-13,2025-12-04,15,2021-09-13,2022-09-09,248,362,18,18,9,6,4,4,4,2,2,8,13,40,266
+HDFCBANK.NS,2021-01-01,2021-09-13,2026-09-11,1241,234,1007,18.8558,2021-09-13,2026-08-19,20,2021-09-13,2022-06-30,200,291,13,13,4,0,3,0,3,1,1,5,11,32,231
+ICICIBANK.NS,2021-01-01,2021-09-13,2026-09-11,1241,219,1022,17.6471,2021-09-13,2022-11-25,8,2021-09-13,2022-03-10,124,179,14,14,0,0,0,0,0,0,0,0,6,35,219
+INFY.NS,2021-01-01,2021-09-13,2026-09-11,1241,199,1042,16.0355,2021-09-13,2026-04-06,19,2021-09-13,2022-04-28,156,228,22,22,4,1,4,4,4,2,2,8,14,25,193
+SBIN.NS,2021-01-01,2021-09-13,2026-09-11,1241,216,1025,17.4053,2021-09-13,2022-09-13,13,2021-09-13,2022-06-27,197,288,15,34,5,0,5,5,5,1,1,1,6,46,216

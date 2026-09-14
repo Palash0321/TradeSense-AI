@@ -1,0 +1,4 @@
+threshold_r,reached_trades,not_reached_trades,reached_actual_r,not_reached_actual_r,reached_win_rate,not_reached_win_rate,median_bars_to_threshold
+1.25,7,6,3.8899999999999997,-6.139999999999999,57.14285714285714,0.0,65.0
+1.5,5,8,3.8899999999999997,-6.14,60.0,12.5,64.0
+1.75,3,10,5.93,-8.18,100.0,10.0,65.0

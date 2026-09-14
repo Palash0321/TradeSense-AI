@@ -1,0 +1,796 @@
+def main():
+
+    print("=" * 100)
+    print("TRADESENSE STRUCTURAL FAILURE DIAGNOSTIC")
+    print("=" * 100)
+
+    all_trades = []
+
+    for symbol in SYMBOLS:
+
+        print()
+        print("-" * 100)
+        print(f"PROCESSING: {symbol}")
+        print("-" * 100)
+
+        service = BacktestService(
+            symbol=symbol,
+            strategy="tradesense",
+            initial_capital=INITIAL_CAPITAL,
+        )
+
+        signals = service.generate_tradesense_signals()
+
+        backtest_result = service.run_directional_backtest(
+            signals,
+            signal_column="Signal",
+            initial_stop_atr=3.5,
+            target_r=2.0,
+            risk_per_trade=0.01
+        )
+
+        trades = backtest_result.get("trades", [])
+
+        if not isinstance(trades, list):
+            print(
+                f"ERROR: Unexpected trades structure for {symbol}: "
+                f"{type(trades)}"
+            )
+            continue
+
+        print(f"EXECUTED TRADES: {len(trades)}")
+        print(f"ROWS: {len(signals)}")
+
+        if "Signal" in signals.columns:
+
+            print(
+                f"LONG SIGNALS: "
+                f"{(signals['Signal'] == 1).sum()}"
+            )
+
+            print(
+                f"SHORT SIGNALS: "
+                f"{(signals['Signal'] == -1).sum()}"
+            )
+
+            print(
+                f"WAIT: "
+                f"{(signals['Signal'] == 0).sum()}"
+            )
+
+        print(f"TRADES: {len(trades)}")
+
+
+        # ------------------------------------------------------------------
+        # MAP EACH EXECUTED TRADE BACK TO ITS SIGNAL CANDLE
+        # ------------------------------------------------------------------
+
+        signal_metadata = {}
+
+        for i in range(len(signals) - 1):
+
+            signal_date = signals.index[i]
+            entry_date = signals.index[i + 1]
+
+            row = signals.iloc[i]
+
+            signal_metadata[entry_date] = {
+                "Setup": row.get("Setup"),
+                "Setup_Confidence": row.get("Setup_Confidence"),
+                "Structure_Bias": row.get("Structure_Bias"),
+                "BOS": row.get("BOS"),
+                "CHOCH": row.get("CHOCH"),
+                "Break_Direction": row.get("Break_Direction"),
+                "Break_Confirmed": row.get("Break_Confirmed"),
+                "Break_Age": row.get("Break_Age"),
+                "Liquidity_Sweep": row.get("Liquidity_Sweep"),
+                "Price_Position_Value": row.get("Price_Position_Value"),
+
+                # Fibonacci context
+                "Fib_Retracement": row.get("Fib_Retracement"),
+                "Fib_Zone": row.get("Fib_Zone"),
+                "Fib_Distance_382": row.get("Fib_Distance_382"),
+                "Fib_Distance_500": row.get("Fib_Distance_500"),
+                "Fib_Distance_618": row.get("Fib_Distance_618"),
+                "Fib_Premium_Discount": row.get("Fib_Premium_Discount"),
+                "Fib_Extension_State": row.get("Fib_Extension_State"),
+                "Fib_Extension_Percent": row.get("Fib_Extension_Percent"),
+
+                "Signal_Date": signal_date,
+            }
+
+
+        # ------------------------------------------------------------------
+        # ATTACH SIGNAL METADATA TO EXECUTED TRADES
+        # ------------------------------------------------------------------
+
+        for trade in trades:
+
+            trade["_symbol"] = symbol
+
+            entry_date = trade.get("entry_date")
+
+            metadata = signal_metadata.get(entry_date)
+
+            if metadata is not None:
+
+                trade.update(metadata)
+
+            else:
+
+                print(
+                    f"WARNING: No signal metadata found for "
+                    f"{symbol} entry date {entry_date}"
+                )
+
+            add_diagnostic_fields(trade)
+
+
+        all_trades.extend(trades)
+
+    print()
+    print("=" * 100)
+    print("OVERALL CURRENT RESULT")
+    print("=" * 100)
+
+    print(
+        f"ALL TRADESENSE TRADES              "
+        f"{performance_label(all_trades)}"
+    )
+
+    # ------------------------------------------------------------------
+    # STOCK
+    # ------------------------------------------------------------------
+
+    print_group(
+        "STOCK × PERFORMANCE",
+        all_trades,
+        "_symbol",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × PERFORMANCE",
+        all_trades,
+        "Diagnostic_Setup",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × DIRECTION
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × DIRECTION",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Direction",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × TREND
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × TREND",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Trend",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × LIQUIDITY
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × LIQUIDITY SWEEP",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Liquidity",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × BOS
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × BOS",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_BOS",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × CHOCH
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × CHOCH",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_CHOCH",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × BREAK AGE
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × BREAK AGE",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Break_Age",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × STRUCTURE BIAS
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × STRUCTURE BIAS",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Structure_Bias",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × CONFIDENCE
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × CONFIDENCE BUCKET",
+        all_trades,
+        "Diagnostic_Setup",
+        "Diagnostic_Confidence_Bucket",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × TREND STRENGTH
+    # ------------------------------------------------------------------
+
+    print()
+    print("=" * 100)
+    print("SETUP × TREND STRENGTH")
+    print("=" * 100)
+
+    strength_buckets = {
+        "< 20": [],
+        "20 - 40": [],
+        "40 - 60": [],
+        "60 - 80": [],
+        ">= 80": [],
+    }
+
+    for trade in all_trades:
+
+        strength = trade.get(
+            "entry_trend_strength",
+            0
+        )
+
+        try:
+            strength = float(strength)
+        except (TypeError, ValueError):
+            strength = 0.0
+
+        if strength < 20:
+            bucket = "< 20"
+        elif strength < 40:
+            bucket = "20 - 40"
+        elif strength < 60:
+            bucket = "40 - 60"
+        elif strength < 80:
+            bucket = "60 - 80"
+        else:
+            bucket = ">= 80"
+
+        strength_buckets[bucket].append(trade)
+
+
+    for bucket, bucket_trades in strength_buckets.items():
+
+        print()
+        print(
+            f"{bucket:<12}"
+            f"TRADES: {len(bucket_trades):>4}"
+        )
+
+        setup_groups = {}
+
+        for trade in bucket_trades:
+
+            setup = trade.get(
+                "Diagnostic_Setup",
+                trade.get("setup", "UNKNOWN")
+            )
+
+            if setup not in setup_groups:
+                setup_groups[setup] = []
+
+            setup_groups[setup].append(trade)
+
+        for setup, setup_trades in sorted(
+            setup_groups.items()
+        ):
+
+            profits = [
+                float(
+                    trade.get("profit", 0)
+                    or 0
+                )
+                for trade in setup_trades
+            ]
+
+            r_values = [
+                float(
+                    trade.get("r_multiple", 0)
+                    or 0
+                )
+                for trade in setup_trades
+            ]
+
+            wins = [
+                value
+                for value in r_values
+                if value > 0
+            ]
+
+            losses = [
+                value
+                for value in r_values
+                if value <= 0
+            ]
+
+            gross_profit = sum(wins)
+            gross_loss = abs(sum(losses))
+
+            if gross_loss > 0:
+                profit_factor = (
+                    gross_profit / gross_loss
+                )
+            else:
+                profit_factor = 0.0
+
+            win_rate = (
+                len(wins) / len(r_values) * 100
+                if r_values
+                else 0.0
+            )
+
+            total_r = sum(r_values)
+
+            print(
+                f"  {str(setup):<25}"
+                f"Trades={len(r_values):>3} "
+                f"Win={win_rate:6.2f}% "
+                f"PF={profit_factor:5.2f} "
+                f"R={total_r:7.2f}"
+            )
+
+    # ------------------------------------------------------------------
+    # SETUP × FIBONACCI ZONE
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × FIB ZONE",
+        all_trades,
+        "Diagnostic_Setup",
+        "Fib_Zone",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × TREND STRENGTH × FIBONACCI ZONE
+    # ------------------------------------------------------------------
+
+    print()
+    print("=" * 120)
+    print("SETUP × TREND STRENGTH × FIB ZONE")
+    print("=" * 120)
+
+    three_way_groups = {}
+
+    for trade in all_trades:
+
+        setup = trade.get(
+            "Diagnostic_Setup",
+            trade.get("setup", "UNKNOWN")
+        )
+
+        strength = trade.get(
+            "entry_trend_strength",
+            0
+        )
+
+        try:
+            strength = float(strength)
+        except (TypeError, ValueError):
+            strength = 0.0
+
+        if strength < 20:
+            strength_bucket = "<20"
+        elif strength < 40:
+            strength_bucket = "20-40"
+        elif strength < 60:
+            strength_bucket = "40-60"
+        elif strength < 80:
+            strength_bucket = "60-80"
+        else:
+            strength_bucket = ">=80"
+
+        fib_zone = trade.get(
+            "Fib_Zone",
+            "UNKNOWN"
+        )
+
+        key = (
+            setup,
+            strength_bucket,
+            fib_zone
+        )
+
+        if key not in three_way_groups:
+            three_way_groups[key] = []
+
+        three_way_groups[key].append(trade)
+
+
+    for (
+        setup,
+        strength_bucket,
+        fib_zone
+    ), group_trades in sorted(
+        three_way_groups.items()
+    ):
+
+        r_values = [
+            float(
+                trade.get("r_multiple", 0)
+                or 0
+            )
+            for trade in group_trades
+        ]
+
+        if not r_values:
+            continue
+
+        wins = [
+            r
+            for r in r_values
+            if r > 0
+        ]
+
+        losses = [
+            r
+            for r in r_values
+            if r <= 0
+        ]
+
+        gross_profit = sum(wins)
+        gross_loss = abs(sum(losses))
+
+        if gross_loss > 0:
+            profit_factor = (
+                gross_profit / gross_loss
+            )
+        else:
+            profit_factor = 0.0
+
+        win_rate = (
+            len(wins)
+            / len(r_values)
+            * 100
+        )
+
+        total_r = sum(r_values)
+
+        print(
+            f"{setup:<25}"
+            f"{strength_bucket:<8}"
+            f"{str(fib_zone):<15}"
+            f"Trades={len(r_values):>3} "
+            f"Win={win_rate:6.2f}% "
+            f"PF={profit_factor:5.2f} "
+            f"R={total_r:7.2f}"
+        )
+
+    # ------------------------------------------------------------------
+    # FIBONACCI ZONE
+    # ------------------------------------------------------------------
+
+    print_group(
+        "FIBONACCI ZONE × PERFORMANCE",
+        all_trades,
+        "Fib_Zone",
+    )
+
+    # ------------------------------------------------------------------
+    # FIBONACCI PREMIUM / DISCOUNT
+    # ------------------------------------------------------------------
+
+    print_group(
+        "FIBONACCI PREMIUM / DISCOUNT × PERFORMANCE",
+        all_trades,
+        "Fib_Premium_Discount",
+    )
+
+    # ------------------------------------------------------------------
+    # FIBONACCI EXTENSION
+    # ------------------------------------------------------------------
+
+    print_group(
+        "FIBONACCI EXTENSION × PERFORMANCE",
+        all_trades,
+        "Fib_Extension_State",
+    )
+
+    # ------------------------------------------------------------------
+    # LIQUIDITY ONLY
+    # ------------------------------------------------------------------
+
+    print_group(
+        "LIQUIDITY × TREND",
+        all_trades,
+        "Diagnostic_Liquidity",
+        "Diagnostic_Trend",
+    )
+
+    # ------------------------------------------------------------------
+    # STRUCTURE ONLY
+    # ------------------------------------------------------------------
+
+    print_group(
+        "STRUCTURE BIAS × TREND",
+        all_trades,
+        "Diagnostic_Structure_Bias",
+        "Diagnostic_Trend",
+    )
+
+    # ------------------------------------------------------------------
+    # DIRECTION × LIQUIDITY
+    # ------------------------------------------------------------------
+
+    print_group(
+        "DIRECTION × LIQUIDITY",
+        all_trades,
+        "Diagnostic_Direction",
+        "Diagnostic_Liquidity",
+    )
+
+    # ------------------------------------------------------------------
+    # DIRECTION × TREND
+    # ------------------------------------------------------------------
+
+    print_group(
+        "DIRECTION × TREND",
+        all_trades,
+        "Diagnostic_Direction",
+        "Diagnostic_Trend",
+    )
+
+    # ------------------------------------------------------------------
+    # EXIT REASON
+    # ------------------------------------------------------------------
+
+    print_group(
+        "EXIT REASON",
+        all_trades,
+        "exit_reason",
+    )
+
+    # ------------------------------------------------------------------
+    # SETUP × EXIT
+    # ------------------------------------------------------------------
+
+    print_group(
+        "SETUP × EXIT REASON",
+        all_trades,
+        "Diagnostic_Setup",
+        "exit_reason",
+    )
+
+    # ------------------------------------------------------------------
+    # SAVE GENERATED TRADES FOR FAST RESEARCH
+    # ------------------------------------------------------------------
+
+    import csv
+    import os
+
+    output_dir = "tests/output"
+
+    os.makedirs(
+        output_dir,
+        exist_ok=True
+    )
+
+    trades_file = os.path.join(
+        output_dir,
+        "tradesense_trades.csv"
+    )
+
+    if all_trades:
+
+        fieldnames = sorted(
+            {
+                key
+                for trade in all_trades
+                for key in trade.keys()
+            }
+        )
+
+        with open(
+            trades_file,
+            "w",
+            newline="",
+            encoding="utf-8"
+        ) as file:
+
+            writer = csv.DictWriter(
+                file,
+                fieldnames=fieldnames,
+                extrasaction="ignore"
+            )
+
+            writer.writeheader()
+
+            writer.writerows(
+                all_trades
+            )
+
+        print()
+        print("=" * 100)
+        print("TRADE DATASET SAVED")
+        print("=" * 100)
+        print(
+            f"Trades saved: {len(all_trades)}"
+        )
+        print(
+            f"File: {trades_file}"
+        )
+
+
+    # ------------------------------------------------------------------
+    # TRADE DATA INTEGRITY
+    # ------------------------------------------------------------------
+
+    print()
+    print("=" * 100)
+    print("TRADE DATA INTEGRITY")
+    print("=" * 100)
+
+    integrity_fields = [
+        "entry_trend",
+        "entry_trend_strength",
+        "entry_trend_slope",
+        "entry_price_position",
+        "Price_Position_Value",
+        "Diagnostic_Setup",
+        "Diagnostic_Direction",
+        "Diagnostic_Liquidity",
+        "Diagnostic_Break_Age",
+        "Diagnostic_Structure_Bias",
+    ]
+
+    for field in integrity_fields:
+
+        missing = sum(
+            1
+            for trade in all_trades
+            if trade.get(field) is None
+        )
+
+        print(
+            f"{field:<35} "
+            f"{missing}/{len(all_trades)} missing"
+        )
+
+    # ------------------------------------------------------------------
+    # TRADE-LEVEL ENTRY QUALITY
+    # ------------------------------------------------------------------
+
+    print_trade_level_diagnostic(all_trades)
+
+    # ------------------------------------------------------------------
+    # OUT-OF-SAMPLE TEST:
+    # SHORT_REVERSAL EXCLUSION
+    # ------------------------------------------------------------------
+
+    print()
+    print("=" * 100)
+    print("OUT-OF-SAMPLE TEST — SHORT_REVERSAL EXCLUSION")
+    print("=" * 100)
+
+    OOS_START = "2025-01-01"
+
+    oos_trades = []
+
+    for trade in all_trades:
+
+        entry_date = trade.get(
+            "entry_date"
+        )
+
+        if entry_date is None:
+            continue
+
+        entry_date = str(entry_date)[:10]
+
+        if entry_date >= OOS_START:
+            oos_trades.append(trade)
+
+    baseline_trades = oos_trades
+
+    filtered_trades = [
+        trade
+        for trade in oos_trades
+        if trade.get(
+            "Diagnostic_Setup",
+            trade.get("setup", "")
+        ) != "SHORT_REVERSAL"
+    ]
+
+    print()
+    print("OOS PERIOD:")
+    print(
+    f"{OOS_START} -> latest available date"
+)
+
+    print()
+    print("BASELINE — ALL SETUPS")
+    print(
+        performance_label(
+            baseline_trades
+        )
+    )
+
+    print()
+    print("FILTERED — EXCLUDE SHORT_REVERSAL")
+    print(
+        performance_label(
+            filtered_trades
+        )
+    )
+
+    print()
+    print(
+        f"SHORT_REVERSAL TRADES REMOVED: "
+        f"{len(baseline_trades) - len(filtered_trades)}"
+    )
+
+    print()
+    print("=" * 100)
+    print("FINAL DIAGNOSTIC SUMMARY")
+    print("=" * 100)
+
+    print(f"Stocks processed: {len(SYMBOLS)}")
+    print(f"Total executed trades: {len(all_trades)}")
+
+    total_profit = sum(
+        float(t.get("profit", 0))
+        for t in all_trades
+    )
+
+    total_r = sum(
+        float(t.get("r_multiple", 0))
+        for t in all_trades
+    )
+
+    print(f"Total P&L: {total_profit:.2f}")
+    print(f"Total R: {total_r:.2f}")
+
+    if all_trades:
+        wins = sum(
+            1
+            for t in all_trades
+            if float(t.get("profit", 0)) > 0
+        )
+
+        print(
+            f"Overall win rate: "
+            f"{wins / len(all_trades) * 100:.2f}"
+        )
+
+    print("=" * 100)
+
+

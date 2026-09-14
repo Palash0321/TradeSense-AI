@@ -1,0 +1,4 @@
+scenario,trades,wins,losses,win_rate,gross_profit_r,gross_loss_r,profit_factor,total_r,avg_r,pnl,closed_trade_drawdown_pct
+ALL,22,6,16,27.2727,11.39,-16.89,0.6744,-5.5,-0.25,-6291.69,6.2917
+LONG_ONLY,15,6,9,40.0,11.39,-9.38,1.2143,2.01,0.134,-147.01,3.7641
+SHORT_ONLY,7,0,7,0.0,0,-7.51,0.0,-7.51,-1.0729,-6144.68,6.1447

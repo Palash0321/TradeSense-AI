@@ -1,0 +1,8 @@
+feature,rows,missing_count,missing_rate
+sector_return_1d_mean,1389,2,0.0014398848092152627
+sector_return_5d_mean,1389,6,0.004319654427645789
+sector_positive_breadth_mean,1389,2,0.0014398848092152627
+sector_negative_breadth_mean,1389,2,0.0014398848092152627
+sector_dispersion_mean,1389,2,0.0014398848092152627
+sector_leadership,1389,2,0.0014398848092152627
+sector_agreement,1389,2,0.0014398848092152627

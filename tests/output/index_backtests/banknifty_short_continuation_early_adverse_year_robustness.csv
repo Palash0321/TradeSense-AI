@@ -1,0 +1,7 @@
+year,baseline_trades,baseline_winners,baseline_win_rate,baseline_total_r,triggered_trades,retained_trades,filtered_winners,filtered_win_rate,filtered_total_r,delta_r
+2021,2,0,0.0,-2.0300000000000002,2,0,0,0.0,0.0,2.0300000000000002
+2022,1,0,0.0,-1.02,1,0,0,0.0,0.0,1.02
+2023,1,0,0.0,-1.03,1,0,0,0.0,0.0,1.03
+2024,1,0,0.0,-1.03,1,0,0,0.0,0.0,1.03
+2025,1,0,0.0,-1.04,1,0,0,0.0,0.0,1.04
+2026,2,0,0.0,-2.04,2,0,0,0.0,0.0,2.04

@@ -1,0 +1,2 @@
+panel_rows,panel_start,panel_end,stock_feature_rows,historical_constituents,duplicate_panel_dates,duplicate_stock_date_symbol,target_missing_rows,feature_missing_cells,constituent_count_min,constituent_count_max,invalid_target_values,accidental_target_columns,status,failure_reasons
+1389,2021-01-29,2026-09-11,69620,62,0,0,1,253,50,51,,,PASS,

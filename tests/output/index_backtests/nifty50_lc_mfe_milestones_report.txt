@@ -1,0 +1,20 @@
+TRADESENSE-AI — NIFTY 50 LONG_CONTINUATION MFE MILESTONE FORENSIC
+====================================================================================================
+
+Trades: 12
+Winners: 5
+Losers: 7
+
+This report is descriptive only.
+No threshold or trading rule was selected.
+
+MILESTONES
+====================================================================================================
+{'milestone': '0.5R', 'reached': 10, 'not_reached': 2, 'reach_pct': 83.33333333333334, 'avg_bars': 11.7, 'median_bars': 12.0}
+{'milestone': '1.0R', 'reached': 7, 'not_reached': 5, 'reach_pct': 58.333333333333336, 'avg_bars': 21.142857142857142, 'median_bars': 20}
+{'milestone': '1.5R', 'reached': 7, 'not_reached': 5, 'reach_pct': 58.333333333333336, 'avg_bars': 35.142857142857146, 'median_bars': 26}
+
+REGIME RESULTS
+====================================================================================================
+{'period': '2021-2023', 'trades': 7, 'wins': 5, 'win_rate': 71.42857142857143, 'total_r': 7.34, 'avg_mfe': 1.6271428571428572, 'avg_mae': 0.6900000000000001, 'avg_early5': 0.37}
+{'period': '2024-2026', 'trades': 5, 'wins': 0, 'win_rate': 0.0, 'total_r': -5.07, 'avg_mfe': 0.974, 'avg_mae': 1.122, 'avg_early5': 0.3975}

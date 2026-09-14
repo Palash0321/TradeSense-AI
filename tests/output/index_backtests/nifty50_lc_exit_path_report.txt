@@ -1,0 +1,45 @@
+NIFTY 50 LONG_CONTINUATION EXIT-PATH FORENSIC
+====================================================================================================
+Input: tests/output/index_backtests/nifty50_index_trades.csv
+LC trades: 12
+
+BASIC LC SUMMARY
+Trades: 12
+Winners: 5
+Losers: 7
+Win Rate: 41.67%
+Total R: 2.27
+Average R: 0.19
+Average MFE: 1.35R
+Average MAE: 0.87R
+Average Bars: 45.33
+
+MFE MILESTONES
+0.5R: 10/12
+1.0R: 7/12
+1.5R: 7/12
+2.0R_TARGET: 5/12
+
+INDIVIDUAL LC EXIT PATH
+-------------------------------------------------------------------------------------------------
+SEQ  ENTRY       EXIT        RESULT    MFE     MAE     0.5R  1R   1.5R  BARS   EXIT          PATH
+-------------------------------------------------------------------------------------------------
+  1  2021-02-16  2021-03-19    -1.06    0.05    1.09     -    -      -     23  STOP_LOSS     UNDER_0_5R
+  2  2021-09-16  2021-10-19     1.88    2.08    0.46     6   20     21     23  TARGET        TARGET_2R
+  3  2022-07-29  2022-11-15     1.91    2.00    0.53     5   11     32     72  TARGET        TARGET_2R
+  4  2022-11-25  2022-12-23    -1.10    0.60    1.35     5    -      -     21  STOP_LOSS     HALF_TO_UNDER_1R
+  5  2023-05-29  2023-07-17     1.89    2.09    0.33    23   24     26     35  TARGET        TARGET_2R
+  6  2023-11-30  2023-12-14     1.91    2.38    0.25     3    3      4     11  TARGET        TARGET_2R
+  7  2023-12-28  2024-06-03     1.91    2.19    0.82    13   48     97    104  TARGET        TARGET_2R
+  8  2024-08-01  2024-08-05    -1.07    0.03    1.33     -    -      -      3  STOP_LOSS     UNDER_0_5R
+  9  2024-08-30  2024-10-18    -1.10    1.54    1.09    15   17     20     35  STOP_LOSS     OVER_1_5R_UNDER_2R
+ 10  2025-06-12  2025-08-07    -1.08    0.61    1.08    12    -      -     41  STOP_LOSS     HALF_TO_UNDER_1R
+ 11  2025-09-15  2026-03-04    -1.10    1.88    1.28    23   25     46    116  STOP_LOSS     OVER_1_5R_UNDER_2R
+ 12  2026-06-19  2026-09-11    -0.72    0.81    0.83    12    -      -     60  FINAL_LIQUIDATION  HALF_TO_UNDER_1R
+-------------------------------------------------------------------------------------------------
+
+RESEARCH VERDICT: EXIT_PATH_WORTH_ONE_CONTROLLED_COUNTERFACTUAL
+At least one LC loser reached >=1.5R before ultimately losing. This means exit architecture is worth one controlled research counterfactual. This is NOT evidence for changing production exits.
+
+IMPORTANT: This analysis is descriptive and in-sample.
+No production strategy, frozen dataset, or holdout dataset was modified.

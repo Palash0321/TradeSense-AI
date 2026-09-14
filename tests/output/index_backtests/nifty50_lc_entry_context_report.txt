@@ -1,0 +1,66 @@
+TRADESENSE-AI — NIFTY 50 LONG_CONTINUATION ENTRY-CONTEXT FORENSIC
+====================================================================================================
+
+LONG_CONTINUATION trades: 12
+Winners: 5
+Losers: 7
+
+This is a descriptive forensic analysis.
+No threshold was optimized.
+No trading filter was selected.
+
+NUMERIC WINNER VS LOSER ANALYSIS
+====================================================================================================
+{'metric': 'Entry ATR', 'winner_avg': 164.36399999999998, 'loser_avg': 221.64142857142858, 'difference': -57.2774285714286}
+{'metric': 'Initial Risk', 'winner_avg': 666.212, 'loser_avg': 775.7428571428571, 'difference': -109.53085714285714}
+{'metric': 'Price Position Value', 'winner_avg': 1.13834, 'loser_avg': 1.112142857142857, 'difference': 0.026197142857142808}
+{'metric': 'Early Adverse Bar 5', 'winner_avg': 0.296, 'loser_avg': 0.45, 'difference': -0.15400000000000003}
+{'metric': 'Maximum Favorable Excursion', 'winner_avg': 2.148, 'loser_avg': 0.7885714285714285, 'difference': 1.3594285714285717}
+{'metric': 'Maximum Adverse Excursion', 'winner_avg': 0.47800000000000004, 'loser_avg': 1.1500000000000001, 'difference': -0.6720000000000002}
+{'metric': 'Bars in Trade', 'winner_avg': 49.0, 'loser_avg': 42.714285714285715, 'difference': 6.285714285714285}
+
+MEDIAN ANALYSIS
+====================================================================================================
+{'metric': 'Entry ATR', 'winner_median': 149.57, 'loser_median': 224.65, 'difference': -75.08000000000001}
+{'metric': 'Initial Risk', 'winner_median': 664.32, 'loser_median': 786.26, 'difference': -121.93999999999994}
+{'metric': 'Price Position Value', 'winner_median': 1.1015, 'loser_median': 1.1078, 'difference': -0.006299999999999972}
+{'metric': 'Early Adverse Bar 5', 'winner_median': 0.32, 'loser_median': 0.305, 'difference': 0.015000000000000013}
+{'metric': 'MFE', 'winner_median': 2.09, 'loser_median': 0.61, 'difference': 1.48}
+{'metric': 'MAE', 'winner_median': 0.46, 'loser_median': 1.09, 'difference': -0.6300000000000001}
+{'metric': 'Bars in Trade', 'winner_median': 35, 'loser_median': 35, 'difference': 0}
+
+PERIOD ANALYSIS
+====================================================================================================
+{'period': '2021-2023', 'trades': 7, 'wins': 5, 'win_rate': 71.42857142857143, 'avg_atr': 179.49, 'median_atr': 162.35, 'avg_risk': 693.1714285714286, 'avg_early5': 0.37, 'avg_mfe': 1.6271428571428572, 'avg_mae': 0.6900000000000001}
+{'period': '2024-2026', 'trades': 5, 'wins': 0, 'win_rate': 0.0, 'avg_atr': 223.37600000000003, 'median_atr': 224.65, 'avg_risk': 781.812, 'avg_early5': 0.3975, 'avg_mfe': 0.974, 'avg_mae': 1.122}
+
+CATEGORICAL ANALYSIS
+====================================================================================================
+{'field': 'entry_trend_strength', 'category': '0.0', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.06}
+{'field': 'entry_trend_strength', 'category': '12.1', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_strength', 'category': '15.52', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -0.72}
+{'field': 'entry_trend_strength', 'category': '31.59', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_trend_strength', 'category': '37.86', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_trend_strength', 'category': '42.39', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.89}
+{'field': 'entry_trend_strength', 'category': '49.53', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.08}
+{'field': 'entry_trend_strength', 'category': '50.63', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_strength', 'category': '54.92', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_strength', 'category': '68.31', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.07}
+{'field': 'entry_trend_strength', 'category': '85.16', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_trend_strength', 'category': '88.62', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.88}
+{'field': 'entry_trend', 'category': 'BULLISH', 'trades': 10, 'wins': 5, 'losses': 5, 'win_rate': 50.0, 'total_r': 4.049999999999999}
+{'field': 'entry_trend', 'category': 'NEUTRAL', 'trades': 2, 'wins': 0, 'losses': 2, 'win_rate': 0.0, 'total_r': -1.78}
+{'field': 'entry_trend_slope', 'category': '0.0', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.06}
+{'field': 'entry_trend_slope', 'category': '29.0757', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_slope', 'category': '31.1467', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.89}
+{'field': 'entry_trend_slope', 'category': '35.7792', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_slope', 'category': '36.6723', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.08}
+{'field': 'entry_trend_slope', 'category': '43.9874', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_trend_slope', 'category': '46.6402', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.1}
+{'field': 'entry_trend_slope', 'category': '48.5041', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -0.72}
+{'field': 'entry_trend_slope', 'category': '49.311', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.07}
+{'field': 'entry_trend_slope', 'category': '49.3746', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.88}
+{'field': 'entry_trend_slope', 'category': '59.5729', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_trend_slope', 'category': '69.7167', 'trades': 1, 'wins': 1, 'losses': 0, 'win_rate': 100.0, 'total_r': 1.91}
+{'field': 'entry_price_position', 'category': 'ABOVE_FAST', 'trades': 11, 'wins': 5, 'losses': 6, 'win_rate': 45.45454545454545, 'total_r': 3.329999999999999}
+{'field': 'entry_price_position', 'category': 'NEUTRAL', 'trades': 1, 'wins': 0, 'losses': 1, 'win_rate': 0.0, 'total_r': -1.06}

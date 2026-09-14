@@ -1,0 +1,7 @@
+_symbol,candidate_total_r,candidate_trades,common_trades,delta_r,fresh_only_trades,historical_only_trades,historical_total_r,historical_trades,net_trade_change
+HDFCBANK.NS,-12.24,19,17,-2.98,2,2,-9.26,19,0
+ICICIBANK.NS,0.47,21,18,-2.48,3,1,2.95,19,2
+INFY.NS,-1.03,23,19,3.25,4,1,-4.28,20,3
+RELIANCE.NS,-3.52,12,8,0.51,4,2,-4.03,10,2
+SBIN.NS,-6.09,21,15,0.83,6,1,-6.92,16,5
+TCS.NS,-12.96,21,14,-5.35,7,8,-7.61,22,-1

@@ -1,0 +1,10 @@
+TRADESENSE-AI — NIFTY 50 TRADE DIAGNOSTICS
+====================================================================================================
+Trades: 22
+Total R: -5.50R
+Win rate: 27.27%
+
+RESEARCH STATUS:
+DIAGNOSTIC ONLY — NO PRODUCTION CHANGES
+NO FROZEN DATASET CHANGES
+NO HOLDOUT CHANGES

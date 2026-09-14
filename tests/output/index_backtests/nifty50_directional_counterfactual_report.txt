@@ -1,0 +1,53 @@
+TradeSense-AI NIFTY 50 Directional Counterfactual
+================================================================================
+Research-only diagnostic.
+No production or frozen datasets modified.
+
+ALL
+----------------------------------------
+Trades: 22
+Wins: 6
+Losses: 16
+Win Rate: 27.27%
+Total R: -5.50R
+Average R: -0.250R
+P&L: ₹-6291.69
+Closed-trade DD: 6.29%
+
+LONG_ONLY
+----------------------------------------
+Trades: 15
+Wins: 6
+Losses: 9
+Win Rate: 40.00%
+Total R: 2.01R
+Average R: 0.134R
+P&L: ₹-147.01
+Closed-trade DD: 3.76%
+
+SHORT_ONLY
+----------------------------------------
+Trades: 7
+Wins: 0
+Losses: 7
+Win Rate: 0.00%
+Total R: -7.51R
+Average R: -1.073R
+P&L: ₹-6144.68
+Closed-trade DD: 6.14%
+
+COUNTERFACTUAL DIFFERENCES
+----------------------------------------
+Long-only vs all-trades:
+Trade count change: -7
+Total R change: 7.51R
+P&L change: ₹6144.68
+
+Short-only contribution:
+Trades: 7
+Total R: -7.51R
+P&L: ₹-6144.68
+
+Interpretation rule:
+A positive long-only result is NOT sufficient to deploy a long-only NIFTY strategy.
+It must subsequently survive chronological, year-level, setup-level and unseen-data validation.

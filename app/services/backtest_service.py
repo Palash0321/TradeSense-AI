@@ -38,13 +38,51 @@ class BacktestService:
     def load_data(
         self,
         start_date=None,
-        end_date=None
+        end_date=None,
+        warmup_days=0
     ):
+
+        # -------------------------------------------------
+        # Warm-up period
+        # -------------------------------------------------
+        #
+        # Indicators and market structure require historical
+        # candles before the requested analysis period.
+        #
+        # IMPORTANT:
+        # warm-up_days only expands the downloaded history.
+        # The caller remains responsible for trimming the
+        # warm-up period before evaluating/backtesting trades.
+        # -------------------------------------------------
+
+        requested_start_date = start_date
+
+        if (
+            start_date is not None
+            and warmup_days
+            and warmup_days > 0
+        ):
+            requested_start_date = pd.Timestamp(
+                start_date
+            )
+
+            download_start_date = (
+                requested_start_date
+                - pd.Timedelta(
+                    days=int(warmup_days)
+                )
+            )
+
+            start_date = (
+                download_start_date
+                .strftime("%Y-%m-%d")
+            )
 
         cache_key = (
             self.symbol,
             str(start_date),
-            str(end_date)
+            str(end_date),
+            int(warmup_days or 0)
         )
 
         # ---------------------------------
