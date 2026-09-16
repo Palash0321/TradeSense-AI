@@ -1,0 +1,13 @@
+check,actual,expected,status
+trajectory_rows,106,106,PASS
+frozen_events,60,60,PASS
+retained,46,46,PASS
+trajectory_unique_keys,106,106,PASS
+primary_state_binary,"[0, 1]","[0, 1]",PASS
+composite_states,"['HIGH_PATH', 'LOW_PATH']","['HIGH_PATH', 'LOW_PATH']",PASS
+pre_threshold_rows,70,>0,PASS
+nested_valid_strata,2,>=2,PASS
+robustness_rows,13,>0,PASS
+production_modified,False,False,PASS
+oos_modified,False,False,PASS
+strategy_rule_promoted,False,False,PASS

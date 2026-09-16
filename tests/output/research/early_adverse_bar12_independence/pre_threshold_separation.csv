@@ -1,0 +1,2 @@
+population,n,state1_event_n,state1_non_event_n,state0_event_n,state0_non_event_n,state1_n,state0_n,event_rate_state1,event_rate_state0,risk_difference_pp,rd_ci_low_pp,rd_ci_high_pp,odds_ratio,fisher_p
+not_crossed_025r_by_bar2,70,20,17,7,26,37,33,0.5405405405405406,0.21212121212121213,32.841932841932845,11.572254889765729,54.11161079409995,4.369747899159663,0.006762280411611294

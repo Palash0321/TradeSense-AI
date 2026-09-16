@@ -1,0 +1,5 @@
+control,global_median
+bar1_cumulative_mae_r,0.1583348736797485
+bar1_cumulative_mfe_r,0.06708416569583076
+bar1_net_excursion_r,-0.08940997056332475
+bar1_mae_minus_mfe,0.0894099705633247

@@ -1,0 +1,16 @@
+metric,value
+trade_count,106.0
+event_count,60.0
+retained_count,46.0
+global_state_event_rate,0.6923076923076923
+global_non_state_event_rate,0.36585365853658536
+global_risk_difference_pp,32.645403377110696
+global_fisher_p,0.0012739863329274967
+nested_mh_or,4.828571428571428
+nested_pooled_rd_pp,29.69083548030917
+nested_permutation_p,0.0007998400319936012
+pre_threshold_n,70.0
+delayed_event_n,26.0
+bootstrap_median_rd_pp,29.58933573429372
+bootstrap_ci_low_pp,12.453598532118978
+bootstrap_ci_high_pp,46.72767328456983

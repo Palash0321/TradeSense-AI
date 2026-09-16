@@ -1,0 +1,2 @@
+analysis,state1_event_n,state1_non_event_n,state0_event_n,state0_non_event_n,state1_n,state0_n,event_rate_state1,event_rate_state0,risk_difference_pp,rd_ci_low_pp,rd_ci_high_pp,odds_ratio,fisher_p
+global_state_vs_frozen_label,45,20,15,26,65,41,0.6923076923076923,0.36585365853658536,32.645403377110696,14.117938538421596,51.172868215799795,3.9,0.0012739863329274967

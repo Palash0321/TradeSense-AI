@@ -1,0 +1,5 @@
+removed_top_n,removed_contribution_r,remaining_total_delta_r,remaining_trades,remaining_positive,remaining_negative,remaining_still_positive
+1,1.2075629444199845,15.139458483953085,43,35,8,True
+3,3.579345471460672,12.767675956912397,41,33,8,True
+5,5.897394949474191,10.449626478898882,39,31,8,True
+10,11.337981560273775,5.0090398680992925,34,26,8,True

@@ -1,0 +1,13 @@
+check,expected,actual,pass
+trade_count,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+path_rows,530,530,True
+state_binary,"{0,1}","[np.int64(0), np.int64(1)]",True
+valid_temporal_folds,>=2,4,True
+strict_temporal_direction,all positive,4/4,True
+strict_nested_direction,all positive,4/4,True
+history_only_control_definition,True,True,True
+production_modified,False,False,True
+oos_modified,False,False,True
+strategy_rule_promoted,False,False,True

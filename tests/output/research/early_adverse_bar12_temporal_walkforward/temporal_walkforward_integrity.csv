@@ -1,0 +1,13 @@
+check,expected,actual,pass
+trajectory_trade_count,106,106,True
+trajectory_event_count,60,60,True
+trajectory_retained_count,46,46,True
+trajectory_unique_keys,106,106,True
+path_rows,530,530,True
+bar2_state_binary,"{0,1}","[np.int64(0), np.int64(1)]",True
+valid_walkforward_folds,>=2,4,True
+validation_direction_consistency,all positive,4/4,True
+nested_direction_consistency,all positive,4/4,True
+production_modified,False,False,True
+oos_modified,False,False,True
+strategy_rule_promoted,False,False,True

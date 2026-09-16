@@ -1,0 +1,8 @@
+check,result,value
+global_association,SIGNIFICANT,0.0012739863329274967
+pre_threshold_population_available,YES,70.0
+delayed_event_population,AVAILABLE,26.0
+permutation_consistency,SIGNIFICANT,0.0011998800119988001
+strategy_rule_promoted,NO,
+production_modified,NO,
+oos_modified,NO,
