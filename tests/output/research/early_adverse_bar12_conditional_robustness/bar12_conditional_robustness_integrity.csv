@@ -1,0 +1,15 @@
+check,passed
+trade_count,True
+event_count,True
+retained_count,True
+input_rows,True
+subgroup_rows_positive,True
+loo_rows_positive,True
+stability_rows,True
+dimension_result_rows,True
+family_summary_rows,True
+all_required_bar1_states_present,True
+no_missing_symbol,True
+no_missing_setup,True
+no_missing_direction,True
+PASS,True

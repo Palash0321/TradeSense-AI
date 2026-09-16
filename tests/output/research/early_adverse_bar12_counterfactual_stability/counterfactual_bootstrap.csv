@@ -1,0 +1,4 @@
+state,state_label,n,observed_total_delta_r,bootstrap_total_ci_low_r,bootstrap_total_ci_high_r,observed_mean_delta_r,bootstrap_mean_ci_low_r,bootstrap_mean_ci_high_r
+bar2_net_deteriorated,Bar-2 net deterioration,53,14.839483863973761,-2.840253727579644,30.584240211489234,0.2799902615844106,-0.053589692973200834,0.5770611360658346
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,65,26.270904735957412,8.114251825567607,42.48785785598716,0.40416776516857555,0.12483464347027089,0.6536593516305717
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,49,14.250422753300326,-2.7999548748189116,29.248227766518117,0.29082495414898624,-0.057141936220794116,0.5969026074799615

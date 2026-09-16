@@ -1,0 +1,4 @@
+family,dimension_count,required_dimension_count,dimension_pass_count,all_dimensions_present,family_robustness_pass,reason
+A_net_path,4,4,4,True,True,PASS
+B_favorable,4,4,4,True,True,PASS
+C_adverse,4,4,4,True,True,PASS

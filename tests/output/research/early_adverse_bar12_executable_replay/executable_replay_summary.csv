@@ -1,0 +1,2 @@
+n,total_delta_r,mean_delta_r,median_delta_r,bootstrap_mean_ci_low,bootstrap_mean_ci_high,positive_trades,negative_trades,zero_trades
+65,26.267492641150806,0.4041152714023201,0.8661146544649303,0.1243119311977483,0.6549332314997784,54,11,0

@@ -1,0 +1,9 @@
+check,actual,expected,pass
+trajectory_rows,106,106,True
+bar2_rows,106,106,True
+production_rows,106,106,True
+merged_rows,106,106,True
+frozen_events,60,60,True
+frozen_retained,46,46,True
+missing_original_final_r,0,0,True
+missing_bar2_close_r,0,0,True

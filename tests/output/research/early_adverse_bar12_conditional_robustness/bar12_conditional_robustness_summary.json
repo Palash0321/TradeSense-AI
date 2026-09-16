@@ -1,0 +1,43 @@
+{
+  "input_file": "tests\\output\\research\\early_adverse_bar12_trajectory\\early_adverse_bar12_trajectory_per_trade.csv",
+  "output_dir": "tests\\output\\research\\early_adverse_bar12_conditional_robustness",
+  "frozen_population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "methodology": {
+    "minimum_subgroup_trades": 8,
+    "minimum_valid_subgroups": 2,
+    "minimum_direction_consistency": 0.75,
+    "bar1_state_definition": "GLOBAL median split",
+    "subgroup_threshold_optimization": false,
+    "machine_learning": false,
+    "production_modified": false,
+    "oos_modified": false
+  },
+  "families": {
+    "A_net_path": {
+      "bar1_feature": "bar1_net_excursion_r",
+      "bar2_state": "bar2_net_deteriorated",
+      "state_name": "Bar-2 net deterioration"
+    },
+    "B_favorable": {
+      "bar1_feature": "bar1_cumulative_mfe_r",
+      "bar2_state": "bar2_favorable_failed_to_improve",
+      "state_name": "Bar-2 favorable failure"
+    },
+    "C_adverse": {
+      "bar1_feature": "bar1_cumulative_mae_r",
+      "bar2_state": "bar2_net_deteriorated",
+      "state_name": "Bar-2 net deterioration"
+    }
+  },
+  "dimension_pass_count": 12,
+  "dimension_total": 12,
+  "family_pass_count": 3,
+  "family_total": 3,
+  "integrity_pass": true,
+  "overall_pass": true,
+  "interpretation": "Conditional robustness only. This remains association with the frozen 5-bar / 0.25R event label. It does not establish causality, independent OOS predictive power, economic value, or a deployable rule."
+}

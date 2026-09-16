@@ -1,0 +1,7 @@
+check,expected,actual,status
+trade_count,106,106,PASS
+event_count,60,60,PASS
+retained_count,46,46,PASS
+trade_level_input_rows,106,106,PASS
+family_count,3,3,PASS
+stratum_rows,6,6,PASS

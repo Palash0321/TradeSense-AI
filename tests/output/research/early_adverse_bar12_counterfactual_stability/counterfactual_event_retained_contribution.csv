@@ -1,0 +1,7 @@
+state,state_label,population,n,total_delta_r,mean_delta_r,median_delta_r
+bar2_net_deteriorated,Bar-2 net deterioration,event,38,13.934279546892945,0.36669156702349853,0.8632791788084622
+bar2_net_deteriorated,Bar-2 net deterioration,retained,15,0.9052043170808177,0.060346954472054515,0.8981818856307686
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,event,45,21.304703330981354,0.47343785179958564,0.8849722040465797
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,retained,20,4.966201404976061,0.24831007024880308,0.930065837240184
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,event,35,11.330823824809684,0.32373782356599096,0.8618666915336093
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,retained,14,2.9195989284906414,0.20854278060647438,0.910229818749671

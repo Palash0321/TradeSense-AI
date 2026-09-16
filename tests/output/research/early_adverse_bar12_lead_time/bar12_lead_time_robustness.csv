@@ -1,0 +1,16 @@
+dimension,state,group,n,state_rate
+year,bar2_net_deteriorated,2022,8,0.5
+year,bar2_favorable_failed_to_improve,2022,8,0.75
+year,adverse_up_favorable_not_up_net_down,2022,8,0.5
+setup,bar2_net_deteriorated,LONG_CONTINUATION,14,0.35714285714285715
+setup,bar2_net_deteriorated,SHORT_REVERSAL,8,0.375
+setup,bar2_favorable_failed_to_improve,LONG_CONTINUATION,14,0.7142857142857143
+setup,bar2_favorable_failed_to_improve,SHORT_REVERSAL,8,0.75
+setup,adverse_up_favorable_not_up_net_down,LONG_CONTINUATION,14,0.35714285714285715
+setup,adverse_up_favorable_not_up_net_down,SHORT_REVERSAL,8,0.375
+direction,bar2_net_deteriorated,LONG,15,0.4
+direction,bar2_net_deteriorated,SHORT,11,0.5454545454545454
+direction,bar2_favorable_failed_to_improve,LONG,15,0.7333333333333333
+direction,bar2_favorable_failed_to_improve,SHORT,11,0.8181818181818182
+direction,adverse_up_favorable_not_up_net_down,LONG,15,0.4
+direction,adverse_up_favorable_not_up_net_down,SHORT,11,0.5454545454545454

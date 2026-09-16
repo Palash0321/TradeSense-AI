@@ -1,0 +1,13 @@
+state,state_label,remove_top_n_positive,full_total_delta_r,removed_delta_r,remaining_total_delta_r,remaining_mean_delta_r,removal_remains_positive
+bar2_net_deteriorated,Bar-2 net deterioration,1,14.839483863973765,1.1810398227728938,13.658444041200871,0.2626623854077091,True
+bar2_net_deteriorated,Bar-2 net deterioration,3,14.839483863973765,3.34283433580104,11.496649528172725,0.2299329905634545,True
+bar2_net_deteriorated,Bar-2 net deterioration,5,14.839483863973765,5.44588899520118,9.393594868772585,0.19569989309942884,True
+bar2_net_deteriorated,Bar-2 net deterioration,10,14.839483863973765,10.515375652732082,4.324108211241683,0.10056065607538797,True
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,1,26.270904735957412,1.2138877567047481,25.057016979252666,0.3915158903008229,True
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,3,26.270904735957412,3.5899215776244127,22.680983158333,0.36582230900537094,True
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,5,26.270904735957412,5.878867843454046,20.392036892503366,0.3398672815417228,True
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,10,26.270904735957412,11.306085476673964,14.964819259283448,0.2720876228960627,True
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,1,14.250422753300324,1.1810398227728938,13.06938293052743,0.2722788110526548,True
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,3,14.250422753300324,3.34283433580104,10.907588417499284,0.23712148733694094,True
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,5,14.250422753300324,5.44588899520118,8.804533758099144,0.2001030399567987,True
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,10,14.250422753300324,10.515375652732082,3.7350471005682415,0.09577043847610876,True

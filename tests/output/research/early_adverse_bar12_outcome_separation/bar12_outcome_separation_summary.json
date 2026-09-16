@@ -1,0 +1,31 @@
+{
+  "trajectory_file": "tests\\output\\research\\early_adverse_bar12_trajectory\\early_adverse_bar12_trajectory_per_trade.csv",
+  "trade_file": "tests\\output\\tradesense_trades.csv",
+  "frozen_population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "merge_type": "symbol|direction|entry_date",
+  "resolved_outcome_columns": {
+    "final_r": "r_multiple",
+    "mfe_r": "max_favorable_r",
+    "mae_r": "max_adverse_r"
+  },
+  "global_bar1_medians": {
+    "bar1_net_excursion_r": -0.08940997056332475,
+    "bar1_cumulative_mfe_r": 0.06708416569583076,
+    "bar1_cumulative_mae_r": 0.1583348736797485
+  },
+  "families": [
+    "A_net_path",
+    "B_favorable",
+    "C_adverse"
+  ],
+  "final_r_directional_separation_count": 3,
+  "final_r_family_count": 3,
+  "integrity_pass": true,
+  "interpretation": "Outcome separation tests whether Bar-2 states are associated with eventual trade outcomes. A negative final-R difference for the adverse Bar-2 state is directionally consistent with worse later economic outcome. This remains association and does not establish causality, independent OOS predictive power, economic value after implementation costs, or a deployable rule.",
+  "production_modified": false,
+  "oos_modified": false
+}

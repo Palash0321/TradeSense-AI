@@ -1,0 +1,7 @@
+check,expected,observed,status
+expected_trade_count,106,106,PASS
+expected_event_count,60,60,PASS
+expected_retained_count,46,46,PASS
+pre_specified_state_count,4,4,PASS
+duplicate_state_count,0,0,PASS
+bonferroni_test_count,4,4,PASS

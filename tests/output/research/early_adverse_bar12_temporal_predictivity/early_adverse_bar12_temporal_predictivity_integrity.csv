@@ -1,0 +1,12 @@
+check,expected,observed,pass
+trade_count,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+trade_level_input_rows,106,106,True
+main_rows,18,18,True
+primary_state_count,4,4,True
+year_rows,>0,24,True
+symbol_loo_rows,>0,24,True
+setup_rows,>0,16,True
+direction_rows,>0,8,True
+stability_rows,4,4,True

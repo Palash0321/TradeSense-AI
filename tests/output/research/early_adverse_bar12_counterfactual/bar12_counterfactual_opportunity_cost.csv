@@ -1,0 +1,4 @@
+state,state_label,state_n,positive_post_bar2_count,negative_post_bar2_count,zero_post_bar2_count,positive_post_bar2_rate,negative_post_bar2_rate,median_post_bar2_incremental_r,mean_post_bar2_incremental_r,sum_post_bar2_incremental_r
+bar2_net_deteriorated,Bar-2 net deterioration,53,11,42,0,0.20754716981132076,0.7924528301886793,-0.864691666083315,-0.27999026158441065,-14.839483863973765
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,65,12,53,0,0.18461538461538463,0.8153846153846154,-0.8981818856307686,-0.40416776516857555,-26.270904735957412
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,49,10,39,0,0.20408163265306123,0.7959183673469388,-0.864691666083315,-0.2908249541489862,-14.250422753300322

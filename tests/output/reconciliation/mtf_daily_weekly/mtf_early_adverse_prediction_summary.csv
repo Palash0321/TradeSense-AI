@@ -1,0 +1,22 @@
+Section,Metric,Value
+Integrity,Frozen_Trades,106
+Integrity,Analyzed_Trades,106
+Integrity,Frozen_Total_R,-29.15000000000001
+Integrity,Analyzed_Total_R,-29.15000000000001
+Integrity,Trade_Count_Reconciliation,PASS
+Integrity,R_Reconciliation,PASS
+Event,Early_Adverse_Bars,7
+Event,Early_Adverse_Threshold_R,0.25
+Event,Total_Event_Rate,0.4528301886792453
+Inference,Aligned_vs_Not_Event_Rate_Delta,0.051428571428571435
+Inference,Permutation_P_Value,0.6965303469653035
+Inference,Bootstrap_CI_Lower,-0.14
+Inference,Bootstrap_CI_Upper,0.24071428571428566
+Robustness,Positive_Symbol_Deltas,1
+Robustness,Eligible_Symbols,6
+Robustness,Positive_Year_Deltas,2
+Robustness,Eligible_Years,5
+Verdict,Final_Verdict,NO RELIABLE EVIDENCE THAT MTF ALIGNMENT REDUCES THE EARLY-ADVERSE EVENT.
+Governance,Production_MTF_Modification,NONE
+Governance,OOS_Modification,NONE
+Governance,Frozen_Strategy_Modification,NONE

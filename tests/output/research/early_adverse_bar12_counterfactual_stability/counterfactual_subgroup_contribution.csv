@@ -1,0 +1,55 @@
+state,state_label,dimension,group,n,total_delta_r,mean_delta_r,median_delta_r,positive_delta_count,negative_delta_count
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2021,4,0.2299794969515121,0.057494874237878024,0.6554526149914691,3,1
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2022,13,5.6783274383191,0.4367944183322384,0.8762653160177203,11,2
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2023,11,3.7853026463625765,0.34411842239659785,0.8428313692358357,9,2
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2024,12,1.3521211732528229,0.11267676443773524,0.9007086125672248,9,3
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2025,10,1.963616787381024,0.1963616787381024,0.7723779420618149,8,2
+bar2_net_deteriorated,Bar-2 net deterioration,_year,2026,3,1.830136321706727,0.610045440568909,0.8646916660833152,2,1
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,HDFCBANK.NS,10,1.4136526953627109,0.1413652695362711,0.7256164226532186,8,2
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,ICICIBANK.NS,11,3.3520647154438974,0.3047331559494452,0.8864583826316041,9,2
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,INFY.NS,9,2.207380658281256,0.2452645175868062,0.8741659702158224,7,2
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,RELIANCE.NS,7,2.817134459039154,0.4024477798627363,0.7814970302212441,6,1
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,SBIN.NS,8,-2.7564493965910692,-0.34455617457388366,0.3282951049341305,4,4
+bar2_net_deteriorated,Bar-2 net deterioration,symbol,TCS.NS,8,7.805700732437813,0.9757125915547267,0.9756169489882058,8,0
+bar2_net_deteriorated,Bar-2 net deterioration,setup,LONG_CONTINUATION,24,4.4350164663907385,0.18479235276628078,0.7723779420618149,19,5
+bar2_net_deteriorated,Bar-2 net deterioration,setup,LONG_REVERSAL,5,-4.525836441050637,-0.9051672882101274,-2.11540532412144,2,3
+bar2_net_deteriorated,Bar-2 net deterioration,setup,SHORT_CONTINUATION,7,2.360808429664127,0.3372583470948753,0.8646916660833152,5,2
+bar2_net_deteriorated,Bar-2 net deterioration,setup,SHORT_REVERSAL,17,12.569495408969532,0.7393820828805607,0.8981818856307686,16,1
+bar2_net_deteriorated,Bar-2 net deterioration,direction,LONG,29,-0.09081997465989788,-0.00313172326413441,0.7707392866809273,21,8
+bar2_net_deteriorated,Bar-2 net deterioration,direction,SHORT,24,14.930303838633659,0.6220959932764024,0.88061876003215,21,3
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2021,6,2.3677996957002483,0.39463328261670805,0.9084960854088937,5,1
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2022,15,7.683102225026226,0.5122068150017484,0.9049747319571265,13,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2023,12,8.092750539460189,0.6743958782883491,0.9380662718743222,11,1
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2024,15,4.827718303734721,0.3218478869156481,0.9174119668632227,12,3
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2025,13,2.064723125192408,0.15882485578403138,0.7740165974427025,10,3
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,_year,2026,4,1.2348108468436227,0.3087027117109057,0.41281298115845794,2,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,HDFCBANK.NS,12,3.6126370379526973,0.3010530864960581,0.7543999755276961,10,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,ICICIBANK.NS,11,3.6138349124281843,0.3285304465843804,0.9000404028575164,9,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,INFY.NS,11,5.828027939624297,0.5298207217840271,0.9049747319571265,9,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,RELIANCE.NS,7,2.817134459039154,0.4024477798627363,0.7814970302212441,6,1
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,SBIN.NS,10,-0.6441632073212658,-0.06441632073212658,0.8230681178044362,6,4
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,symbol,TCS.NS,14,11.043433594234347,0.7888166853024534,0.928862824717513,13,1
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,setup,LONG_CONTINUATION,30,13.795096727207186,0.4598365575735729,0.8946983108816399,26,4
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,setup,LONG_REVERSAL,6,-3.3119486843458885,-0.5519914473909814,-0.5554474823658143,3,3
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,setup,SHORT_CONTINUATION,10,2.5344512518577695,0.25344512518577694,0.8619565783312184,7,3
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,setup,SHORT_REVERSAL,19,13.253305441238343,0.6975423916441233,0.9276359519120242,17,2
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,direction,LONG,36,10.483148042861298,0.2911985567461472,0.8946983108816399,29,7
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,direction,SHORT,29,15.78775669309611,0.5444054032102107,0.8981818856307686,24,5
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2021,3,-0.6441864732643103,-0.2147288244214368,0.4367392597671158,2,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2022,13,5.6783274383191,0.4367944183322384,0.8762653160177203,11,2
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2023,9,4.956865888536564,0.5507628765040626,0.8849722040465797,8,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2024,11,0.46566279062121896,0.04233298096556536,0.9149588425028453,8,3
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2025,10,1.963616787381024,0.1963616787381024,0.7723779420618149,8,2
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,_year,2026,3,1.830136321706727,0.610045440568909,0.8646916660833152,2,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,HDFCBANK.NS,9,0.5708213261268753,0.06342459179187504,0.7131721809319722,7,2
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,ICICIBANK.NS,10,2.4656063328122935,0.24656063328122935,0.8859542142956414,8,2
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,INFY.NS,7,3.3476092994752573,0.4782298999250368,0.8981818856307686,6,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,RELIANCE.NS,7,2.817134459039154,0.4024477798627363,0.7814970302212441,6,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,SBIN.NS,8,-2.7564493965910692,-0.34455617457388366,0.3282951049341305,4,4
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,symbol,TCS.NS,8,7.805700732437813,0.9757125915547267,0.9756169489882058,8,0
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,setup,LONG_CONTINUATION,22,5.562952695168958,0.2528614861440435,0.7723779420618149,18,4
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,setup,LONG_REVERSAL,5,-4.525836441050637,-0.9051672882101274,-2.11540532412144,2,3
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,setup,SHORT_CONTINUATION,7,2.360808429664127,0.3372583470948753,0.8646916660833152,5,2
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,setup,SHORT_REVERSAL,15,10.852498069517873,0.7234998713011915,0.9222777518685734,14,1
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,direction,LONG,27,1.0371162541183225,0.03841171311549343,0.7707392866809273,20,7
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,direction,SHORT,22,13.213306499182,0.6006048408719091,0.8915770448386742,19,3

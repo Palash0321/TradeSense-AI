@@ -1,0 +1,16 @@
+{
+  "input_file": "tests\\output\\research\\early_adverse_bar12_trajectory\\early_adverse_bar12_trajectory_per_trade.csv",
+  "frozen_population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "alpha": 0.05,
+  "family_count": 3,
+  "bonferroni_alpha": 0.016666666666666666,
+  "family_pass_count": 3,
+  "conditional_evidence": true,
+  "deployment_rule_promoted": false,
+  "production_modified": false,
+  "oos_modified": false
+}

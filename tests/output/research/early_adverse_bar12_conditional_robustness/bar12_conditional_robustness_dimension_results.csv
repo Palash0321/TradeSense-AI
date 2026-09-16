@@ -1,0 +1,13 @@
+family,dimension,valid_subgroups,subgroup_direction_pct,valid_loo_results,loo_direction_pct,subgroup_direction_pass,loo_direction_pass,dimension_pass,reason
+A_net_path,year,6,100.0,6,100.0,True,True,True,PASS
+A_net_path,symbol,6,83.33333333333334,6,100.0,True,True,True,PASS
+A_net_path,setup,4,100.0,4,100.0,True,True,True,PASS
+A_net_path,direction,2,100.0,2,100.0,True,True,True,PASS
+B_favorable,year,6,83.33333333333334,6,100.0,True,True,True,PASS
+B_favorable,symbol,6,83.33333333333334,6,100.0,True,True,True,PASS
+B_favorable,setup,4,100.0,4,100.0,True,True,True,PASS
+B_favorable,direction,2,100.0,2,100.0,True,True,True,PASS
+C_adverse,year,6,100.0,6,100.0,True,True,True,PASS
+C_adverse,symbol,6,83.33333333333334,6,100.0,True,True,True,PASS
+C_adverse,setup,4,100.0,4,100.0,True,True,True,PASS
+C_adverse,direction,2,100.0,2,100.0,True,True,True,PASS

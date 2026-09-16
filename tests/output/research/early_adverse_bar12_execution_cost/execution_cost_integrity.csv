@@ -1,0 +1,9 @@
+check,expected,actual,pass
+trade_count,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+cost_scenarios,6,6,True
+break_even_rows,6,6,True
+subgroup_output_nonempty,True,True,True
+concentration_output_nonempty,True,True,True
+event_retained_output_nonempty,True,True,True

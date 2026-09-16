@@ -1,0 +1,19 @@
+{
+  "analysis": "Bar1->Bar2 counterfactual management",
+  "frozen_population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "bar2_exit_timing": "after_bar2_close_state_observed",
+  "states_tested": [
+    "bar2_net_deteriorated",
+    "bar2_favorable_failed_to_improve",
+    "adverse_up_favorable_not_up_net_down"
+  ],
+  "integrity_pass": true,
+  "production_modified": false,
+  "oos_modified": false,
+  "deployment_rule_promoted": false,
+  "methodology_note": "Hypothetical Bar-2-close exit; not executable performance and excludes transaction-cost/slippage modeling."
+}

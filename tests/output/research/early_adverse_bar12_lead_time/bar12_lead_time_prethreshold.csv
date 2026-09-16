@@ -1,0 +1,4 @@
+analysis,state,state_label,event_n,retained_n,event_state_n,retained_state_n,event_state_rate,retained_state_rate,rate_difference_pp
+prethreshold_bar2_state,bar2_net_deteriorated,Bar-2 net deterioration,26,46,12,15,0.46153846153846156,0.32608695652173914,13.545150501672243
+prethreshold_bar2_state,bar2_favorable_failed_to_improve,Bar-2 favorable failure,26,46,20,20,0.7692307692307693,0.43478260869565216,33.44481605351171
+prethreshold_bar2_state,adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,26,46,12,14,0.46153846153846156,0.30434782608695654,15.719063545150503

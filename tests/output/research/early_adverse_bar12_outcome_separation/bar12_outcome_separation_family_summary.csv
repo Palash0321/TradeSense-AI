@@ -1,0 +1,4 @@
+family,final_r_rows,final_r_median_difference,final_r_mw_p,final_r_ci_low,final_r_ci_high,directional_economic_separation
+A_net_path,1,-0.010000000000000009,0.2757919741507827,-0.53,0.010000000000000009,True
+B_favorable,1,-0.010000000000000009,0.01981369511128811,-2.99,0.0,True
+C_adverse,1,-0.010000000000000009,0.2757919741507827,-0.53,0.010000000000000009,True

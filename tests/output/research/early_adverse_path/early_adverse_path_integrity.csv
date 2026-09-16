@@ -1,0 +1,14 @@
+check,expected,observed,status
+frozen_trade_count,106,106,PASS
+path_row_count,530,530,PASS
+production_observed_bar5_mismatches,0,0,PASS
+production_event_replay_mismatches,0,0,PASS
+frozen_event_count,60,60,PASS
+frozen_retained_count,46,46,PASS
+production_bar5_reached_count,informational,102,INFO
+production_bar5_not_reached_count,informational,4,INFO
+extended_5bar_event_count,informational,63,INFO
+extended_5bar_retained_count,informational,43,INFO
+bar_sequence_1_to_5,0,0,PASS
+primary_path_output_exists,True,True,PASS
+validation_output_exists,True,True,PASS

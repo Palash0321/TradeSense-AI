@@ -1,0 +1,13 @@
+check,expected,actual,pass
+trade_count,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+trajectory_unique_keys,106,106,True
+production_unique_keys,106,106,True
+bar2_duplicate_keys,0,0,True
+bar3_duplicate_keys,0,0,True
+state_trigger_count,65,65,True
+executable_rows_nonzero,True,True,True
+executable_delta_complete,True,True,True
+cost_scenario_count,5,5,True
+per_trade_rows,106,106,True

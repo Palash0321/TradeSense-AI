@@ -1,0 +1,18 @@
+{
+  "analysis": "Bar1->Bar2 counterfactual stability",
+  "population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "states": [
+    "bar2_net_deteriorated",
+    "bar2_favorable_failed_to_improve",
+    "adverse_up_favorable_not_up_net_down"
+  ],
+  "bootstrap_iterations": 10000,
+  "integrity_pass": true,
+  "production_modified": false,
+  "oos_modified": false,
+  "deployment_rule_promoted": false
+}

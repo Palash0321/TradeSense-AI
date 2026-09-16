@@ -1,0 +1,4 @@
+family,bar1_feature,bar1_median,bar2_state,bar2_label,cmh_odds_ratio,cmh_p,bonferroni_alpha,valid_strata,direction_consistent,conditional_significance,family_pass
+A_net_path,bar1_net_excursion_r,-0.08940997056332475,bar2_net_deteriorated,Bar-2 net deterioration,3.256944444444444,0.014552296454205249,0.016666666666666666,2,True,True,True
+B_favorable,bar1_cumulative_mfe_r,0.06708416569583076,bar2_favorable_failed_to_improve,Bar-2 favorable failure,3.9344262295081966,0.005798472188448781,0.016666666666666666,2,True,True,True
+C_adverse,bar1_cumulative_mae_r,0.1583348736797485,bar2_net_deteriorated,Bar-2 net deterioration,4.036496350364963,0.0027356744846266487,0.016666666666666666,2,True,True,True

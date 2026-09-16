@@ -1,0 +1,10 @@
+check,passed
+trade_count,True
+event_count,True
+retained_count,True
+final_r_present,True
+primary_rows_positive,True
+family_coverage,True
+no_duplicate_trajectory_rows,True
+bar2_states_binary,True
+PASS,True

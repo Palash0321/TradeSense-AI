@@ -1,0 +1,10 @@
+state,state_label,outcome,n,mean,median,min,max
+bar2_net_deteriorated,Bar-2 net deterioration,outcome_final_r,53,-0.4730188679245283,-1.06,-1.07,1.95
+bar2_net_deteriorated,Bar-2 net deterioration,outcome_mfe_r,53,0.7290566037735849,0.43,0.0,2.45
+bar2_net_deteriorated,Bar-2 net deterioration,outcome_mae_r,53,1.0139622641509436,1.07,0.14,1.56
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,outcome_final_r,65,-0.5523076923076925,-1.06,-1.07,1.95
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,outcome_mfe_r,65,0.7366153846153846,0.44,0.0,2.45
+bar2_favorable_failed_to_improve,Bar-2 favorable failure,outcome_mae_r,65,1.032,1.07,0.05,1.68
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,outcome_final_r,49,-0.486530612244898,-1.06,-1.07,1.95
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,outcome_mfe_r,49,0.7393877551020408,0.44,0.0,2.45
+adverse_up_favorable_not_up_net_down,Bar-2 adverse-up + favorable-not-up + net-down,outcome_mae_r,49,1.0257142857142858,1.07,0.14,1.56

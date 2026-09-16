@@ -1,0 +1,12 @@
+check,expected,observed,pass
+trade_count,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+path_row_count,530,530,True
+trade_level_rows,106,106,True
+incremental_rows,21,21,True
+effect_rows,7,7,True
+state_family_rows,9,9,True
+direction_rows_nonzero,>0,30,True
+setup_rows_nonzero,>0,60,True
+correlation_matrix_nonempty,True,True,True

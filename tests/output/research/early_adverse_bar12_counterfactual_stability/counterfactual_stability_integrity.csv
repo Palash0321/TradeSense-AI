@@ -1,0 +1,10 @@
+check,actual,expected,pass
+input_rows,106,106,True
+event_count,60,60,True
+retained_count,46,46,True
+primary_state_count,3,3,True
+concentration_rows,12,12,True
+loo_rows,167,167,True
+bootstrap_rows,3,3,True
+subgroup_rows,54,54,True
+removal_rows,12,12,True

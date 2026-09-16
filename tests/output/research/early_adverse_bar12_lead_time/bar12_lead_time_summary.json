@@ -1,0 +1,15 @@
+{
+  "analysis": "Bar1->Bar2 lead-time / pre-threshold predictivity",
+  "frozen_population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "threshold_r": 0.25,
+  "max_bar": 5,
+  "delayed_event_count": 26,
+  "integrity_pass": true,
+  "production_modified": false,
+  "oos_modified": false,
+  "deployment_rule_promoted": false
+}
