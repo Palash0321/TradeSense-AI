@@ -8,6 +8,7 @@ Workflow
 1. Run OOS collection
 2. Run OOS monitor
 3. Run OOS change detection
+4. Run OOS evidence ledger
 
 This orchestration layer does NOT alter the research logic of any
 underlying component.
@@ -60,6 +61,18 @@ STEPS = [
         PROJECT_ROOT
         / "tests"
         / "monitor_oos_changes.py",
+    ),
+    (
+        "OOS EVIDENCE LEDGER",
+        PROJECT_ROOT
+        / "tests"
+        / "monitor_oos_evidence.py",
+    ),
+    (
+        "OOS EVIDENCE SUFFICIENCY",
+        PROJECT_ROOT
+        / "tests"
+        / "monitor_oos_sufficiency.py",
     ),
 ]
 
