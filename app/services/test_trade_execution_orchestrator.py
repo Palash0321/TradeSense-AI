@@ -3,6 +3,56 @@ from app.services.trade_execution_orchestrator import (
 )
 
 
+VALID_CANDIDATE = {
+    "symbol": "TEST",
+    "direction": "LONG",
+    "decision": "BUY",
+    "actionable": True,
+    "setup_type": "BREAKOUT",
+    "preferred_setup": "BREAKOUT",
+    "validation_status": "PASS",
+    "entry": 100.0,
+    "entry_low": None,
+    "entry_high": None,
+    "stop_loss": 98.0,
+    "target1": 103.0,
+    "target2": 105.0,
+    "target3": 107.0,
+    "risk_reward": {
+        "target1": 1.5,
+        "target2": 2.5,
+        "target3": 3.5,
+    },
+    "ai_confidence": 80.0,
+    "breakout_trigger": True,
+    "breakout_level": 100.0,
+}
+
+
+VALID_PORTFOLIO_STATE = {
+    "status": "PASS",
+    "passed": True,
+    "user_id": 1,
+    "cash_balance": 900000.0,
+    "holdings_market_value": 100000.0,
+    "gross_exposure": 100000.0,
+    "equity": 1000000.0,
+    "holdings_count": 2,
+    "open_risk_known": False,
+    "open_risk": None,
+    "risk_budget_policy_defined": False,
+    "risk_budget": None,
+    "checks": {
+        "account_exists": True,
+        "cash_balance_valid": True,
+        "equity_valid": True,
+        "portfolio_exposure_valid": True,
+    },
+    "reasons": [],
+    "source": "PortfolioRiskStateService",
+}
+
+
 class FakeRiskEngine:
     def __init__(self, result):
         self.result = result
@@ -13,7 +63,7 @@ class FakeRiskEngine:
         return self.result
 
 
-class FakePositionSizingEngine:
+class FakeSizingEngine:
     def __init__(self, result):
         self.result = result
         self.called = False
@@ -33,89 +83,86 @@ class FakeOrderIntentService:
         return self.result
 
 
-def make_candidate():
-    return {
-        "symbol": "RELIANCE.NS",
-        "direction": "LONG",
-        "decision": "BUY",
-        "actionable": True,
-        "setup_type": "BREAKOUT",
-        "entry": 100.0,
-        "stop_loss": 98.0,
-        "target1": 103.0,
-        "target2": 105.0,
-        "target3": 107.0,
-        "risk_reward": 1.5,
-    }
-
-
-def make_risk_pass():
+def passed_risk():
     return {
         "risk_decision": "PASS",
-        "passed": True,
-        "symbol": "RELIANCE.NS",
-        "direction": "LONG",
-        "entry": 100.0,
-        "stop_loss": 98.0,
-        "risk": 2.0,
-        "target1": 103.0,
-        "target2": 105.0,
-        "target3": 107.0,
+        "checks": {},
         "reasons": [],
+        "risk": 2.0,
         "source": "RiskEngine",
     }
 
 
-def make_sizing_pass():
+def rejected_risk():
+    return {
+        "risk_decision": "REJECT",
+        "checks": {},
+        "reasons": ["Risk rejected."],
+        "risk": None,
+        "source": "RiskEngine",
+    }
+
+
+def passed_sizing():
     return {
         "sizing_decision": "PASS",
-        "passed": True,
-        "symbol": "RELIANCE.NS",
-        "direction": "LONG",
-        "entry": 100.0,
-        "stop_loss": 98.0,
-        "risk_per_unit": 2.0,
-        "risk_budget": 1000.0,
         "quantity": 500,
         "position_value": 50000.0,
         "actual_risk": 1000.0,
-        "reasons": [],
+        "risk_budget": 1000.0,
         "source": "PositionSizingEngine",
     }
 
 
-def make_order_intent_pass():
+def rejected_sizing():
+    return {
+        "sizing_decision": "REJECT",
+        "quantity": None,
+        "position_value": None,
+        "actual_risk": None,
+        "risk_budget": 0.5,
+        "reasons": ["Insufficient risk budget."],
+        "source": "PositionSizingEngine",
+    }
+
+
+def passed_intent():
     return {
         "intent_decision": "PASS",
-        "ready_for_execution": True,
-        "symbol": "RELIANCE.NS",
+        "ready": True,
+        "symbol": "TEST",
         "direction": "LONG",
-        "order_type": "MARKET",
+        "order_type": "STOP",
         "quantity": 500,
         "entry": 100.0,
         "stop_loss": 98.0,
-        "target1": 103.0,
-        "target2": 105.0,
-        "target3": 107.0,
-        "risk_budget": 1000.0,
-        "risk_per_unit": 2.0,
-        "actual_risk": 1000.0,
-        "position_value": 50000.0,
-        "reasons": [],
         "source": "OrderIntentService",
     }
 
 
-def test_full_pipeline_passes():
-    candidate = make_candidate()
+def rejected_intent():
+    return {
+        "intent_decision": "REJECT",
+        "ready": False,
+        "symbol": "TEST",
+        "direction": "LONG",
+        "order_type": None,
+        "quantity": None,
+        "reasons": ["Order intent rejected."],
+        "source": "OrderIntentService",
+    }
 
-    risk_engine = FakeRiskEngine(make_risk_pass())
-    sizing_engine = FakePositionSizingEngine(make_sizing_pass())
-    intent_service = FakeOrderIntentService(make_order_intent_pass())
+
+def test_full_pipeline_passes_with_legacy_direct_budget():
+    risk_engine = FakeRiskEngine(passed_risk())
+    sizing_engine = FakeSizingEngine(passed_sizing())
+    intent_service = FakeOrderIntentService(
+        passed_intent()
+    )
 
     orchestrator = TradeExecutionOrchestrator(
-        trade_candidate=candidate,
-        risk_budget=1000.0,
+        trade_candidate=VALID_CANDIDATE,
+        risk_budget=1000,
         risk_engine=risk_engine,
         position_sizing_engine=sizing_engine,
         order_intent_service=intent_service,
@@ -127,39 +174,69 @@ def test_full_pipeline_passes():
     assert result["ready_for_execution"] is True
     assert result["failed_stage"] is None
 
-    assert result["trade_candidate"] == candidate
     assert result["risk"]["risk_decision"] == "PASS"
-    assert result["position_sizing"]["sizing_decision"] == "PASS"
-    assert result["order_intent"]["intent_decision"] == "PASS"
+    assert result["risk_budget"]["status"] == "PASS"
+    assert result["risk_budget"]["risk_budget"] == 1000.0
+
+    assert (
+        result["position_sizing"]["sizing_decision"]
+        == "PASS"
+    )
+
+    assert (
+        result["order_intent"]["intent_decision"]
+        == "PASS"
+    )
 
     assert risk_engine.called is True
     assert sizing_engine.called is True
     assert intent_service.called is True
 
 
-def test_risk_rejection_stops_pipeline():
-    candidate = make_candidate()
-
-    risk_engine = FakeRiskEngine(
-        {
-            "risk_decision": "REJECT",
-            "passed": False,
-            "reasons": ["Invalid risk geometry."],
-            "source": "RiskEngine",
-        }
-    )
-
-    sizing_engine = FakePositionSizingEngine(
-        make_sizing_pass()
-    )
-
+def test_pipeline_uses_risk_budget_service_with_portfolio_state():
+    risk_engine = FakeRiskEngine(passed_risk())
+    sizing_engine = FakeSizingEngine(passed_sizing())
     intent_service = FakeOrderIntentService(
-        make_order_intent_pass()
+        passed_intent()
     )
 
     orchestrator = TradeExecutionOrchestrator(
-        trade_candidate=candidate,
-        risk_budget=1000.0,
+        trade_candidate=VALID_CANDIDATE,
+        portfolio_state=VALID_PORTFOLIO_STATE,
+        risk_budget=5000,
+        risk_engine=risk_engine,
+        position_sizing_engine=sizing_engine,
+        order_intent_service=intent_service,
+    )
+
+    result = orchestrator.prepare()
+
+    assert result["execution_decision"] == "PASS"
+    assert result["ready_for_execution"] is True
+
+    assert result["risk_budget"]["status"] == "PASS"
+    assert result["risk_budget"]["risk_budget"] == 5000.0
+    assert result["risk_budget"]["user_id"] == 1
+    assert result["risk_budget"]["equity"] == 1000000.0
+
+
+def test_invalid_portfolio_state_fails_closed_before_sizing():
+    risk_engine = FakeRiskEngine(passed_risk())
+    sizing_engine = FakeSizingEngine(passed_sizing())
+    intent_service = FakeOrderIntentService(
+        passed_intent()
+    )
+
+    invalid_state = dict(
+        VALID_PORTFOLIO_STATE
+    )
+    invalid_state["status"] = "REJECT"
+    invalid_state["passed"] = False
+
+    orchestrator = TradeExecutionOrchestrator(
+        trade_candidate=VALID_CANDIDATE,
+        portfolio_state=invalid_state,
+        risk_budget=5000,
         risk_engine=risk_engine,
         position_sizing_engine=sizing_engine,
         order_intent_service=intent_service,
@@ -169,41 +246,28 @@ def test_risk_rejection_stops_pipeline():
 
     assert result["execution_decision"] == "REJECT"
     assert result["ready_for_execution"] is False
-    assert result["failed_stage"] == "RISK"
+    assert result["failed_stage"] == "risk_budget"
 
-    assert result["risk"]["risk_decision"] == "REJECT"
-    assert result["position_sizing"] is None
-    assert result["order_intent"] is None
+    assert (
+        result["risk_budget"]["status"]
+        == "REJECT"
+    )
 
-    assert risk_engine.called is True
     assert sizing_engine.called is False
     assert intent_service.called is False
 
 
-def test_position_sizing_rejection_stops_order_intent():
-    candidate = make_candidate()
-
-    risk_engine = FakeRiskEngine(make_risk_pass())
-
-    sizing_engine = FakePositionSizingEngine(
-        {
-            "sizing_decision": "REJECT",
-            "passed": False,
-            "quantity": 0,
-            "reasons": [
-                "Risk budget is insufficient to purchase at least one unit."
-            ],
-            "source": "PositionSizingEngine",
-        }
-    )
-
+def test_invalid_risk_budget_fails_closed_before_sizing():
+    risk_engine = FakeRiskEngine(passed_risk())
+    sizing_engine = FakeSizingEngine(passed_sizing())
     intent_service = FakeOrderIntentService(
-        make_order_intent_pass()
+        passed_intent()
     )
 
     orchestrator = TradeExecutionOrchestrator(
-        trade_candidate=candidate,
-        risk_budget=0.5,
+        trade_candidate=VALID_CANDIDATE,
+        portfolio_state=VALID_PORTFOLIO_STATE,
+        risk_budget=0,
         risk_engine=risk_engine,
         position_sizing_engine=sizing_engine,
         order_intent_service=intent_service,
@@ -213,35 +277,89 @@ def test_position_sizing_rejection_stops_order_intent():
 
     assert result["execution_decision"] == "REJECT"
     assert result["ready_for_execution"] is False
-    assert result["failed_stage"] == "POSITION_SIZING"
+    assert result["failed_stage"] == "risk_budget"
 
-    assert result["risk"]["risk_decision"] == "PASS"
-    assert result["position_sizing"]["sizing_decision"] == "REJECT"
-    assert result["order_intent"] is None
+    assert (
+        result["risk_budget"]["status"]
+        == "REJECT"
+    )
 
-    assert risk_engine.called is True
+    assert sizing_engine.called is False
+    assert intent_service.called is False
+
+
+def test_risk_rejection_stops_pipeline():
+    risk_engine = FakeRiskEngine(
+        rejected_risk()
+    )
+    sizing_engine = FakeSizingEngine(
+        passed_sizing()
+    )
+    intent_service = FakeOrderIntentService(
+        passed_intent()
+    )
+
+    orchestrator = TradeExecutionOrchestrator(
+        trade_candidate=VALID_CANDIDATE,
+        risk_budget=1000,
+        risk_engine=risk_engine,
+        position_sizing_engine=sizing_engine,
+        order_intent_service=intent_service,
+    )
+
+    result = orchestrator.prepare()
+
+    assert result["execution_decision"] == "REJECT"
+    assert result["ready_for_execution"] is False
+    assert result["failed_stage"] == "risk"
+
+    assert sizing_engine.called is False
+    assert intent_service.called is False
+
+
+def test_sizing_rejection_stops_order_intent():
+    risk_engine = FakeRiskEngine(
+        passed_risk()
+    )
+    sizing_engine = FakeSizingEngine(
+        rejected_sizing()
+    )
+    intent_service = FakeOrderIntentService(
+        passed_intent()
+    )
+
+    orchestrator = TradeExecutionOrchestrator(
+        trade_candidate=VALID_CANDIDATE,
+        risk_budget=1000,
+        risk_engine=risk_engine,
+        position_sizing_engine=sizing_engine,
+        order_intent_service=intent_service,
+    )
+
+    result = orchestrator.prepare()
+
+    assert result["execution_decision"] == "REJECT"
+    assert result["ready_for_execution"] is False
+    assert result["failed_stage"] == "position_sizing"
+
     assert sizing_engine.called is True
     assert intent_service.called is False
 
 
 def test_order_intent_rejection_is_terminal():
-    candidate = make_candidate()
-
-    risk_engine = FakeRiskEngine(make_risk_pass())
-    sizing_engine = FakePositionSizingEngine(make_sizing_pass())
-
+    risk_engine = FakeRiskEngine(
+        passed_risk()
+    )
+    sizing_engine = FakeSizingEngine(
+        passed_sizing()
+    )
     intent_service = FakeOrderIntentService(
-        {
-            "intent_decision": "REJECT",
-            "ready_for_execution": False,
-            "reasons": ["Invalid order contract."],
-            "source": "OrderIntentService",
-        }
+        rejected_intent()
     )
 
     orchestrator = TradeExecutionOrchestrator(
-        trade_candidate=candidate,
-        risk_budget=1000.0,
+        trade_candidate=VALID_CANDIDATE,
+        risk_budget=1000,
         risk_engine=risk_engine,
         position_sizing_engine=sizing_engine,
         order_intent_service=intent_service,
@@ -251,12 +369,6 @@ def test_order_intent_rejection_is_terminal():
 
     assert result["execution_decision"] == "REJECT"
     assert result["ready_for_execution"] is False
-    assert result["failed_stage"] == "ORDER_INTENT"
+    assert result["failed_stage"] == "order_intent"
 
-    assert result["risk"]["risk_decision"] == "PASS"
-    assert result["position_sizing"]["sizing_decision"] == "PASS"
-    assert result["order_intent"]["intent_decision"] == "REJECT"
-
-    assert risk_engine.called is True
-    assert sizing_engine.called is True
     assert intent_service.called is True
