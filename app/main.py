@@ -43,6 +43,9 @@ from app.api.paper_trading import (
 )
 from app.api.paper_orders import (
     router as paper_orders_router
+)
+from app.api.trade_execution import (
+    router as trade_execution_router
 )   
 from app.api.paper_portfolio import (
     router as paper_portfolio_router
@@ -80,6 +83,9 @@ app.include_router(
 )
 app.include_router(
     paper_orders_router
+)
+app.include_router(
+    trade_execution_router
 )
 app.include_router(
     paper_portfolio_router
