@@ -6,11 +6,8 @@ from app.core.database import get_db
 from app.auth.dependencies import get_current_user
 
 from app.models.user import User
-from app.models.paper_account import PaperAccount
-from app.models.paper_portfolio import PaperPortfolio
 
-from app.services.market_price_service import get_live_price
-from app.models.paper_transaction import PaperTransaction
+from app.services.paper_execution_service import PaperExecutionService
 
 
 router = APIRouter(
@@ -20,9 +17,8 @@ router = APIRouter(
 
 
 class PaperBuy(BaseModel):
-
     symbol: str
-    quantity: float
+    quantity: int
 
 
 @router.post("/buy")
@@ -31,113 +27,48 @@ def paper_buy(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    service = PaperExecutionService(
+        db=db,
+        user_id=current_user.id,
+    )
 
-    symbol = order.symbol.upper()
+    result = service.execute_manual_buy(
+        symbol=order.symbol,
+        quantity=order.quantity,
+    )
 
-    price = get_live_price(symbol)
+    if result["status"] == "REJECT":
+        reason = result.get("reason", "Paper BUY rejected")
 
-    if price <= 0:
+        if reason == "Paper account not found":
+            raise HTTPException(
+                status_code=404,
+                detail=reason,
+            )
+
+        if reason == "Unable to fetch live price":
+            raise HTTPException(
+                status_code=400,
+                detail=reason,
+            )
+
+        if reason == "Insufficient paper balance":
+            raise HTTPException(
+                status_code=400,
+                detail=reason,
+            )
 
         raise HTTPException(
             status_code=400,
-            detail="Unable to fetch live price",
+            detail=reason,
         )
-
-    account = (
-        db.query(PaperAccount)
-        .filter(
-            PaperAccount.user_id == current_user.id
-        )
-        .first()
-    )
-
-    if account is None:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Paper account not found",
-        )
-
-    total_cost = price * order.quantity
-
-    if total_cost > account.balance:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Insufficient paper balance",
-        )
-
-    account.balance -= total_cost
-
-    paper_tx = PaperTransaction(
-    user_id=current_user.id,
-    symbol=symbol,
-    transaction_type="BUY",
-    quantity=order.quantity,
-    price=price,
-    total_amount=total_cost,
-)
-
-    db.add(paper_tx)
-
-    holding = (
-        db.query(PaperPortfolio)
-        .filter(
-            PaperPortfolio.user_id == current_user.id,
-            PaperPortfolio.symbol == symbol,
-        )
-        .first()
-    )
-
-    if holding:
-
-        total_qty = (
-            holding.quantity
-            + order.quantity
-        )
-
-        total_value = (
-            holding.quantity
-            * holding.average_price
-        ) + total_cost
-
-        holding.quantity = total_qty
-
-        holding.average_price = (
-            total_value / total_qty
-        )
-
-        holding.current_price = price
-
-    else:
-
-        holding = PaperPortfolio(
-
-            user_id=current_user.id,
-
-            symbol=symbol,
-
-            quantity=order.quantity,
-
-            average_price=price,
-
-            current_price=price,
-
-        )
-
-        db.add(holding)
-
-    db.commit()
 
     return {
-
-        "message": "Paper trade executed",
-
-        "balance": round(account.balance, 2),
-
-        "price": round(price, 2),
-
+        "message": result["message"],
+        "balance": result["remaining_balance"],
+        "price": result["execution_price"],
     }
+
 
 @router.post("/sell")
 def paper_sell(
@@ -145,93 +76,47 @@ def paper_sell(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    service = PaperExecutionService(
+        db=db,
+        user_id=current_user.id,
+    )
 
-    symbol = order.symbol.upper()
+    result = service.execute_manual_sell(
+        symbol=order.symbol,
+        quantity=order.quantity,
+    )
 
-    price = get_live_price(symbol)
+    if result["status"] == "REJECT":
+        reason = result.get("reason", "Paper SELL rejected")
 
-    if price <= 0:
+        if reason in (
+            "Paper account not found",
+            "Stock not found",
+        ):
+            raise HTTPException(
+                status_code=404,
+                detail=reason,
+            )
+
+        if reason == "Unable to fetch live price":
+            raise HTTPException(
+                status_code=400,
+                detail=reason,
+            )
+
+        if reason == "Not enough quantity":
+            raise HTTPException(
+                status_code=400,
+                detail=reason,
+            )
 
         raise HTTPException(
             status_code=400,
-            detail="Unable to fetch live price",
+            detail=reason,
         )
-
-    account = (
-        db.query(PaperAccount)
-        .filter(
-            PaperAccount.user_id == current_user.id
-        )
-        .first()
-    )
-
-    if account is None:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Paper account not found",
-        )
-
-    holding = (
-        db.query(PaperPortfolio)
-        .filter(
-            PaperPortfolio.user_id == current_user.id,
-            PaperPortfolio.symbol == symbol,
-        )
-        .first()
-    )
-
-    if holding is None:
-
-        raise HTTPException(
-            status_code=404,
-            detail="Stock not found",
-        )
-
-    if order.quantity > holding.quantity:
-
-        raise HTTPException(
-            status_code=400,
-            detail="Not enough quantity",
-        )
-
-    sale_value = price * order.quantity
-
-    account.balance += sale_value
-
-    paper_tx = PaperTransaction(
-    user_id=current_user.id,
-    symbol=symbol,
-    transaction_type="SELL",
-    quantity=order.quantity,
-    price=price,
-    total_amount=sale_value,
-)
-
-    db.add(paper_tx)
-
-    holding.quantity -= order.quantity
-
-    holding.current_price = price
-
-    if holding.quantity == 0:
-
-        db.delete(holding)
-
-    db.commit()
 
     return {
-
-        "message": "Paper sell executed",
-
-        "balance": round(
-            account.balance,
-            2,
-        ),
-
-        "sell_price": round(
-            price,
-            2,
-        ),
-
+        "message": result["message"],
+        "balance": result["remaining_balance"],
+        "sell_price": result["execution_price"],
     }
