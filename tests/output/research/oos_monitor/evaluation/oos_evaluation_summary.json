@@ -1,0 +1,34 @@
+{
+  "locked_hypothesis": {
+    "rule_version": "7B_0.25R",
+    "status": "FROZEN",
+    "threshold_r": 0.25,
+    "window_bars": 7
+  },
+  "reason": "Stage 5 has not opened OOS evaluation.",
+  "safety": {
+    "historical_106_used_as_oos": false,
+    "historical_data_modified": false,
+    "hypothesis_modified": false,
+    "oos_ledgers_modified": false,
+    "parameter_tuning": false,
+    "production_modified": false,
+    "regime_selection": false,
+    "setup_selection": false
+  },
+  "stage5_global_counts": {
+    "7b_events": 0,
+    "complete_7b": 0,
+    "duplicate_keys": 0,
+    "genuine_oos": 0,
+    "invalid_dates": 0,
+    "missing_path": 0,
+    "no_event_full_7b": 0,
+    "partial_7b": 0,
+    "pre_start": 0,
+    "streams_monitored": 5
+  },
+  "stage5_status": "NO_GENUINE_OOS_EVIDENCE",
+  "status": "EVALUATION_BLOCKED",
+  "timestamp_utc": "2026-09-17T05:50:20.053192+00:00"
+}

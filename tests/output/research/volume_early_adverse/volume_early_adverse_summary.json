@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "frozen_trades": 106,
+  "frozen_events": 60,
+  "frozen_retained": 46,
+  "volume_definition": "Signal-day Volume / 20-period rolling mean Volume",
+  "event_definition": "early_adverse_r_bar_5 >= 0.25R",
+  "threshold_optimization": "NONE",
+  "strategy_modification": "NONE",
+  "oos_modification": "NONE",
+  "profitability_rule": "NOT_CREATED",
+  "category_counts": {
+    "LOW": 38,
+    "NORMAL": 34,
+    "HIGH": 21,
+    "VERY_HIGH": 13
+  },
+  "category_event_rates_pct": {
+    "LOW": 60.526315789473685,
+    "NORMAL": 70.58823529411765,
+    "HIGH": 52.38095238095239,
+    "VERY_HIGH": 15.384615384615385
+  },
+  "continuous": {
+    "mean_volume_ratio_event": 1.1707389503130565,
+    "mean_volume_ratio_retained": 1.5950092185264275,
+    "mean_difference_event_minus_retained": -0.424270268213371,
+    "median_volume_ratio_event": 1.1509147447353956,
+    "median_volume_ratio_retained": 1.4144910144275888,
+    "median_difference_event_minus_retained": -0.2635762696921933,
+    "pearson_correlation": -0.2939458939507796,
+    "spearman_correlation": -0.21648548730994419,
+    "mann_whitney_u": 1032.0,
+    "mann_whitney_p_value": 0.026751218699955063
+  },
+  "median_split": {
+    "median_volume_ratio": 1.1924812273360488,
+    "low_n": 53,
+    "low_events": 35,
+    "low_event_rate_pct": 66.0377358490566,
+    "high_n": 53,
+    "high_events": 25,
+    "high_event_rate_pct": 47.16981132075472,
+    "risk_difference_high_minus_low_pp": -18.867924528301884,
+    "rd_ci_low_pp": -37.39300516640544,
+    "rd_ci_high_pp": -0.3428438901983327,
+    "odds_ratio_high_vs_low": 0.45918367346938777,
+    "fisher_p_value": 0.07725536944432158
+  },
+  "integrity_failures": 0
+}

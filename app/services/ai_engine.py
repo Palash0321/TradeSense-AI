@@ -11,6 +11,7 @@ from app.services.entry_engine_service import EntryEngineService
 from app.services.trade_validation_service import TradeValidationService
 from app.services.option_chain_service import OptionChainService
 from app.services.final_decision_service import FinalDecisionService
+from app.services.trade_candidate_service import TradeCandidateService
 from app.core.levels.market_structure import calculate_market_structure
 from app.core.liquidity.liquidity import calculate_liquidity
 from app.core.setup.setup_engine import calculate_setup
@@ -1009,6 +1010,17 @@ class AIEngine:
 
         ).decide()
 
+        # =====================================
+        # Trade Candidate Contract
+        # =====================================
+
+        trade_candidate = TradeCandidateService(
+            symbol=self.symbol,
+            final_decision=final_decision,
+            setup=setup,
+            ai_confidence=ai_confidence
+        ).build()
+
         return {
 
             "trade_quality": analysis,
@@ -1034,6 +1046,8 @@ class AIEngine:
             "trade_validation": trade_validation,
 
             "final_decision": final_decision,
+
+            "trade_candidate": trade_candidate,
 
             "candlestick_patterns": patterns,
 

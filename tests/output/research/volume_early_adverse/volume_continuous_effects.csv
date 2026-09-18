@@ -1,0 +1,11 @@
+metric,value
+mean_volume_ratio_event,1.1707389503130565
+mean_volume_ratio_retained,1.5950092185264275
+mean_difference_event_minus_retained,-0.424270268213371
+median_volume_ratio_event,1.1509147447353956
+median_volume_ratio_retained,1.4144910144275888
+median_difference_event_minus_retained,-0.2635762696921933
+pearson_correlation,-0.2939458939507796
+spearman_correlation,-0.21648548730994419
+mann_whitney_u,1032.0
+mann_whitney_p_value,0.026751218699955063

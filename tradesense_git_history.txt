@@ -1,0 +1,68 @@
+32f5254|2026-07-04|Initial commit
+30105ce|2026-07-04|Initial FastAPI project setup
+3cd6dc1|2026-07-04|Remove Python cache files
+ca9b89d|2026-07-04|Added interactive stock chart with Plotly
+daeca05|2026-07-04|Added RSI and MACD calculations with technical dashboard improvements
+73c6cf1|2026-07-05|Built Professional homepage UI
+7d9956b|2026-07-07|Optimize Plotly chart responsiveness and dashboard layout
+ea80773|2026-07-07|Improve home page and redesign result dashboard
+c1a1ad6|2026-07-07|Resolve merge conflict
+b0df9b4|2026-07-07|Improve result dashboard with company information and formatted market statistics
+c5943f7|2026-07-07|Add live price change indicators to dashboard
+dba0b1d|2026-07-08|Enhance recommendation card with AI confidence and market status
+10e4565|2026-07-08|Build professional smart search module
+bb6305b|2026-07-10|Implement SQLite search, market filtering, watchlist page, and premium search UI
+4d84442|2026-07-10|Refactor search architecture, add StockUniverse service and symbol alias engine
+1ba03d2|2026-07-10|Implement AI screener improvements and database preparation
+94a5bf2|2026-07-12|Refactor AI engine into modular scoring and indicator architecture
+7504af0|2026-07-14|feat: add AI chart overlays with support, resistance, target and stop-loss
+a268b18|2026-07-15|feat: implement SQLite-backed watchlist system
+4061222|2026-07-29|Add Market Intelligence page with live global indices
+f1c4708|2026-07-29|Add AI market sentiment summary to Market Intelligence
+0130ba7|2026-07-29|Add live top gainers and losers to Market Intelligence
+05ef251|2026-07-29|Add sector performance section to Market Intelligence
+dda448e|2026-07-29|Add Market News section to Market Intelligence
+c06cb5a|2026-07-29|Add Market Calendar and live NSE status
+3d4e95b|2026-08-01|Setup PostgreSQL, SQLAlchemy and Alembic
+7007cc5|2026-08-01|Meaningful commit message
+53206ef|2026-08-07|feat: TradeSense AI v0.9 milestone
+0fb137f|2026-08-17|feat: add market intelligence to stock results
+ced7022|2026-08-17|feat: add sector performance to market intelligence
+1d1b21e|2026-08-18|feat: add live market breadth intelligence
+5880e93|2026-08-18|feat: add market intelligence summary
+ac3baa6|2026-08-18|feat: add live sector performance
+dc7ddc7|2026-08-18|feat: centralize market universe and improve breadth tracking
+e1efe2e|2026-08-18|feat: establish validated 30-stock market universe
+dc4b0cc|2026-08-18|feat: add dynamic RSI status styling
+dc6d8aa|2026-08-18|feat: add cached market breadth health scoring
+6d4ad16|2026-08-19|Add ATR risk strategy foundation
+76128fe|2026-08-19|Add EMA gap filter and wider ATR trailing stop
+9394416|2026-08-20|checkpoint before Qantivra UI redesign
+647e1c1|2026-08-22|checkpoint: trade signal architecture and UI
+d387b35|2026-08-22|Improve breakout state visibility
+cedcfdd|2026-08-23|Add robust ATR strategy validation and NIFTY regime filter
+e2314c5|2026-08-27|Freeze validated backend and portfolio execution
+7961b5d|2026-08-27|Fix desktop AI panel layout and probability styling
+66bef4c|2026-08-28|Preserve candidate trade setup levels
+3bb4a8c|2026-08-28|Add market structure analysis and scoring
+6a00d06|2026-08-28|Add liquidity analysis and opportunity scoring
+3a29128|2026-08-29|Add structural setup engine
+fdb9a5f|2026-08-29|Integrate directional setup with entry engine
+47bec02|2026-08-29|Make validation and final decisions directional
+9d22f6d|2026-08-29|Align opportunity messaging with setup direction
+2b4a1fb|2026-08-30|refactor backend trade setup and validation flow
+c8722f4|2026-08-30|fix sell decision rendering in result page
+25ada37|2026-08-31|Refine trade signal validation and MTF logic
+0cf98cb|2026-08-31|Integrate NSE option chain analysis
+14f422f|2026-08-31|Fix directional backtest cash accounting
+cdd54a8|2026-09-01|Optimize market structure swing detection
+49a7d32|2026-09-01|Optimize TradeSense signal generation
+9bfbce7|2026-09-08|Validate frozen 5B 0.25R dimension robustness audit
+c0d4d9c|2026-09-08|Harden frozen 5B 0.25R holdout ledger integrity
+eb87562|2026-09-14|Add cross-index research matrix
+dfc528f|2026-09-15|Add regime forensics and five-stream OOS gate
+2bc3a93|2026-09-16|Forensic: validate executable Bar2 adverse-path replay
+6faa770|2026-09-16|Forensic: validate early adverse temporal robustness
+7215ac7|2026-09-16|OOS: add master monitoring pipeline
+6852316|2026-09-17|OOS: integrate evidence sufficiency gate
+7387e77|2026-09-17|OOS: add Stage 6 hypothesis evaluation

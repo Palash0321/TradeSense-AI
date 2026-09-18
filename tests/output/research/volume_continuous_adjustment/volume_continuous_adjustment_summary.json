@@ -1,0 +1,163 @@
+{
+  "hypothesis": {
+    "threshold_r": 0.25,
+    "max_bars": 5,
+    "definition": "5B_0.25R"
+  },
+  "population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "volume": {
+    "global_median": 1.1924812273360488,
+    "raw_odds_ratio": 0.45918367346938777,
+    "raw_fisher_p": 0.07725536944432154,
+    "raw_risk_difference_pp": -18.867924528301884
+  },
+  "continuous_controls": [
+    {
+      "control": "TREND_STRENGTH",
+      "control_column": "TREND_STRENGTH",
+      "control_median": 41.035,
+      "missing_values": 0,
+      "n": 106,
+      "pooled_cmh_or": 0.46817248459958927,
+      "pooled_cmh_p_approx": 0.1836008549467406,
+      "usable_strata": 2
+    },
+    {
+      "control": "TREND_SLOPE",
+      "control_column": "TREND_SLOPE",
+      "control_median": 1.14105,
+      "missing_values": 0,
+      "n": 106,
+      "pooled_cmh_or": 0.4666666666666667,
+      "pooled_cmh_p_approx": 0.1805070951578872,
+      "usable_strata": 2
+    },
+    {
+      "control": "ENTRY_ATR",
+      "control_column": "ENTRY_ATR",
+      "control_median": 24.92,
+      "missing_values": 0,
+      "n": 106,
+      "pooled_cmh_or": 0.4558521560574949,
+      "pooled_cmh_p_approx": 0.16690818125854703,
+      "usable_strata": 2
+    },
+    {
+      "control": "SETUP_CONFIDENCE",
+      "control_column": "SETUP_CONFIDENCE",
+      "control_median": 70.0,
+      "missing_values": 0,
+      "n": 106,
+      "pooled_cmh_or": 0.44973544973544977,
+      "pooled_cmh_p_approx": 0.048765915225386716,
+      "usable_strata": 1
+    },
+    {
+      "control": "BREAK_AGE",
+      "control_column": "BREAK_AGE",
+      "control_median": 0.0,
+      "missing_values": 0,
+      "n": 106,
+      "pooled_cmh_or": 0.4680776014109347,
+      "pooled_cmh_p_approx": 0.06251346522667021,
+      "usable_strata": 2
+    }
+  ],
+  "combined_controls": [
+    {
+      "combined_control": "TREND_STRENGTH_X_TREND_SLOPE",
+      "controls": [
+        "TREND_STRENGTH",
+        "TREND_SLOPE"
+      ],
+      "strata": 4,
+      "usable_strata": 4,
+      "pooled_cmh_or": 0.4293193717277487,
+      "pooled_cmh_p_approx": 0.3291438469544977
+    },
+    {
+      "combined_control": "ENTRY_ATR_X_SETUP_CONFIDENCE",
+      "controls": [
+        "ENTRY_ATR",
+        "SETUP_CONFIDENCE"
+      ],
+      "strata": 3,
+      "usable_strata": 2,
+      "pooled_cmh_or": 0.4505426739023186,
+      "pooled_cmh_p_approx": 0.16630453215272906
+    },
+    {
+      "combined_control": "TREND_STRENGTH_X_ENTRY_ATR",
+      "controls": [
+        "TREND_STRENGTH",
+        "ENTRY_ATR"
+      ],
+      "strata": 4,
+      "usable_strata": 4,
+      "pooled_cmh_or": 0.4668820678513732,
+      "pooled_cmh_p_approx": 0.35888369296934625
+    },
+    {
+      "combined_control": "SETUP_CONFIDENCE_X_BREAK_AGE",
+      "controls": [
+        "SETUP_CONFIDENCE",
+        "BREAK_AGE"
+      ],
+      "strata": 4,
+      "usable_strata": 1,
+      "pooled_cmh_or": 0.4483516483516483,
+      "pooled_cmh_p_approx": 0.050007959362755094
+    }
+  ],
+  "integrity": [
+    {
+      "check": "FROZEN_TRADE_COUNT",
+      "actual": 106,
+      "expected": 106,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_EVENT_COUNT",
+      "actual": 60,
+      "expected": 60,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_RETAINED_COUNT",
+      "actual": 46,
+      "expected": 46,
+      "status": "PASS"
+    },
+    {
+      "check": "VOLUME_DUPLICATE_KEYS",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_DUPLICATE_KEYS",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "MISSING_VOLUME_RATIO",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    }
+  ],
+  "safety": {
+    "production_modified": false,
+    "frozen_dataset_modified": false,
+    "oos_modified": false,
+    "threshold_optimized": false,
+    "feature_selection": false,
+    "ml_model": false,
+    "deployment_rule_created": false
+  }
+}

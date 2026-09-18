@@ -1,0 +1,1505 @@
+7387e77 | 2026-09-17 | OOS: add Stage 6 hypothesis evaluation
+ tests/evaluate_oos_hypothesis.py        | 1851 +++++++++++++++++++++++++++++++
+ tests/test_oos_hypothesis_evaluation.py |  955 ++++++++++++++++
+ 2 files changed, 2806 insertions(+)
+
+6852316 | 2026-09-17 | OOS: integrate evidence sufficiency gate
+ tests/monitor_oos_evidence.py    | 1309 ++++++++++++++++++++++++++++++++++++++
+ tests/monitor_oos_sufficiency.py | 1087 +++++++++++++++++++++++++++++++
+ tests/run_oos_monitor.py         |   13 +
+ 3 files changed, 2409 insertions(+)
+
+7215ac7 | 2026-09-16 | OOS: add master monitoring pipeline
+ tests/monitor_oos.py                               | 1068 ++++++++++++++++++++
+ tests/monitor_oos_changes.py                       |  904 +++++++++++++++++
+ .../oos_monitor/oos_monitor_change_history.jsonl   |    2 +
+ .../research/oos_monitor/oos_monitor_current.csv   |    6 +
+ .../snapshots/oos_monitor_20260916_231557.json     |  152 +++
+ .../snapshots/oos_monitor_20260916_231905.json     |  152 +++
+ .../snapshots/oos_monitor_20260916_232808.json     |  152 +++
+ tests/run_oos_monitor.py                           |  336 ++++++
+ 8 files changed, 2772 insertions(+)
+
+6faa770 | 2026-09-16 | Forensic: validate early adverse temporal robustness
+ tests/forensic_early_adverse_bar12_independence.py | 1597 +++++++++++++++
+ ...ensic_early_adverse_bar12_nested_conditional.py | 2069 ++++++++++++++++++++
+ ...nsic_early_adverse_bar12_temporal_executable.py | 1900 ++++++++++++++++++
+ ...adverse_bar12_temporal_executable_robustness.py | 1358 +++++++++++++
+ ...sic_early_adverse_bar12_temporal_walkforward.py | 1906 ++++++++++++++++++
+ ...ly_adverse_bar12_temporal_walkforward_strict.py | 1886 ++++++++++++++++++
+ .../bar1_control_strata.csv                        |    9 +
+ .../crossing_timing_analysis.csv                   |    6 +
+ .../delayed_event_summary.csv                      |    3 +
+ .../distance_band_analysis.csv                     |    6 +
+ .../event_timing_state_rate.csv                    |    7 +
+ .../global_state_separation.csv                    |    2 +
+ .../independence_integrity.csv                     |   12 +
+ .../interpretation_flags.csv                       |    8 +
+ .../permutation_test.csv                           |    2 +
+ .../pre_threshold_separation.csv                   |    2 +
+ .../subgroup_robustness.csv                        |   19 +
+ .../bar1_control_medians.csv                       |    5 +
+ .../delayed_nested_strata.csv                      |    3 +
+ .../nested_conditional_integrity.csv               |   13 +
+ .../nested_conditional_per_trade.csv               |  107 +
+ .../nested_conditional_summary.csv                 |   16 +
+ .../nested_exact_signatures.csv                    |    5 +
+ .../nested_mh_strata.csv                           |    3 +
+ .../nested_pairwise_controls.csv                   |    9 +
+ .../nested_robustness_loo.csv                      |   19 +
+ .../nested_robustness_subgroups.csv                |   14 +
+ .../nested_robustness_summary.csv                  |    5 +
+ .../pre_threshold_nested_strata.csv                |    3 +
+ .../temporal_executable_bootstrap.csv              |    6 +
+ .../temporal_executable_cost_aggregate.csv         |    6 +
+ .../temporal_executable_cost_by_fold.csv           |   21 +
+ .../temporal_executable_event_retained.csv         |   11 +
+ .../temporal_executable_folds.csv                  |    5 +
+ .../temporal_executable_integrity.csv              |   14 +
+ .../temporal_executable_loo.csv                    |   21 +
+ .../temporal_executable_per_trade.csv              |   45 +
+ .../temporal_executable_subgroups.csv              |   61 +
+ .../temporal_executable_bootstrap.csv              |    6 +
+ .../temporal_executable_concentration.csv          |    5 +
+ .../temporal_executable_cost.csv                   |    6 +
+ .../temporal_executable_cost_year_loo.csv          |   21 +
+ .../temporal_executable_direction.csv              |    3 +
+ .../temporal_executable_robustness_integrity.csv   |   19 +
+ .../temporal_executable_setup.csv                  |    5 +
+ .../temporal_executable_symbol_loo.csv             |    7 +
+ .../temporal_executable_top_removal.csv            |    5 +
+ .../temporal_executable_year_loo.csv               |    5 +
+ .../temporal_walkforward_cumulative.csv            |    5 +
+ .../temporal_walkforward_folds.csv                 |   13 +
+ .../temporal_walkforward_integrity.csv             |   13 +
+ .../temporal_walkforward_years.csv                 |    5 +
+ .../temporal_walkforward_strict_cumulative.csv     |    5 +
+ .../temporal_walkforward_strict_folds.csv          |   13 +
+ ...temporal_walkforward_strict_history_medians.csv |    5 +
+ .../temporal_walkforward_strict_integrity.csv      |   13 +
+ 56 files changed, 11338 insertions(+)
+
+2bc3a93 | 2026-09-16 | Forensic: validate executable Bar2 adverse-path replay
+ ..._early_adverse_bar12_conditional_incremental.py | 1032 +++++++++
+ ...c_early_adverse_bar12_conditional_robustness.py | 1728 ++++++++++++++
+ ...forensic_early_adverse_bar12_cost_robustness.py | 1310 +++++++++++
+ .../forensic_early_adverse_bar12_counterfactual.py | 1510 ++++++++++++
+ ...early_adverse_bar12_counterfactual_stability.py | 1472 ++++++++++++
+ ...rensic_early_adverse_bar12_executable_replay.py | 1558 +++++++++++++
+ .../forensic_early_adverse_bar12_execution_cost.py | 1251 ++++++++++
+ tests/forensic_early_adverse_bar12_incremental.py  | 1677 ++++++++++++++
+ tests/forensic_early_adverse_bar12_lead_time.py    | 1380 +++++++++++
+ ...ensic_early_adverse_bar12_outcome_separation.py | 1836 +++++++++++++++
+ tests/forensic_early_adverse_bar12_significance.py |  726 ++++++
+ ...ic_early_adverse_bar12_temporal_predictivity.py | 1169 ++++++++++
+ tests/forensic_early_adverse_bar12_trajectory.py   | 1323 +++++++++++
+ tests/forensic_early_adverse_entry_mechanics.py    | 1646 +++++++++++++
+ .../forensic_early_adverse_location_conditional.py | 2442 ++++++++++++++++++++
+ tests/forensic_early_adverse_market_structure.py   | 1702 ++++++++++++++
+ tests/forensic_early_adverse_path.py               | 2219 ++++++++++++++++++
+ tests/forensic_early_adverse_path_analysis.py      | 1871 +++++++++++++++
+ tests/forensic_mtf_7b025_retention.py              | 1930 ++++++++++++++++
+ tests/forensic_mtf_component_contribution.py       | 1070 +++++++++
+ tests/forensic_mtf_daily_weekly.py                 | 1395 +++++++++++
+ tests/forensic_mtf_early_adverse.py                |  954 ++++++++
+ tests/forensic_mtf_early_adverse_prediction.py     | 1597 +++++++++++++
+ tests/forensic_mtf_incremental_counterfactual.py   | 1424 ++++++++++++
+ tests/forensic_mtf_incremental_information.py      | 1585 +++++++++++++
+ tests/forensic_mtf_interaction_significance.py     | 1540 ++++++++++++
+ tests/forensic_mtf_pre_entry_timing.py             |  879 +++++++
+ tests/forensic_mtf_setup_conditional.py            | 1209 ++++++++++
+ tests/forensic_mtf_setup_early_interaction.py      | 1275 ++++++++++
+ .../early_adverse_entry_mechanics_categories.csv   |   22 +
+ .../early_adverse_entry_mechanics_event_level.csv  |  107 +
+ .../early_adverse_entry_mechanics_event_rate.csv   |   10 +
+ .../early_adverse_entry_mechanics_numeric.csv      |   14 +
+ .../early_adverse_entry_mechanics_setup.csv        |    7 +
+ .../early_adverse_entry_mechanics_symbol_loo.csv   |   79 +
+ .../early_adverse_entry_mechanics_year_loo.csv     |   79 +
+ .../early_adverse_market_structure_categories.csv  |   49 +
+ .../early_adverse_market_structure_event_level.csv |   61 +
+ .../early_adverse_market_structure_numeric.csv     |    9 +
+ .../early_adverse_market_structure_setup.csv       |   56 +
+ .../early_adverse_market_structure_symbol_loo.csv  |   30 +
+ .../early_adverse_market_structure_year_loo.csv    |   30 +
+ .../mtf_daily_weekly/direction_by_mtf.csv          |   11 +
+ .../mtf_7b025_retention_event_economics.csv        |    7 +
+ .../mtf_7b025_retention_setup_conditional.csv      |   25 +
+ .../mtf_7b025_retention_summary.csv                |   24 +
+ .../mtf_7b025_retention_symbol_loo.csv             |   37 +
+ .../mtf_7b025_retention_trade_level.csv            |  107 +
+ .../mtf_7b025_retention_year_loo.csv               |   37 +
+ .../mtf_daily_weekly/mtf_availability_audit.csv    |  107 +
+ .../mtf_candidate_interactions.csv                 |   10 +
+ .../mtf_component_contribution_summary.csv         |   16 +
+ .../mtf_component_contribution_trade_level.csv     |  107 +
+ .../mtf_early_adverse_direction.csv                |   19 +
+ .../mtf_early_adverse_prediction_summary.csv       |   22 +
+ .../mtf_early_adverse_prediction_trade_level.csv   |  107 +
+ .../mtf_daily_weekly/mtf_early_adverse_score.csv   |    9 +
+ .../mtf_daily_weekly/mtf_early_adverse_setup.csv   |   31 +
+ .../mtf_daily_weekly/mtf_early_adverse_summary.csv |   10 +
+ .../mtf_daily_weekly/mtf_early_adverse_symbol.csv  |   47 +
+ .../mtf_early_adverse_trade_level.csv              |   96 +
+ .../mtf_daily_weekly/mtf_early_adverse_year.csv    |   41 +
+ .../mtf_incremental_counterfactual_summary.csv     |   16 +
+ .../mtf_incremental_counterfactual_trade_level.csv |  107 +
+ .../mtf_daily_weekly/mtf_incremental_effect.csv    |    3 +
+ .../mtf_incremental_information_detail.csv         |   61 +
+ ...mtf_incremental_information_direction_setup.csv |    9 +
+ .../mtf_incremental_information_setup_summary.csv  |    5 +
+ .../mtf_incremental_information_symbol_loo.csv     |    7 +
+ .../mtf_incremental_information_year_loo.csv       |    7 +
+ .../mtf_interaction_significance_summary.csv       |   48 +
+ .../mtf_interaction_significance_trade_level.csv   |  107 +
+ .../mtf_daily_weekly/mtf_loo_symbol.csv            |   13 +
+ .../mtf_daily_weekly/mtf_loo_year.csv              |   11 +
+ .../mtf_positive_alignment_summary.csv             |    7 +
+ .../mtf_pre_entry_timing_summary.csv               |  196 ++
+ .../mtf_pre_entry_timing_trade_level.csv           |  107 +
+ .../mtf_daily_weekly/mtf_score_summary.csv         |    5 +
+ .../mtf_setup_conditional_summary.csv              |   68 +
+ .../mtf_setup_conditional_trade_level.csv          |  107 +
+ .../mtf_setup_early_interaction_summary.csv        |   52 +
+ .../mtf_setup_early_interaction_trade_level.csv    |  107 +
+ .../mtf_daily_weekly/mtf_summary.csv               |    6 +
+ .../mtf_daily_weekly/setup_by_mtf.csv              |   19 +
+ .../mtf_daily_weekly/trade_level_mtf.csv           |  107 +
+ .../bar12_conditional_incremental_integrity.csv    |    7 +
+ .../bar12_conditional_incremental_primary.csv      |    4 +
+ .../bar12_conditional_incremental_strata.csv       |    7 +
+ .../bar12_conditional_incremental_summary.json     |   16 +
+ ...12_conditional_robustness_dimension_results.csv |   13 +
+ ...bar12_conditional_robustness_family_summary.csv |    4 +
+ .../bar12_conditional_robustness_integrity.csv     |   15 +
+ .../bar12_conditional_robustness_loo.csv           |   55 +
+ .../bar12_conditional_robustness_stability.csv     |   13 +
+ .../bar12_conditional_robustness_subgroups.csv     |   55 +
+ .../bar12_conditional_robustness_summary.json      |   43 +
+ .../cost_robustness_concentration.csv              |    9 +
+ .../cost_robustness_event_retained.csv             |    5 +
+ .../cost_robustness_integrity.csv                  |   10 +
+ .../cost_robustness_leave_one_out.csv              |   25 +
+ .../cost_robustness_scenarios.csv                  |    3 +
+ .../cost_robustness_subgroups.csv                  |   37 +
+ .../cost_robustness_top_removal.csv                |    9 +
+ .../bar12_counterfactual_integrity.csv             |    9 +
+ .../bar12_counterfactual_opportunity_cost.csv      |    4 +
+ .../bar12_counterfactual_outcome_profile.csv       |   10 +
+ .../bar12_counterfactual_per_trade.csv             |  107 +
+ .../bar12_counterfactual_primary.csv               |    4 +
+ .../bar12_counterfactual_summary.json              |   19 +
+ .../counterfactual_bootstrap.csv                   |    4 +
+ .../counterfactual_event_retained_contribution.csv |    7 +
+ .../counterfactual_leave_one_out.csv               |  168 ++
+ .../counterfactual_removal_stress.csv              |   13 +
+ .../counterfactual_stability_integrity.csv         |   10 +
+ .../counterfactual_stability_primary.csv           |    4 +
+ .../counterfactual_stability_summary.json          |   18 +
+ .../counterfactual_subgroup_contribution.csv       |   55 +
+ .../counterfactual_top_n_concentration.csv         |   13 +
+ .../executable_replay_cost_sensitivity.csv         |    6 +
+ .../executable_replay_direction.csv                |    3 +
+ .../executable_replay_event_retained.csv           |    3 +
+ .../executable_replay_integrity.csv                |   13 +
+ .../executable_replay_loo_symbol.csv               |    7 +
+ .../executable_replay_loo_year.csv                 |    7 +
+ .../executable_replay_per_trade.csv                |  107 +
+ .../executable_replay_setup.csv                    |    5 +
+ .../executable_replay_summary.csv                  |    2 +
+ .../executable_replay_symbol.csv                   |    7 +
+ .../executable_replay_year.csv                     |    7 +
+ .../execution_cost_break_even.csv                  |    7 +
+ .../execution_cost_concentration.csv               |   25 +
+ .../execution_cost_event_retained.csv              |   13 +
+ .../execution_cost_integrity.csv                   |    9 +
+ .../execution_cost_scenarios.csv                   |    7 +
+ .../execution_cost_subgroups.csv                   |  109 +
+ .../early_adverse_bar12_incremental.csv            |   22 +
+ ...early_adverse_bar12_incremental_correlation.csv |   10 +
+ .../early_adverse_bar12_incremental_direction.csv  |   31 +
+ .../early_adverse_bar12_incremental_effects.csv    |    8 +
+ .../early_adverse_bar12_incremental_integrity.csv  |   12 +
+ .../early_adverse_bar12_incremental_setup.csv      |   61 +
+ .../early_adverse_bar12_state_family.csv           |   10 +
+ .../bar12_lead_time_crossing_timing.csv            |  107 +
+ .../bar12_lead_time_integrity.csv                  |    9 +
+ .../bar12_lead_time_per_trade.csv                  |  107 +
+ .../bar12_lead_time_prethreshold.csv               |    4 +
+ .../bar12_lead_time_recovery.csv                   |    4 +
+ .../bar12_lead_time_robustness.csv                 |   16 +
+ .../bar12_lead_time_state_timing.csv               |    4 +
+ .../bar12_lead_time_summary.json                   |   15 +
+ .../bar12_outcome_separation_family_summary.csv    |    4 +
+ .../bar12_outcome_separation_integrity.csv         |   10 +
+ .../bar12_outcome_separation_per_trade.csv         |  107 +
+ .../bar12_outcome_separation_primary.csv           |   10 +
+ .../bar12_outcome_separation_summary.json          |   31 +
+ .../early_adverse_bar12_significance.csv           |    5 +
+ .../early_adverse_bar12_significance_integrity.csv |    7 +
+ .../early_adverse_bar12_temporal_predictivity.csv  |   19 +
+ ...verse_bar12_temporal_predictivity_direction.csv |    9 +
+ ...adverse_bar12_temporal_predictivity_effects.csv |    5 +
+ ...verse_bar12_temporal_predictivity_integrity.csv |   12 +
+ ...y_adverse_bar12_temporal_predictivity_setup.csv |   17 +
+ ...verse_bar12_temporal_predictivity_stability.csv |    5 +
+ ...erse_bar12_temporal_predictivity_symbol_loo.csv |   25 +
+ ...ly_adverse_bar12_temporal_predictivity_year.csv |   25 +
+ .../early_adverse_bar12_direction.csv              |   29 +
+ .../early_adverse_bar12_effect_sizes.csv           |    8 +
+ .../early_adverse_bar12_integrity.csv              |   13 +
+ .../early_adverse_bar12_raw_distributions.csv      |   20 +
+ .../early_adverse_bar12_setup.csv                  |   57 +
+ .../early_adverse_bar12_state_transitions.csv      |   11 +
+ .../early_adverse_bar12_trajectory_per_trade.csv   |  107 +
+ .../early_adverse_location_conditional_results.csv |   30 +
+ .../early_adverse_path_integrity.csv               |   14 +
+ .../early_adverse_path_per_trade_bar.csv           |  531 +++++
+ .../early_adverse_path_validation.csv              |  107 +
+ .../early_adverse_path_025_crossing_state.csv      |   11 +
+ .../early_adverse_path_analysis_integrity.csv      |   36 +
+ .../early_adverse_path_direction.csv               |   11 +
+ .../early_adverse_path_earliest_warning.csv        |   59 +
+ .../early_adverse_path_microstructure.csv          |  131 ++
+ .../early_adverse_path_setup.csv                   |   21 +
+ .../early_adverse_path_symbol.csv                  |   31 +
+ .../early_adverse_path_threshold_progression.csv   |   15 +
+ .../early_adverse_path_trajectory.csv              |  131 ++
+ tests/run_oos_collection.py                        |  342 +++
+ 186 files changed, 48846 insertions(+)
+
+dfc528f | 2026-09-15 | Add regime forensics and five-stream OOS gate
+ tests/audit_oos_readiness.py                       |  989 +++++++++++++++++++
+ ..._tradesense_early_adverse_regime_interaction.py |  777 +++++++++++++++
+ tests/forensic_tradesense_regime_analysis.py       | 1025 ++++++++++++++++++++
+ tests/forward_nifty50_holdout.py                   |  843 ++++++++++++++++
+ tests/forward_sensex_holdout.py                    | 1018 +++++++++++++++++++
+ .../oos_readiness/oos_readiness_summary.csv        |    6 +
+ .../direction_by_regime.csv                        |    9 +
+ .../early_adverse_by_regime.csv                    |    9 +
+ .../early_adverse_effect_within_regime.csv         |    5 +
+ .../early_adverse_regime_interaction.csv           |    9 +
+ ...arly_adverse_regime_interaction_trade_level.csv |  107 ++
+ .../regime_effect_within_early_adverse_state.csv   |    3 +
+ .../tradesense_regime_analysis/regime_summary.csv  |    5 +
+ .../tradesense_regime_analysis/setup_by_regime.csv |   16 +
+ .../trade_level_regime_classification.csv          |  107 ++
+ .../tradesense_regime_analysis/year_by_regime.csv  |   21 +
+ 16 files changed, 4949 insertions(+)
+
+eb87562 | 2026-09-14 | Add cross-index research matrix
+ app/services/backtest_service.py                   |     42 +-
+ data/nifty50_constituent_baseline_2021_01_29.csv   |     51 +
+ data/nifty50_constituent_events.csv                |     29 +
+ data/nifty50_constituent_membership.csv            | 102634 ++++++++++++++++++
+ data/nifty50_features/nifty50_t1_features.csv      |   1390 +
+ .../nifty50_features/nifty50_t1_features_audit.csv |      2 +
+ data/nifty50_model0/model0_confusion_matrix.csv    |      3 +
+ data/nifty50_model0/model0_predictions.csv         |   1117 +
+ data/nifty50_model0/model0_summary.csv             |      4 +
+ data/nifty50_model0/model0_yearly_results.csv      |      6 +
+ data/nifty50_model1/model1_confusion_matrix.csv    |      3 +
+ data/nifty50_model1/model1_predictions.csv         |   1117 +
+ data/nifty50_model1/model1_summary.csv             |      2 +
+ data/nifty50_model1/model1_yearly_results.csv      |      6 +
+ .../model10_bootstrap_results.csv                  |  10001 ++
+ .../model10_holdout_lock.csv                       |      2 +
+ .../model10_holdout_predictions.csv                |      1 +
+ .../model10_large_move_confusion_matrix.csv        |      3 +
+ .../model10_large_move_predictions.csv             |   1117 +
+ .../model10_large_move_summary.csv                 |      2 +
+ .../model10_large_move_yearly_results.csv          |      6 +
+ .../model10_permutation_results.csv                |  10001 ++
+ .../model10_ranking_audit.csv                      |      4 +
+ .../model10_ranking_yearly.csv                     |      6 +
+ .../model10_statistical_significance_summary.csv   |      2 +
+ .../model11_directional_composition.csv            |      4 +
+ .../model11_directional_composition_yearly.csv     |     16 +
+ .../model11_top_vs_bottom_comparison.csv           |      2 +
+ .../model11_top_vs_bottom_yearly.csv               |      6 +
+ data/nifty50_model2/model2_confusion_matrix.csv    |      3 +
+ data/nifty50_model2/model2_predictions.csv         |   1117 +
+ data/nifty50_model2/model2_summary.csv             |      2 +
+ data/nifty50_model2/model2_yearly_results.csv      |      6 +
+ data/nifty50_model2/nifty50_model2_features.csv    |   1390 +
+ data/nifty50_model3/model3_confusion_matrix.csv    |      3 +
+ data/nifty50_model3/model3_predictions.csv         |   1117 +
+ data/nifty50_model3/model3_summary.csv             |      4 +
+ data/nifty50_model3/model3_yearly_results.csv      |      6 +
+ data/nifty50_model4/model4_confusion_matrix.csv    |      3 +
+ data/nifty50_model4/model4_predictions.csv         |   1117 +
+ data/nifty50_model4/model4_summary.csv             |      4 +
+ data/nifty50_model4/model4_yearly_results.csv      |      6 +
+ data/nifty50_model5/model5_confusion_matrix.csv    |      3 +
+ data/nifty50_model5/model5_predictions.csv         |   1117 +
+ data/nifty50_model5/model5_summary.csv             |      4 +
+ data/nifty50_model5/model5_yearly_results.csv      |      6 +
+ data/nifty50_model6/model6_confusion_matrix.csv    |      3 +
+ data/nifty50_model6/model6_predictions.csv         |   1117 +
+ data/nifty50_model6/model6_summary.csv             |      4 +
+ data/nifty50_model6/model6_yearly_results.csv      |      6 +
+ data/nifty50_model6/nifty50_model6_features.csv    |   1390 +
+ .../nifty50_model6_features_audit.csv              |      8 +
+ data/nifty50_model7/model7_confusion_matrix.csv    |      3 +
+ data/nifty50_model7/model7_predictions.csv         |   1117 +
+ data/nifty50_model7/model7_summary.csv             |      2 +
+ data/nifty50_model7/model7_yearly_results.csv      |      6 +
+ .../model8_return_predictions.csv                  |   1117 +
+ .../model8_return_summary.csv                      |      2 +
+ .../model8_return_yearly_results.csv               |      6 +
+ data/nifty50_model9_regimes/regime_summary.csv     |      5 +
+ .../regime_yearly_results.csv                      |     20 +
+ data/nifty50_point_in_time_audit.csv               |     64 +
+ data/nifty50_price_integrity_audit.csv             |     64 +
+ data/nifty50_price_source_audit.csv                |     64 +
+ data/nifty50_prices/ADANIENT.csv                   |   1389 +
+ data/nifty50_prices/ADANIPORTS.csv                 |   1389 +
+ data/nifty50_prices/APOLLOHOSP.csv                 |   1389 +
+ data/nifty50_prices/ASIANPAINT.csv                 |   1389 +
+ data/nifty50_prices/AXISBANK.csv                   |   1389 +
+ data/nifty50_prices/BAJAJ-AUTO.csv                 |   1389 +
+ data/nifty50_prices/BAJAJFINSV.csv                 |   1389 +
+ data/nifty50_prices/BAJFINANCE.csv                 |   1389 +
+ data/nifty50_prices/BEL.csv                        |   1389 +
+ data/nifty50_prices/BHARTIARTL.csv                 |   1389 +
+ data/nifty50_prices/BPCL.csv                       |   1389 +
+ data/nifty50_prices/BRITANNIA.csv                  |   1389 +
+ data/nifty50_prices/CIPLA.csv                      |   1389 +
+ data/nifty50_prices/COALINDIA.csv                  |   1389 +
+ data/nifty50_prices/DIVISLAB.csv                   |   1389 +
+ data/nifty50_prices/DRREDDY.csv                    |   1389 +
+ data/nifty50_prices/EICHERMOT.csv                  |   1389 +
+ data/nifty50_prices/GAIL.csv                       |   1389 +
+ data/nifty50_prices/GRASIM.csv                     |   1389 +
+ data/nifty50_prices/HCLTECH.csv                    |   1389 +
+ data/nifty50_prices/HDFC.csv                       |    608 +
+ data/nifty50_prices/HDFCBANK.csv                   |   1389 +
+ data/nifty50_prices/HDFCLIFE.csv                   |   1389 +
+ data/nifty50_prices/HEROMOTOCO.csv                 |   1389 +
+ data/nifty50_prices/HINDALCO.csv                   |   1389 +
+ data/nifty50_prices/HINDUNILVR.csv                 |   1389 +
+ data/nifty50_prices/ICICIBANK.csv                  |   1389 +
+ data/nifty50_prices/INDIGO.csv                     |   1389 +
+ data/nifty50_prices/INDUSINDBK.csv                 |   1389 +
+ data/nifty50_prices/INFY.csv                       |   1389 +
+ data/nifty50_prices/IOC.csv                        |   1389 +
+ data/nifty50_prices/ITC.csv                        |   1389 +
+ data/nifty50_prices/JIOFIN.csv                     |    756 +
+ data/nifty50_prices/JSWSTEEL.csv                   |   1389 +
+ data/nifty50_prices/KOTAKBANK.csv                  |   1389 +
+ data/nifty50_prices/LT.csv                         |   1389 +
+ data/nifty50_prices/LTIM.csv                       |    303 +
+ data/nifty50_prices/M&M.csv                        |   1389 +
+ data/nifty50_prices/MARUTI.csv                     |   1389 +
+ data/nifty50_prices/MAXHEALTH.csv                  |   1389 +
+ data/nifty50_prices/NESTLEIND.csv                  |   1389 +
+ data/nifty50_prices/NIFTY_INDEX.csv                |     10 +
+ data/nifty50_prices/NTPC.csv                       |   1389 +
+ data/nifty50_prices/ONGC.csv                       |   1389 +
+ data/nifty50_prices/POWERGRID.csv                  |   1389 +
+ data/nifty50_prices/RELIANCE.csv                   |   1389 +
+ data/nifty50_prices/SBILIFE.csv                    |   1389 +
+ data/nifty50_prices/SBIN.csv                       |   1389 +
+ data/nifty50_prices/SHREECEM.csv                   |   1389 +
+ data/nifty50_prices/SHRIRAMFIN.csv                 |   1389 +
+ data/nifty50_prices/SUNPHARMA.csv                  |   1389 +
+ data/nifty50_prices/TATACONSUM.csv                 |   1389 +
+ data/nifty50_prices/TATAMOTORS.csv                 |   1175 +
+ data/nifty50_prices/TATASTEEL.csv                  |   1389 +
+ data/nifty50_prices/TCS.csv                        |   1389 +
+ data/nifty50_prices/TECHM.csv                      |   1389 +
+ data/nifty50_prices/TITAN.csv                      |   1389 +
+ data/nifty50_prices/TMPV.csv                       |   1389 +
+ data/nifty50_prices/TRENT.csv                      |   1389 +
+ data/nifty50_prices/ULTRACEMCO.csv                 |   1389 +
+ data/nifty50_prices/UPL.csv                        |   1389 +
+ data/nifty50_prices/WIPRO.csv                      |   1389 +
+ data/nifty50_prices/ZOMATO.csv                     |   1271 +
+ .../_pre_holiday_cleanup_backup/ADANIENT.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/ADANIPORTS.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/APOLLOHOSP.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/ASIANPAINT.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/AXISBANK.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/BAJAJ-AUTO.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/BAJAJFINSV.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/BAJFINANCE.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/BEL.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/BHARTIARTL.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/BPCL.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/BRITANNIA.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/CIPLA.csv          |   1393 +
+ .../_pre_holiday_cleanup_backup/COALINDIA.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/DIVISLAB.csv       |   1392 +
+ .../_pre_holiday_cleanup_backup/DRREDDY.csv        |   1393 +
+ .../_pre_holiday_cleanup_backup/EICHERMOT.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/GAIL.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/GRASIM.csv         |   1393 +
+ .../_pre_holiday_cleanup_backup/HCLTECH.csv        |   1393 +
+ .../_pre_holiday_cleanup_backup/HDFCBANK.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/HDFCLIFE.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/HEROMOTOCO.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/HINDALCO.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/HINDUNILVR.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/ICICIBANK.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/INDIGO.csv         |   1392 +
+ .../_pre_holiday_cleanup_backup/INDUSINDBK.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/INFY.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/IOC.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/ITC.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/JIOFIN.csv         |    760 +
+ .../_pre_holiday_cleanup_backup/JSWSTEEL.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/KOTAKBANK.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/LT.csv             |   1393 +
+ .../_pre_holiday_cleanup_backup/M&M.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/MARUTI.csv         |   1393 +
+ .../_pre_holiday_cleanup_backup/MAXHEALTH.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/NESTLEIND.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/NTPC.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/ONGC.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/POWERGRID.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/RELIANCE.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/SBILIFE.csv        |   1393 +
+ .../_pre_holiday_cleanup_backup/SBIN.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/SHREECEM.csv       |   1393 +
+ .../_pre_holiday_cleanup_backup/SHRIRAMFIN.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/SUNPHARMA.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/TATACONSUM.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/TATASTEEL.csv      |   1393 +
+ .../_pre_holiday_cleanup_backup/TCS.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/TECHM.csv          |   1393 +
+ .../_pre_holiday_cleanup_backup/TITAN.csv          |   1393 +
+ .../_pre_holiday_cleanup_backup/TMPV.csv           |   1393 +
+ .../_pre_holiday_cleanup_backup/TRENT.csv          |   1393 +
+ .../_pre_holiday_cleanup_backup/ULTRACEMCO.csv     |   1393 +
+ .../_pre_holiday_cleanup_backup/UPL.csv            |   1393 +
+ .../_pre_holiday_cleanup_backup/WIPRO.csv          |   1393 +
+ .../_pre_holiday_cleanup_backup/ZOMATO.csv         |   1275 +
+ .../_pre_nse_repair_backup/ADANIENT.csv            |   1389 +
+ .../_pre_nse_repair_backup/ADANIPORTS.csv          |   1389 +
+ .../_pre_nse_repair_backup/APOLLOHOSP.csv          |   1389 +
+ .../_pre_nse_repair_backup/ASIANPAINT.csv          |   1389 +
+ .../_pre_nse_repair_backup/AXISBANK.csv            |   1389 +
+ .../_pre_nse_repair_backup/BAJAJ-AUTO.csv          |   1389 +
+ .../_pre_nse_repair_backup/BAJAJFINSV.csv          |   1389 +
+ .../_pre_nse_repair_backup/BAJFINANCE.csv          |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/BEL.csv |   1389 +
+ .../_pre_nse_repair_backup/BHARTIARTL.csv          |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/BPCL.csv |   1389 +
+ .../_pre_nse_repair_backup/BRITANNIA.csv           |   1389 +
+ .../_pre_nse_repair_backup/CIPLA.csv               |   1389 +
+ .../_pre_nse_repair_backup/COALINDIA.csv           |   1389 +
+ .../_pre_nse_repair_backup/DIVISLAB.csv            |   1389 +
+ .../_pre_nse_repair_backup/DRREDDY.csv             |   1389 +
+ .../_pre_nse_repair_backup/EICHERMOT.csv           |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/GAIL.csv |   1389 +
+ .../_pre_nse_repair_backup/GRASIM.csv              |   1389 +
+ .../_pre_nse_repair_backup/HCLTECH.csv             |   1389 +
+ .../_pre_nse_repair_backup/HDFCBANK.csv            |   1389 +
+ .../_pre_nse_repair_backup/HDFCLIFE.csv            |   1389 +
+ .../_pre_nse_repair_backup/HEROMOTOCO.csv          |   1389 +
+ .../_pre_nse_repair_backup/HINDALCO.csv            |   1389 +
+ .../_pre_nse_repair_backup/HINDUNILVR.csv          |   1389 +
+ .../_pre_nse_repair_backup/ICICIBANK.csv           |   1389 +
+ .../_pre_nse_repair_backup/INDIGO.csv              |   1389 +
+ .../_pre_nse_repair_backup/INDUSINDBK.csv          |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/INFY.csv |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/IOC.csv |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/ITC.csv |   1393 +
+ .../_pre_nse_repair_backup/JIOFIN.csv              |    756 +
+ .../_pre_nse_repair_backup/JSWSTEEL.csv            |   1389 +
+ .../_pre_nse_repair_backup/KOTAKBANK.csv           |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/LT.csv  |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/M&M.csv |   1389 +
+ .../_pre_nse_repair_backup/MARUTI.csv              |   1389 +
+ .../_pre_nse_repair_backup/MAXHEALTH.csv           |   1389 +
+ .../_pre_nse_repair_backup/NESTLEIND.csv           |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/NTPC.csv |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/ONGC.csv |   1389 +
+ .../_pre_nse_repair_backup/POWERGRID.csv           |   1389 +
+ .../_pre_nse_repair_backup/RELIANCE.csv            |   1389 +
+ .../_pre_nse_repair_backup/SBILIFE.csv             |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/SBIN.csv |   1389 +
+ .../_pre_nse_repair_backup/SHREECEM.csv            |   1389 +
+ .../_pre_nse_repair_backup/SHRIRAMFIN.csv          |   1389 +
+ .../_pre_nse_repair_backup/SUNPHARMA.csv           |   1389 +
+ .../_pre_nse_repair_backup/TATACONSUM.csv          |   1389 +
+ .../_pre_nse_repair_backup/TATASTEEL.csv           |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/TCS.csv |   1389 +
+ .../_pre_nse_repair_backup/TECHM.csv               |   1389 +
+ .../_pre_nse_repair_backup/TITAN.csv               |   1389 +
+ .../nifty50_prices/_pre_nse_repair_backup/TMPV.csv |   1389 +
+ .../_pre_nse_repair_backup/TRENT.csv               |   1389 +
+ .../_pre_nse_repair_backup/ULTRACEMCO.csv          |   1389 +
+ data/nifty50_prices/_pre_nse_repair_backup/UPL.csv |   1389 +
+ .../_pre_nse_repair_backup/WIPRO.csv               |   1389 +
+ .../_pre_nse_repair_backup/ZOMATO.csv              |   1271 +
+ data/nifty50_prices/nse_holiday_cleanup_audit.csv  |    235 +
+ data/nifty50_prices/nse_repair_audit.csv           |     72 +
+ data/nifty50_sector_map.csv                        |     63 +
+ ...lyze_nifty50_model11_directional_composition.py |    611 +
+ tests/analyze_nifty50_regimes.py                   |    739 +
+ tests/analyze_tradesense_trades.py                 |      4 +-
+ tests/audit_index_data_sources.py                  |    187 +
+ tests/audit_midselect_niftyindices_source.py       |    658 +
+ tests/audit_midselect_nse_source.py                |    678 +
+ tests/audit_nifty50_model10_ranking.py             |    390 +
+ ...dit_nifty50_model10_statistical_significance.py |    709 +
+ tests/audit_nifty50_model2_features.py             |    345 +
+ tests/audit_nifty50_model6_features.py             |    465 +
+ tests/audit_nifty50_point_in_time.py               |    629 +
+ tests/audit_nifty50_price_integrity.py             |    623 +
+ tests/audit_nifty50_price_sources.py               |    328 +
+ tests/audit_nifty50_sector_map.py                  |    322 +
+ tests/audit_nifty50_transitions.py                 |    138 +
+ tests/backtest_banknifty_index.py                  |    870 +
+ tests/backtest_midselect_index.py                  |    936 +
+ tests/backtest_nifty50_index.py                    |    644 +
+ tests/backtest_sensex_index.py                     |    767 +
+ tests/build_nifty50_features.py                    |   1904 +
+ tests/build_nifty50_membership.py                  |    303 +
+ tests/build_nifty50_model2_features.py             |    531 +
+ tests/build_nifty50_model6_features.py             |    770 +
+ tests/check_infy_warmup.py                         |     99 +
+ tests/check_structure_warmup_invariance.py         |    192 +
+ tests/clean_nifty50_nse_holiday_placeholders.py    |    481 +
+ tests/compare_infy_structure_boundary.py           |     57 +
+ tests/compare_old_current_infy_trades.py           |    649 +
+ tests/compare_signal_boundary_invariance.py        |    293 +
+ tests/diagnose_infy_boundary.py                    |    215 +
+ tests/diagnose_infy_boundary_index.py              |    201 +
+ tests/diagnose_infy_boundary_sweep.py              |    360 +
+ tests/diagnose_infy_execution_path.py              |    125 +
+ tests/diagnose_infy_execution_path_fixed.py        |    327 +
+ tests/diagnose_infy_exit_trace.py                  |    379 +
+ tests/diagnose_infy_jan_execution.py               |    242 +
+ tests/diagnose_infy_signal_path_fixed.py           |    274 +
+ tests/diagnose_infy_swing_conditions.py            |    373 +
+ tests/diagnose_infy_swings.py                      |    233 +
+ tests/download_nifty50_prices.py                   |   1348 +
+ tests/evaluate_nifty50_model10_holdout.py          |    917 +
+ ...sic_banknifty_short_continuation_development.py |   1057 +
+ ..._short_continuation_early_adverse_robustness.py |   1526 +
+ ...orensic_banknifty_short_reversal_development.py |    537 +
+ tests/forensic_banknifty_trade_diagnostics.py      |   1042 +
+ tests/forensic_context_trade_outcomes.py           |    745 +
+ tests/forensic_early_adverse_matrix.py             |    703 +
+ tests/forensic_early_adverse_ohlc_replay.py        |   1601 +
+ tests/forensic_early_adverse_robustness.py         |   1152 +
+ tests/forensic_first_divergence.py                 |    626 +
+ tests/forensic_frozen_vs_current_path.py           |      0
+ tests/forensic_internal_market_structure.py        |   1047 +
+ tests/forensic_market_structure_prefix.py          |    478 +
+ ...orensic_midselect_directional_counterfactual.py |    831 +
+ tests/forensic_midselect_exit_counterfactual.py    |   1791 +
+ tests/forensic_midselect_exit_sensitivity.py       |   1596 +
+ tests/forensic_midselect_trade_diagnostics.py      |   1095 +
+ tests/forensic_midselect_trigger_thresholds.py     |   1677 +
+ .../forensic_nifty50_directional_counterfactual.py |   1027 +
+ tests/forensic_nifty50_lc_entry_context.py         |   1334 +
+ tests/forensic_nifty50_lc_exit_counterfactual.py   |   1174 +
+ tests/forensic_nifty50_lc_exit_path.py             |   1245 +
+ tests/forensic_nifty50_lc_exit_robustness.py       |   1190 +
+ tests/forensic_nifty50_lc_mfe_milestones.py        |   1219 +
+ tests/forensic_nifty50_lc_trade_development.py     |   1104 +
+ tests/forensic_nifty50_long_continuation.py        |    853 +
+ tests/forensic_nifty50_trade_diagnostics.py        |    840 +
+ tests/forensic_sensex_early_adverse_robustness.py  |   1168 +
+ .../forensic_sensex_short_reversal_development.py  |    609 +
+ ...ic_sensex_short_reversal_exit_counterfactual.py |   1392 +
+ tests/forensic_sensex_trade_diagnostics.py         |    786 +
+ tests/forensic_setup_causality.py                  |    615 +
+ tests/forensic_setup_inputs.py                     |   1067 +
+ tests/forensic_signal_bar.py                       |    944 +
+ tests/forensic_signal_determinism_layers.py        |    519 +
+ tests/forensic_signal_field_causality.py           |   1224 +
+ tests/forensic_signal_root_cause.py                |   1559 +
+ tests/forensic_signal_state.py                     |    795 +
+ tests/forensic_structural_event_causality.py       |   1409 +
+ tests/forensic_structure_context.py                |    771 +
+ tests/forensic_structure_convergence.py            |    950 +
+ tests/forensic_swing_state.py                      |    556 +
+ tests/forensic_tcs_structural_event_state.py       |    828 +
+ tests/forensic_tcs_structure_events.py             |    555 +
+ tests/forensic_trade_outcome_mechanics.py          |    854 +
+ tests/forensic_warmup_convergence.py               |    618 +
+ ...forward_banknifty_short_continuation_holdout.py |    831 +
+ tests/forward_midselect_holdout.py                 |   1393 +
+ tests/lock_nifty50_model10_holdout.py              |    149 +
+ tests/output/_generator_main_inspected.txt         |    796 +
+ .../index_backtests/banknifty_index_trades.csv     |     25 +
+ .../banknifty_short_continuation_development.csv   |      9 +
+ ...rt_continuation_early_adverse_leave_one_out.csv |      9 +
+ ...short_continuation_early_adverse_robustness.csv |     25 +
+ ..._continuation_early_adverse_year_robustness.csv |      7 +
+ .../banknifty_trade_diagnostics.csv                |     25 +
+ .../index_backtests/index_research_matrix.csv      |      5 +
+ .../index_backtests/index_research_matrix.md       |    210 +
+ .../midselect_exit_counterfactual.csv              |     14 +
+ .../midselect_exit_counterfactual_loo.csv          |     14 +
+ .../midselect_exit_counterfactual_years.csv        |      6 +
+ .../index_backtests/midselect_exit_sensitivity.csv |     10 +
+ .../midselect_exit_sensitivity_trades.csv          |    118 +
+ .../index_backtests/midselect_index_trades.csv     |     14 +
+ .../midselect_niftyindices_ohlc.csv                |   1161 +
+ .../midselect_trigger_threshold_summary.csv        |      4 +
+ .../midselect_trigger_threshold_trade_paths.csv    |     14 +
+ .../nifty50_directional_counterfactual.csv         |      4 +
+ .../nifty50_directional_counterfactual_report.txt  |     53 +
+ .../index_backtests/nifty50_index_trades.csv       |     23 +
+ .../index_backtests/nifty50_lc_entry_context.csv   |     57 +
+ .../nifty50_lc_entry_context_report.txt            |     66 +
+ .../nifty50_lc_exit_counterfactual.csv             |     13 +
+ .../nifty50_lc_exit_counterfactual_report.txt      |     30 +
+ .../index_backtests/nifty50_lc_exit_path.csv       |     13 +
+ .../nifty50_lc_exit_path_report.txt                |     45 +
+ .../nifty50_lc_exit_robustness_leave_one_out.csv   |     13 +
+ .../nifty50_lc_exit_robustness_report.txt          |     39 +
+ .../nifty50_lc_exit_robustness_slices.csv          |     13 +
+ .../nifty50_lc_exit_robustness_trade_level.csv     |     13 +
+ .../index_backtests/nifty50_lc_mfe_milestones.csv  |     18 +
+ .../nifty50_lc_mfe_milestones_report.txt           |     20 +
+ .../nifty50_lc_trade_development.csv               |     19 +
+ .../nifty50_lc_trade_development_report.txt        |     35 +
+ .../index_backtests/nifty50_long_continuation.csv  |     19 +
+ .../nifty50_long_continuation_report.txt           |     57 +
+ .../index_backtests/nifty50_trade_diagnostics.csv  |     23 +
+ .../nifty50_trade_diagnostics_report.txt           |     10 +
+ .../sensex_early_adverse_leave_one_out.csv         |     22 +
+ .../sensex_early_adverse_robustness.csv            |     25 +
+ .../sensex_early_adverse_year_robustness.csv       |      7 +
+ .../output/index_backtests/sensex_index_trades.csv |     22 +
+ .../sensex_short_reversal_development.csv          |      8 +
+ .../sensex_short_reversal_exit_counterfactual.csv  |      8 +
+ .../reconciliation/common_trade_field_changes.csv  |    187 +
+ .../common_trade_r_reconciliation.csv              |     92 +
+ .../context_common_trade_outcomes.csv              |     94 +
+ .../context_identity_differences.csv               |     28 +
+ .../reconciliation/early_adverse_leave_one_out.csv |     40 +
+ .../early_adverse_ohlc_replay_bars.csv             |   1061 +
+ .../early_adverse_ohlc_replay_matrix.csv           |     25 +
+ .../early_adverse_ohlc_replay_validation.csv       |    531 +
+ .../reconciliation/early_adverse_robustness.csv    |     25 +
+ .../early_adverse_symbol_robustness.csv            |      7 +
+ .../early_adverse_threshold_window_matrix.csv      |     25 +
+ .../early_adverse_year_robustness.csv              |      7 +
+ .../reconciliation/first_divergence_forensic.csv   |      7 +
+ tests/output/reconciliation/fresh_only_trades.csv  |     27 +
+ .../reconciliation/historical_only_trades.csv      |     16 +
+ .../internal_market_structure_forensic.csv         |    265 +
+ .../market_structure_prefix_forensic.csv           |   1063 +
+ .../output/reconciliation/mode_a_frozen_trades.csv |    107 +
+ .../reconciliation/mode_b_buffered_trades.csv      |    108 +
+ .../reconciliation/setup_causality_forensic.csv    |     14 +
+ .../reconciliation/setup_inputs_forensic.csv       |     16 +
+ .../output/reconciliation/signal_bar_forensic.csv  |     42 +
+ .../signal_field_causality_forensic.csv            |     42 +
+ .../reconciliation/signal_root_cause_forensic.csv  |      5 +
+ .../reconciliation/signal_state_forensic.csv       |     42 +
+ .../structural_event_causality_forensic.csv        |     42 +
+ .../reconciliation/structure_context_forensic.csv  |     42 +
+ .../structure_convergence_forensic.csv             |   7447 ++
+ .../structure_convergence_summary.csv              |      7 +
+ tests/output/reconciliation/summary.csv            |     18 +
+ .../output/reconciliation/swing_state_forensic.csv |   1374 +
+ .../reconciliation/symbol_reconciliation.csv       |      7 +
+ .../tcs_structural_event_state_forensic.csv        |     21 +
+ .../tcs_structure_events_forensic.csv              |     22 +
+ .../output/reconciliation/three_context_modes.csv  |      4 +
+ .../trade_outcome_mechanics_forensic.csv           |     42 +
+ .../warmup_convergence_field_summary.csv           |    589 +
+ .../reconciliation/warmup_convergence_forensic.csv |     43 +
+ .../output/reconciliation/year_reconciliation.csv  |      7 +
+ tests/output/tradesense_trades_OLD_REFERENCE.csv   |    107 +
+ ...nse_trades_REPRODUCED_2021-09-07_2026-09-08.csv |    107 +
+ tests/output/tradesense_trades_REPRODUCED_FULL.csv |    107 +
+ .../tradesense_trades_current_reproduction.csv     |    107 +
+ .../tradesense_trades_research_candidate.csv       |    118 +
+ tests/reconcile_trade_datasets.py                  |   1109 +
+ tests/refresh_nifty50_prospective.py               |    801 +
+ tests/repair_nifty50_bad_volume_from_nse.py        |   1043 +
+ tests/research_index_matrix.py                     |    693 +
+ tests/resolve_nifty50_nse_prices.py                |    348 +
+ tests/resolve_nifty50_special_prices.py            |    167 +
+ tests/run_nifty50_model0.py                        |    900 +
+ tests/run_nifty50_model1.py                        |    574 +
+ tests/run_nifty50_model10_holdout.py               |    708 +
+ tests/run_nifty50_model10_large_move.py            |    777 +
+ tests/run_nifty50_model2.py                        |    779 +
+ tests/run_nifty50_model3.py                        |    618 +
+ tests/run_nifty50_model4.py                        |    689 +
+ tests/run_nifty50_model5.py                        |    705 +
+ tests/run_nifty50_model6.py                        |    715 +
+ tests/run_nifty50_model7.py                        |    550 +
+ tests/run_nifty50_model8_return.py                 |    759 +
+ tests/test_evaluation_backtest_regression.py       |    683 +
+ tests/test_evaluation_slice_regression.py          |    433 +
+ tests/test_frozen_reproduction_current.py          |    591 +
+ tests/test_three_context_modes.py                  |    652 +
+ tests/test_trend_pipeline.py                       |    844 +-
+ tests/test_warmup_boundary_regression.py           |    393 +
+ 449 files changed, 484931 insertions(+), 15 deletions(-)
+
+c0d4d9c | 2026-09-08 | Harden frozen 5B 0.25R holdout ledger integrity
+ tests/analyze_tradesense_trades.py | 356 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 292 insertions(+), 64 deletions(-)
+
+9bfbce7 | 2026-09-08 | Validate frozen 5B 0.25R dimension robustness audit
+ analyzer_output.txt                            |  1198 ++
+ app/core/fibonacci/fibonacci_engine.py         |   476 +
+ app/core/levels/market_structure.py            |    34 +-
+ app/core/trend/trend_engine.py                 |   238 +
+ app/services/backtest_service.py               |  1506 +-
+ latest_output.txt                              |   686 +
+ setup_trend_timeout_5_walk_forward_output.txt  |  2160 ++
+ setup_walk_forward_output.txt                  |  2098 ++
+ stop_debug.txt                                 |   800 +
+ target_debug.txt                               |   546 +
+ tests/analyze_tradesense_trades.py             | 25167 +++++++++++++++++++++++
+ tests/frozen_5b_025_holdout_ledger.py          |     0
+ tests/output/tradesense_trades.csv             |   107 +
+ tests/test_delayed_early_adverse.py            |  1096 +
+ tests/test_early_adverse_walk_forward_exact.py |  1098 +
+ tests/test_trend_pipeline.py                   |  1996 ++
+ time_to_05r_walk_forward_output.txt            |  2128 ++
+ trade_rows.txt                                 |   151 +
+ 18 files changed, 41434 insertions(+), 51 deletions(-)
+
+49a7d32 | 2026-09-01 | Optimize TradeSense signal generation
+ app/services/backtest_service.py | 348 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 348 insertions(+)
+
+cdd54a8 | 2026-09-01 | Optimize market structure swing detection
+ app/core/levels/market_structure.py | 138 ++++++++++++++++++++++++------------
+ 1 file changed, 91 insertions(+), 47 deletions(-)
+
+14f422f | 2026-08-31 | Fix directional backtest cash accounting
+ app/services/backtest_service.py | 977 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 977 insertions(+)
+
+0cf98cb | 2026-08-31 | Integrate NSE option chain analysis
+ app/services/ai_engine.py            |  75 ++++++++++-
+ app/services/nse_service.py          | 249 +++++++++++++++++++++++++++++++----
+ app/services/opportunity_service.py  |  33 ++---
+ app/services/option_chain_service.py | 122 +++++++++++++++++
+ app/services/signal_service.py       |  23 +++-
+ app/static/css/result.css            | 136 +++++++++++++++++++
+ app/templates/result.html            | 105 +++++++++++++++
+ 7 files changed, 696 insertions(+), 47 deletions(-)
+
+25ada37 | 2026-08-31 | Refine trade signal validation and MTF logic
+ app/services/ai_engine.py               | 355 +++++++++++++++++++++++---------
+ app/services/multi_timeframe_service.py | 127 +++++++++---
+ app/static/css/result.css               |   5 +
+ app/templates/result.html               |  24 ++-
+ 4 files changed, 379 insertions(+), 132 deletions(-)
+
+c8722f4 | 2026-08-30 | fix sell decision rendering in result page
+ app/static/css/result.css |  9 +++++++++
+ app/templates/result.html | 30 ++++++++++++++++++++++--------
+ 2 files changed, 31 insertions(+), 8 deletions(-)
+
+2b4a1fb | 2026-08-30 | refactor backend trade setup and validation flow
+ app/services/ai_confidence_service.py    |  13 +-
+ app/services/ai_engine.py                |  72 +++-
+ app/services/multi_timeframe_service.py  |  75 ++++-
+ app/services/opportunity_service.py      | 551 +++++++++++++++++++++++--------
+ app/services/signal_service.py           |  23 +-
+ app/services/trade_planner_service.py    | 105 ++++--
+ app/services/trade_quality_service.py    |  91 +++--
+ app/services/trade_validation_service.py |  14 +-
+ 8 files changed, 728 insertions(+), 216 deletions(-)
+
+9d22f6d | 2026-08-29 | Align opportunity messaging with setup direction
+ app/services/opportunity_service.py | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+47bec02 | 2026-08-29 | Make validation and final decisions directional
+ app/services/final_decision_service.py   | 102 +++++++++++++++------
+ app/services/trade_validation_service.py | 153 ++++++++++++++++++++++++++-----
+ 2 files changed, 202 insertions(+), 53 deletions(-)
+
+fdb9a5f | 2026-08-29 | Integrate directional setup with entry engine
+ app/services/ai_engine.py            |   8 +-
+ app/services/entry_engine_service.py | 372 ++++++++++++++++++++++++-----------
+ app/services/opportunity_service.py  |  56 +++++-
+ 3 files changed, 319 insertions(+), 117 deletions(-)
+
+3a29128 | 2026-08-29 | Add structural setup engine
+ app/core/setup/__init__.py          |   0
+ app/core/setup/setup_engine.py      | 287 ++++++++++++++++++++++++++++++++++++
+ app/services/ai_engine.py           |  18 ++-
+ app/services/opportunity_service.py |   4 +-
+ app/services/signal_service.py      |   4 +
+ 5 files changed, 311 insertions(+), 2 deletions(-)
+
+6a00d06 | 2026-08-28 | Add liquidity analysis and opportunity scoring
+ app/core/liquidity/__init__.py      |   0
+ app/core/liquidity/liquidity.py     | 379 ++++++++++++++++++++++++++++++++++++
+ app/services/ai_engine.py           |  18 +-
+ app/services/opportunity_service.py | 228 +++++++++++++++++++++-
+ app/services/signal_service.py      |   4 +
+ app/services/test_liquidity.py      | 209 ++++++++++++++++++++
+ 6 files changed, 834 insertions(+), 4 deletions(-)
+
+3bb4a8c | 2026-08-28 | Add market structure analysis and scoring
+ app/core/levels/market_structure.py | 480 ++++++++++++++++++++++++++++++++++++
+ app/services/ai_engine.py           |  19 +-
+ app/services/opportunity_service.py | 188 +++++++++++++-
+ app/services/signal_service.py      |   4 +
+ 4 files changed, 687 insertions(+), 4 deletions(-)
+
+66bef4c | 2026-08-28 | Preserve candidate trade setup levels
+ app/services/ai_engine.py              |  8 +++-
+ app/services/final_decision_service.py |  4 +-
+ app/services/signal_service.py         | 82 ++++++++++++++++++++++++++--------
+ app/templates/result.html              |  7 +--
+ 4 files changed, 75 insertions(+), 26 deletions(-)
+
+7961b5d | 2026-08-27 | Fix desktop AI panel layout and probability styling
+ app/services/opportunity_service.py                |   41 +-
+ app/static/css/result.css                          |  296 ++-
+ app/static/css/result_before_ai_panel_fix.css      | 2692 +++++++++++++++++++
+ .../css/result_before_decision_css_cleanup.css     | 2620 +++++++++++++++++++
+ app/static/css/result_before_ui_refactor.css       | 2696 ++++++++++++++++++++
+ .../result_before_ai_decision_removal.html         | 1682 ++++++++++++
+ app/templates/result_before_ui_refactor.html       | 1682 ++++++++++++
+ 7 files changed, 11706 insertions(+), 3 deletions(-)
+
+e2314c5 | 2026-08-27 | Freeze validated backend and portfolio execution
+ app/services/ai_engine_after_setup_details.py      |  622 ++++++
+ app/services/ai_engine_after_setup_mapping.py      |  651 ++++++
+ app/services/ai_engine_after_trigger_logic.py      |  620 ++++++
+ app/services/ai_engine_before_rr_architecture.py   |  651 ++++++
+ .../ai_engine_before_setup_details_mapping.py      |  622 ++++++
+ app/services/ai_engine_before_trigger_logic.py     |  620 ++++++
+ app/services/backtest_service.py                   |  274 ++-
+ .../entry_engine_service_before_rr_architecture.py |  214 ++
+ .../final_decision_service_after_setup_details.py  |  198 ++
+ .../final_decision_service_after_setup_mapping.py  |  200 ++
+ .../final_decision_service_after_trigger_logic.py  |  149 ++
+ ...ecision_service_before_setup_details_mapping.py |  198 ++
+ .../final_decision_service_before_trigger_logic.py |  104 +
+ app/services/opportunity_service_after_no_setup.py |  508 +++++
+ .../opportunity_service_after_setup_details.py     |  505 +++++
+ .../opportunity_service_after_trigger_logic.py     |  505 +++++
+ .../opportunity_service_before_no_setup.py         |  505 +++++
+ .../opportunity_service_before_rr_architecture.py  |  508 +++++
+ .../opportunity_service_before_trigger_logic.py    |  500 +++++
+ app/services/portfolio_execution_engine.py         |  834 +++++++
+ app/services/strategy_optimizer.py                 |   29 +-
+ app/services/strategy_robustness.py                |   20 +-
+ app/services/test_2024_trade_reconciliation.py     |  187 ++
+ app/services/test_backend_regression.py            |  417 ++++
+ app/services/test_capital_constrained_portfolio.py |  681 ++++++
+ app/services/test_entry_grid.py                    |  181 ++
+ app/services/test_final_validation.py              |  201 ++
+ app/services/test_hindunilvr_training.py           |   54 +
+ app/services/test_initial_stop_grid.py             |  211 ++
+ app/services/test_initial_stop_validation.py       |  197 ++
+ app/services/test_mae_mfe.py                       |  287 +++
+ app/services/test_market_regime.py                 |  168 ++
+ app/services/test_momentum_filter.py               |  172 ++
+ app/services/test_monthly_performance.py           |  350 +++
+ app/services/test_portfolio_allocation_order.py    |  375 ++++
+ app/services/test_portfolio_equity_validation.py   |  604 +++++
+ app/services/test_portfolio_execution_engine.py    |  300 +++
+ app/services/test_portfolio_execution_real_data.py |  408 ++++
+ app/services/test_portfolio_execution_stress.py    |  644 ++++++
+ app/services/test_portfolio_exposure_validation.py |  663 ++++++
+ app/services/test_portfolio_validation.py          |  281 +++
+ app/services/test_r_multiple.py                    |  327 +++
+ app/services/test_risk_budget_grid.py              |  199 ++
+ app/services/test_risk_budget_validation.py        |  240 ++
+ app/services/test_risk_robustness.py               |  273 +++
+ app/services/test_robustness_config.py             |  112 +
+ app/services/test_selected_config.py               |   97 +
+ app/services/test_stop_robustness.py               |  160 ++
+ app/services/test_trade_concentration.py           |  433 ++++
+ app/services/test_worst_case_dependency.py         |  532 +++++
+ ...trade_validation_service_after_setup_details.py |  158 ++
+ ...trade_validation_service_after_trigger_logic.py |  158 ++
+ ...de_validation_service_before_rr_architecture.py |  158 ++
+ ...rade_validation_service_before_trigger_logic.py |  158 ++
+ app/services/walk_forward_engine.py                |  129 +-
+ app/services/walk_forward_robustness.py            |   14 +-
+ app/static/css/result_before_compact_ai.css        | 2339 ++++++++++++++++++++
+ app/templates/result.html.backup_20260820_135023   |  989 +++++++++
+ app/templates/result_before_compact_ai.html        | 1445 ++++++++++++
+ backups/ai_engine_after_final_setup_rr.py          |  617 ++++++
+ backups/ai_engine_after_setup_rr.py                |  625 ++++++
+ backups/ai_engine_before_final_setup_rr.py         |  625 ++++++
+ backups/ai_engine_before_rr_fix.py                 |  593 +++++
+ backups/ai_engine_before_setup_rr.py               |  593 +++++
+ backups/ai_engine_working.py                       |  593 +++++
+ backups/entry_engine_service_working.py            |  214 ++
+ ...inal_decision_service_after_breakout_trigger.py |  104 +
+ ...ecision_service_before_breakout_revalidation.py |  104 +
+ ...nal_decision_service_before_breakout_trigger.py |   96 +
+ backups/final_decision_service_working.py          |   96 +
+ .../opportunity_service_after_breakout_routing.py  |  498 +++++
+ ...rtunity_service_before_breakout_revalidation.py |  498 +++++
+ .../opportunity_service_before_breakout_trigger.py |  498 +++++
+ backups/opportunity_service_before_rr_fix.py       |  498 +++++
+ .../opportunity_service_before_setup_routing.py    |  498 +++++
+ backups/opportunity_service_before_setup_rr.py     |  498 +++++
+ backups/opportunity_service_working.py             |  498 +++++
+ backups/result_working.css                         | 2281 +++++++++++++++++++
+ backups/result_working.html                        | 1445 ++++++++++++
+ backups/signal_service_before_rr_fix.py            |  521 +++++
+ backups/signal_service_working.py                  |  521 +++++
+ .../trade_validation_service_after_breakout_fix.py |  155 ++
+ ...rade_validation_service_after_final_setup_rr.py |  158 ++
+ ...validation_service_after_setup_rr_diagnostic.py |  165 ++
+ ...trade_validation_service_before_breakout_fix.py |  153 ++
+ ...idation_service_before_breakout_revalidation.py |  158 ++
+ ...ade_validation_service_before_final_setup_rr.py |  165 ++
+ .../trade_validation_service_before_setup_rr.py    |  155 ++
+ backups/trade_validation_service_working.py        |  153 ++
+ test_entry_grid.py                                 |    0
+ 90 files changed, 37079 insertions(+), 36 deletions(-)
+
+cedcfdd | 2026-08-23 | Add robust ATR strategy validation and NIFTY regime filter
+ app/api/backtest.py                     |   4 +
+ app/services/backtest_service.py        | 765 ++++++++++++++++++++++++++++++--
+ app/services/parameter_robustness.py    | 309 +++++++++++++
+ app/services/strategy_optimizer.py      | 296 ++++++++++++
+ app/services/strategy_robustness.py     | 302 +++++++++++++
+ app/services/walk_forward_engine.py     | 484 ++++++++++++++++++++
+ app/services/walk_forward_robustness.py | 250 +++++++++++
+ app/static/js/backtest.js               |   7 +-
+ app/templates/backtest.html             |  12 +-
+ 9 files changed, 2394 insertions(+), 35 deletions(-)
+
+d387b35 | 2026-08-22 | Improve breakout state visibility
+ app/static/css/result.css | 52 +++++++++++++++++++++++++++++++++++++
+ app/templates/result.html | 66 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 118 insertions(+)
+
+647e1c1 | 2026-08-22 | checkpoint: trade signal architecture and UI
+ app/main.py                              |   4 +-
+ app/services/ai_engine.py                | 318 ++++++++++-
+ app/services/entry_engine_service.py     | 214 ++++++++
+ app/services/final_decision_service.py   | 203 +++++++
+ app/services/market_price_service.py     |  52 +-
+ app/services/multi_timeframe_service.py  | 176 ++++--
+ app/services/opportunity_service.py      | 540 ++++++++++++++++--
+ app/services/signal_service.py           | 152 ++++++
+ app/services/trade_horizon_service.py    | 280 ++++++++++
+ app/services/trade_validation_service.py | 224 ++++++++
+ app/static/css/layout.css                |  47 +-
+ app/static/css/result.css                | 911 +++++++++++++++++++++++++++++++
+ app/static/css/stock-search.css          | 188 +++++++
+ app/templates/base.html                  |  24 +-
+ app/templates/result.html                | 715 ++++++++++++++++++++++--
+ app/templates/stock_search.html          | 276 ++++++++++
+ 16 files changed, 4162 insertions(+), 162 deletions(-)
+
+9394416 | 2026-08-20 | checkpoint before Qantivra UI redesign
+ app/main.py                             |   21 +-
+ app/services/backtest_service.py        |  246 ++++++--
+ app/services/backtest_service_backup.py |  943 ++++++++++++++++++++++++++++
+ app/services/backtest_service_v1.py     | 1015 +++++++++++++++++++++++++++++++
+ app/templates/dashboard.html            |    1 +
+ app/templates/index.html                |    6 +-
+ 6 files changed, 2174 insertions(+), 58 deletions(-)
+
+76128fe | 2026-08-19 | Add EMA gap filter and wider ATR trailing stop
+ app/services/backtest_service.py | 898 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 897 insertions(+), 1 deletion(-)
+
+6d4ad16 | 2026-08-19 | Add ATR risk strategy foundation
+ app/services/backtest_service.py | 996 +++++++++++++++++++++++++++++++++------
+ 1 file changed, 850 insertions(+), 146 deletions(-)
+
+dc6d8aa | 2026-08-18 | feat: add cached market breadth health scoring
+ app/services/market_health_service.py | 110 ++++++++++++++++++++++++++++++++++
+ app/services/signal_service.py        |  30 +++-------
+ 2 files changed, 119 insertions(+), 21 deletions(-)
+
+dc4b0cc | 2026-08-18 | feat: add dynamic RSI status styling
+ app/static/css/result.css | 20 ++++++++++++++++++++
+ app/templates/result.html | 10 ++++++----
+ 2 files changed, 26 insertions(+), 4 deletions(-)
+
+e1efe2e | 2026-08-18 | feat: establish validated 30-stock market universe
+ app/services/market_universe.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+dc7ddc7 | 2026-08-18 | feat: centralize market universe and improve breadth tracking
+ app/services/market_service.py  | 20 ++++++------
+ app/services/market_universe.py | 68 +++++++++++++++++++++++++++++++++++++++++
+ app/services/sector_service.py  | 23 ++++----------
+ app/static/js/result-market.js  |  6 ++--
+ 4 files changed, 88 insertions(+), 29 deletions(-)
+
+ac3baa6 | 2026-08-18 | feat: add live sector performance
+ app/routers/market.py          |  17 ++-----
+ app/services/sector_service.py | 105 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 109 insertions(+), 13 deletions(-)
+
+5880e93 | 2026-08-18 | feat: add market intelligence summary
+ app/static/css/result.css      |  99 ++++++++++++
+ app/static/js/result-market.js | 351 ++++++++++++++++++++++++++++++++++++++++-
+ app/templates/result.html      |  33 ++++
+ 3 files changed, 482 insertions(+), 1 deletion(-)
+
+1d1b21e | 2026-08-18 | feat: add live market breadth intelligence
+ app/routers/market.py           |  41 ++-------------
+ app/services/market_service.py  | 108 +++++++++++++++++++++++++++++++++++++++-
+ app/static/css/result.css       |  69 +++++++++++++++++++++++++
+ app/static/js/result-market.js  |  72 ++++++++++++++++++++++++++-
+ app/templates/result.html       |  59 ++++++++++++++++++++++
+ data/market_breadth_stocks.json |  12 +++++
+ 6 files changed, 322 insertions(+), 39 deletions(-)
+
+ced7022 | 2026-08-17 | feat: add sector performance to market intelligence
+ app/static/css/result.css      |  59 +++++++++++++++++++++
+ app/static/js/result-market.js | 118 ++++++++++++++++++++++++++++++++++++++++-
+ app/templates/result.html      |  35 ++++++++++++
+ 3 files changed, 211 insertions(+), 1 deletion(-)
+
+0fb137f | 2026-08-17 | feat: add market intelligence to stock results
+ app/main.py                    |  10 +-
+ app/static/css/result.css      | 182 ++++++++++++++++++++++
+ app/static/js/result-market.js | 341 +++++++++++++++++++++++++++++++++++++++++
+ app/templates/result.html      | 189 +++++++++++++++++++++++
+ 4 files changed, 717 insertions(+), 5 deletions(-)
+
+53206ef | 2026-08-07 | feat: TradeSense AI v0.9 milestone
+ .github/PULL_REQUEST_TEMPLATE.md                   |   20 +
+ CODE_OF_CONDUCT.md                                 |   11 +
+ CONTRIBUTING.md                                    |   21 +
+ LICENSE                                            |   13 +-
+ README.md                                          |  145 ++-
+ .../520ef55ffe41_create_transactions_table.py      |   44 +
+ .../versions/7fdee56c6dcd_add_watchlist_table.py   |   40 +
+ .../ac834f1c58ca_add_portfolio_price_columns.py    |   34 +
+ .../bde9d9ccf441_create_paper_transactions.py      |   45 +
+ .../versions/ca839ac17675_create_paper_accounts.py |   47 +
+ .../versions/d0995f7e8d4c_add_realized_profit.py   |   32 +
+ .../f442c87159cf_create_paper_portfolio.py         |   43 +
+ app/api/backtest.py                                |   36 +
+ app/api/dashboard.py                               |  123 ++
+ app/api/paper_analytics.py                         |   82 ++
+ app/api/paper_dashboard.py                         |   99 ++
+ app/api/paper_history.py                           |   43 +
+ app/api/paper_orders.py                            |  237 ++++
+ app/api/paper_portfolio.py                         |   85 ++
+ app/api/paper_trading.py                           |   45 +
+ app/api/portfolio.py                               |  117 ++
+ app/api/portfolio_summary.py                       |   86 ++
+ app/api/transactions.py                            |  203 +++
+ app/api/watchlist.py                               |   94 ++
+ app/auth/dependencies.py                           |    8 +
+ app/core/indicators/atr.py                         |   37 +
+ app/create_tables.py                               |    8 +
+ app/main.py                                        |  432 +++----
+ app/models/__init__.py                             |    7 +-
+ app/models/paper_account.py                        |   29 +
+ app/models/paper_portfolio.py                      |   43 +
+ app/models/paper_transaction.py                    |   63 +
+ app/models/portfolio.py                            |   53 +
+ app/models/transaction.py                          |   63 +
+ app/services/ai_confidence_service.py              |  115 ++
+ app/services/ai_engine.py                          |  415 +++++++
+ app/services/backtest_service.py                   |  402 ++++++
+ app/services/candlestick_service.py                |  100 ++
+ app/services/market_data_service.py                |   51 +-
+ app/services/market_price_service.py               |   26 +
+ app/services/multi_timeframe_service.py            |  141 +++
+ app/services/opportunity_service.py                |  107 ++
+ app/services/portfolio_service.py                  |   63 +-
+ app/services/probability_service.py                |   73 ++
+ app/services/rule_engine.py                        |  101 ++
+ app/services/signal_service.py                     |  464 ++++++-
+ app/services/trade_planner_service.py              |  143 +++
+ app/services/trade_quality_service.py              |  249 ++++
+ app/services/volume_service.py                     |   64 +
+ app/static/css/backtest.css                        |  204 +++
+ app/static/css/paper_dashboard.css                 |  126 ++
+ app/static/css/result.css                          | 1304 ++++++++++++++++++++
+ app/static/css/style.css                           |  514 +++++++-
+ app/static/js/auth.js                              |   53 +
+ app/static/js/backtest.js                          |  242 ++++
+ app/static/js/chart.js                             |   86 +-
+ app/static/js/paper_dashboard.js                   |  484 ++++++++
+ app/templates/backtest.html                        |  221 ++++
+ app/templates/base.html                            |    6 +-
+ app/templates/dashboard.html                       |    2 +-
+ app/templates/login.html                           |  267 ++++
+ app/templates/paper_dashboard.html                 |  241 ++++
+ app/templates/portfolio.html                       |    2 +-
+ app/templates/register.html                        |  252 ++++
+ app/templates/result.html                          |  643 +++++++---
+ app/templates/watchlist.html                       |    2 +-
+ docs/AI_ENGINE.md                                  |  177 +++
+ docs/API_DOCUMENTATION.md                          |  191 +++
+ docs/ARCHITECTURE.md                               |  198 +++
+ docs/CHANGELOG.md                                  |   69 ++
+ docs/DATABASE.md                                   |  112 ++
+ docs/DEPLOYMENT.md                                 |   61 +
+ docs/INDICATORS.md                                 |   75 ++
+ docs/INTERVIEW_GUIDE.md                            |    0
+ docs/PROJECT_BRAIN.md                              |  146 +++
+ docs/PROJECT_PROGRESS.md                           |  142 +++
+ docs/ROADMAP.md                                    |   43 +
+ tests/test_backtest.py                             |   23 +
+ {app => tests}/test_db.py                          |    0
+ {app => tests}/test_hash.py                        |    0
+ {app => tests}/test_jwt.py                         |    0
+ {app => tests}/test_provider.py                    |    0
+ tests/test_token.py                                |    7 +
+ 83 files changed, 10286 insertions(+), 609 deletions(-)
+
+7007cc5 | 2026-08-01 | Meaningful commit message
+ app/auth/__init__.py     |   0
+ app/auth/dependencies.py |  44 ++++++++++++++++++++
+ app/auth/hashing.py      |  20 +++++++++
+ app/auth/jwt_handler.py  |  66 ++++++++++++++++++++++++++++++
+ app/auth/routes.py       | 103 +++++++++++++++++++++++++++++++++++++++++++++++
+ app/auth/schemas.py      |  12 ++++++
+ app/create_tables.py     |   2 +
+ app/main.py              |   3 ++
+ app/models/__init__.py   |   2 +
+ app/models/watchlist.py  |  23 +++++++++++
+ app/test_hash.py         |  18 +++++++++
+ app/test_jwt.py          |  22 ++++++++++
+ 12 files changed, 315 insertions(+)
+
+3d4e95b | 2026-08-01 | Setup PostgreSQL, SQLAlchemy and Alembic
+ .env                                            |    5 +
+ alembic.ini                                     |  149 ++
+ alembic/README                                  |    1 +
+ alembic/env.py                                  |   85 +
+ alembic/script.py.mako                          |   28 +
+ alembic/versions/aeb723eb72b5_initial_schema.py |   32 +
+ app/backtesting/__init__.py                     |    0
+ app/backtesting/backtester.py                   |    0
+ app/backtesting/metrics.py                      |   25 +
+ app/backtesting/report.py                       |   13 +
+ app/backtesting/strategy.py                     |    0
+ app/backtesting/trade.py                        |   40 +
+ app/config.py                                   |   36 +
+ app/core/config.py                              |   16 +
+ app/core/database.py                            |   28 +
+ app/create_tables.py                            |   10 +
+ app/database/stocks.db                          |  Bin 733184 -> 733184 bytes
+ app/main.py                                     |  311 ++-
+ app/models/user.py                              |   37 +
+ app/routers/market.py                           |  178 +-
+ app/services/cache_service.py                   |   31 +
+ app/services/chart_service.py                   |  125 +-
+ app/services/macro_service.py                   |   50 +
+ app/services/market_data/base.py                |   16 +
+ app/services/market_data/provider.py            |    3 +
+ app/services/market_data/yahoo_provider.py      |   41 +
+ app/services/nse_service.py                     |   60 +
+ app/services/sentiment_service.py               |   46 +
+ app/services/trade_engine.py                    |  205 ++
+ app/services/trade_engine/__init__.py           |    0
+ app/services/trade_engine/confidence_engine.py  |   90 +
+ app/services/trade_engine/momentum_engine.py    |  188 ++
+ app/services/trade_engine/option_engine.py      |  172 ++
+ app/services/trade_engine/risk_engine.py        |    0
+ app/services/trade_engine/trend_engine.py       |  172 ++
+ app/services/trade_engine/volume_engine.py      |    0
+ app/static/css/dashboard.css                    | 2708 ++++++++++++++++-------
+ app/static/css/layout.css                       |   74 +
+ app/static/css/market.css                       |  184 ++
+ app/static/css/watchlist.css                    |   76 +
+ app/static/js/dashboard.js                      | 1437 +++++++++++-
+ app/static/js/indicators.js                     |  143 ++
+ app/static/js/market.js                         |  112 +-
+ app/static/js/watchlist.js                      |  120 +-
+ app/templates/base.html                         |   91 +
+ app/templates/dashboard.html                    |  644 +++++-
+ app/templates/market.html                       |   83 +
+ app/templates/portfolio.html                    |   63 +-
+ app/templates/watchlist.html                    |   81 +-
+ app/test_db.py                                  |   17 +
+ app/test_provider.py                            |    5 +
+ 51 files changed, 7006 insertions(+), 1025 deletions(-)
+
+c06cb5a | 2026-07-29 | Add Market Calendar and live NSE status
+ app/static/css/market.css | 74 +++++++++++++++++++++++++++++++++++++++++++++++
+ app/static/js/market.js   | 42 ++++++++++++++++++++++++++-
+ app/templates/market.html | 46 +++++++++++++++++++++++++++++
+ 3 files changed, 161 insertions(+), 1 deletion(-)
+
+dda448e | 2026-07-29 | Add Market News section to Market Intelligence
+ app/static/css/market.css | 76 +++++++++++++++++++++++++++++++++++++++++++++++
+ app/static/js/market.js   | 45 +++++++++++++++++++++++++++-
+ app/templates/market.html | 22 ++++++++++++++
+ 3 files changed, 142 insertions(+), 1 deletion(-)
+
+05ef251 | 2026-07-29 | Add sector performance section to Market Intelligence
+ app/main.py               | 25 ++++++++++++-
+ app/static/css/market.css | 90 +++++++++++++++++++++++++++++++++++++++++++++++
+ app/static/js/market.js   | 40 ++++++++++++++++++++-
+ app/templates/market.html | 17 +++++++++
+ 4 files changed, 170 insertions(+), 2 deletions(-)
+
+0130ba7 | 2026-07-29 | Add live top gainers and losers to Market Intelligence
+ app/static/css/market.css | 112 +++++++++++++++++++++++++++++++++++++++++++++-
+ app/static/js/market.js   |  45 +++++++++++++++++--
+ app/templates/market.html |  23 ++++++++++
+ 3 files changed, 175 insertions(+), 5 deletions(-)
+
+f1c4708 | 2026-07-29 | Add AI market sentiment summary to Market Intelligence
+ app/main.py               | 33 ++++++++++++++++++++++++++++++++-
+ app/static/css/market.css | 40 ++++++++++++++++++++++++++++++++++++++++
+ app/static/js/market.js   | 16 +++++++++++++++-
+ app/templates/market.html | 24 ++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 2 deletions(-)
+
+4061222 | 2026-07-29 | Add Market Intelligence page with live global indices
+ app/ai/ranking_engine.py           |   24 +
+ app/core/scoring/recommendation.py |   13 +-
+ app/database/stocks.db             |  Bin 729088 -> 733184 bytes
+ app/main.py                        |  752 +++++++++++-
+ app/routers/market.py              |   23 +
+ app/services/database_service.py   |   97 +-
+ app/services/market_service.py     |   48 +
+ app/services/portfolio_service.py  |   42 +
+ app/services/signal_service.py     |    2 +
+ app/static/css/badges.css          |   90 ++
+ app/static/css/base.css            |  105 ++
+ app/static/css/buttons.css         |  173 +++
+ app/static/css/cards.css           |  331 +++++
+ app/static/css/dashboard.css       | 1495 ++++++++++++++++++++++
+ app/static/css/home.css            |    0
+ app/static/css/layout.css          |   77 ++
+ app/static/css/market.css          |  101 ++
+ app/static/css/navbar.css          |  140 +++
+ app/static/css/portfolio.css       | 1484 ++++++++++++++++++++++
+ app/static/css/responsive.css      |    0
+ app/static/css/result.css          |    0
+ app/static/css/style.css           |  678 +++++-----
+ app/static/css/utilities.css       |    0
+ app/static/css/variables.css       |   69 ++
+ app/static/css/watchlist.css       |  142 +++
+ app/static/js/api.js               |   17 +
+ app/static/js/dashboard.js         | 1022 ++++++++++++++++
+ app/static/js/market.js            |    1 +
+ app/static/js/portfolio.js         | 2384 ++++++++++++++++++++++++++++++++++++
+ app/static/js/watchlist.js         |  539 ++++++--
+ app/templates/dashboard.html       |  670 ++++++++++
+ app/templates/index.html           |   82 +-
+ app/templates/market.html          |   97 ++
+ app/templates/portfolio.html       |  636 ++++++++++
+ app/templates/result.html          |    5 +-
+ app/templates/watchlist.html       |   27 +-
+ 36 files changed, 10882 insertions(+), 484 deletions(-)
+
+a268b18 | 2026-07-15 | feat: implement SQLite-backed watchlist system
+ app/database/stocks.db           | Bin 720896 -> 729088 bytes
+ app/main.py                      |  79 +++++++++++++++++++++++++++++++++++++--
+ app/services/database_service.py |  28 +++++++++++++-
+ app/static/css/style.css         |   2 +-
+ app/static/js/chart.js           |  44 ++++++++++++++++++++++
+ app/templates/result.html        |  35 +++++++----------
+ 6 files changed, 161 insertions(+), 27 deletions(-)
+
+7504af0 | 2026-07-14 | feat: add AI chart overlays with support, resistance, target and stop-loss
+ app/core/decision/__init__.py             |   0
+ app/core/decision/decision_engine.py      |  71 ++++++
+ app/core/explainability/__init__.py       |   0
+ app/core/explainability/explainability.py |  89 ++++++++
+ app/core/levels/__init__.py               |   0
+ app/core/levels/support_resistance.py     |  19 ++
+ app/core/prediction/__init__.py           |   0
+ app/core/prediction/predictor.py          |  63 ++++++
+ app/core/risk_reward/__init__.py          |   0
+ app/core/risk_reward/risk_reward.py       |  45 ++++
+ app/database/stocks.db                    | Bin 720896 -> 720896 bytes
+ app/main.py                               |  48 +++-
+ app/services/signal_service.py            |  49 +++++
+ app/static/css/style.css                  | 350 ++++++++++++++++--------------
+ app/static/js/chart.js                    | 122 +++++++++++
+ app/templates/result.html                 | 124 +++++++++--
+ 16 files changed, 791 insertions(+), 189 deletions(-)
+
+94a5bf2 | 2026-07-12 | Refactor AI engine into modular scoring and indicator architecture
+ Scripts/check_database.py             |  21 +++-
+ Scripts/run_scan.py                   |   8 ++
+ Scripts/update_database.py            |   6 ++
+ app/api/admin.py                      |  21 ++++
+ app/core/indicators/__init__.py       |   0
+ app/core/indicators/macd.py           |  11 +++
+ app/core/indicators/market_status.py  |  24 +++++
+ app/core/indicators/moving_average.py |   7 ++
+ app/core/indicators/rsi.py            |  17 ++++
+ app/core/scoring/__init__.py          |   0
+ app/core/scoring/confidence.py        |   5 +
+ app/core/scoring/macd_score.py        |  14 +++
+ app/core/scoring/price_score.py       |  16 +++
+ app/core/scoring/recommendation.py    |   9 ++
+ app/core/scoring/risk.py              |  14 +++
+ app/core/scoring/rsi_score.py         |  17 ++++
+ app/core/scoring/score_engine.py      |  33 +++++++
+ app/core/scoring/trend_score.py       |   6 ++
+ app/core/utils/__init__.py            |   0
+ app/core/utils/formatter.py           |  37 +++++++
+ app/database/stocks.db                | Bin 704512 -> 720896 bytes
+ app/main.py                           |  91 ++++++++++++++++-
+ app/services/init_db.py               |   3 +-
+ app/services/market_data_service.py   |  33 +++++++
+ app/services/scan_engine.py           | 154 +++++++++++++++++++++++++++++
+ app/services/signal_service.py        | 177 +++++++---------------------------
+ app/static/css/style.css              |  46 +++++++++
+ app/static/js/watchlist.js            |  44 ++++++---
+ app/templates/index.html              |  26 ++++-
+ 29 files changed, 673 insertions(+), 167 deletions(-)
+
+1ba03d2 | 2026-07-10 | Implement AI screener improvements and database preparation
+ Imports/init_db.py                  |   4 ++
+ Scripts/check_database.py           |   8 +--
+ Scripts/test_ai_screener.py         |  36 ++++++++++
+ Scripts/update_database.py          |  23 ++++++
+ app/core/stock_universe.py          |  32 ++++++++-
+ app/database/stocks.db              | Bin 704512 -> 704512 bytes
+ app/main.py                         |  15 +++-
+ app/services/ai_screener_service.py |  48 +++++++++++++
+ app/services/signal_service.py      |   1 +
+ app/static/css/style.css            | 136 ++++++++++++++++++++++++++++++++++++
+ app/static/js/watchlist.js          | 118 +++++++++++++++++++++----------
+ app/templates/index.html            |   9 +++
+ 12 files changed, 386 insertions(+), 44 deletions(-)
+
+4d84442 | 2026-07-10 | Refactor search architecture, add StockUniverse service and symbol alias engine
+ Imports/master_stock_import.py       |   62 +
+ Scripts/check_database.py            |   13 +
+ Scripts/check_ltim.py                |    5 +
+ Scripts/download_stock_lists.py      |   51 +
+ Scripts/merge_stock_lists.py         |   34 +
+ Scripts/test_lookup.py               |   17 +
+ Scripts/update_india_stocks.py       |   32 +
+ app/core/stock_universe.py           |   64 +
+ app/database/stocks.db               |  Bin 12288 -> 704512 bytes
+ app/main.py                          |   49 +-
+ app/services/init_db.py              |   21 +-
+ app/services/master_stock_service.py |   10 +
+ app/services/stock_lookup_service.py |   54 +
+ data/india_stocks.csv                | 2385 ++++++++++
+ data/master_stocks.csv               | 7923 ++++++++++++++++++++++++++++++++++
+ data/symbol_alias.json               |    5 +
+ data/us_stocks.csv                   | 5558 ++++++++++++++++++++++++
+ 17 files changed, 16235 insertions(+), 48 deletions(-)
+
+bb6305b | 2026-07-10 | Implement SQLite search, market filtering, watchlist page, and premium search UI
+ app/database/stocks.db           | Bin 0 -> 12288 bytes
+ app/main.py                      |  95 +++++-
+ app/services/database_service.py |  12 +
+ app/services/import_service.py   |  47 +++
+ app/services/init_db.py          |  66 ++++
+ app/services/screener_service.py |  50 +++
+ app/services/signal_service.py   |  29 +-
+ app/static/css/style.css         | 712 +++++++++++++++++++++++++++++++++------
+ app/static/js/watchlist.js       | 259 ++++++++++++++
+ app/templates/index.html         | 158 ++++++---
+ app/templates/result.html        |  52 +++
+ app/templates/watchlist.html     |  56 +++
+ data/stock.csv                   |  31 ++
+ 13 files changed, 1417 insertions(+), 150 deletions(-)
+
+10e4565 | 2026-07-08 | Build professional smart search module
+ app/main.py              |  22 +++-
+ app/static/css/style.css | 288 +++++++++++++++++++++++++++++++++++++++++++++++
+ app/templates/index.html | 194 ++++++++++++++++++++++++++++++-
+ data/stocks.json         |  56 +++++++++
+ 4 files changed, 553 insertions(+), 7 deletions(-)
+
+dba0b1d | 2026-07-08 | Enhance recommendation card with AI confidence and market status
+ app/services/signal_service.py | 24 +++++++++-
+ app/static/css/style.css       | 99 ++++++++++++++++++++++++++++++++++++++++++
+ app/templates/result.html      | 61 +++++++++++++++++++++-----
+ 3 files changed, 172 insertions(+), 12 deletions(-)
+
+c5943f7 | 2026-07-07 | Add live price change indicators to dashboard
+ app/services/signal_service.py | 19 ++++++++++++++++++-
+ app/static/css/style.css       | 26 ++++++++++++++++++++++++++
+ app/templates/result.html      | 26 ++++++++++++++++++++++++++
+ 3 files changed, 70 insertions(+), 1 deletion(-)
+
+b0df9b4 | 2026-07-07 | Improve result dashboard with company information and formatted market statistics
+ app/services/signal_service.py | 53 ++++++++++++++++++++++++++++++++++++++--
+ app/static/css/style.css       | 44 +++++++++++++++++++++++++++++++++
+ app/templates/result.html      | 55 ++++++++++++++++++++++++++++++++++++------
+ 3 files changed, 143 insertions(+), 9 deletions(-)
+
+c1a1ad6 | 2026-07-07 | Resolve merge conflict
+ea80773 | 2026-07-07 | Improve home page and redesign result dashboard
+ app/main.py                    | 11 +++---
+ app/services/signal_service.py | 21 ++++++++++-
+ app/static/css/style.css       | 84 ++++++++++++++++++++++++++++++++++++++++++
+ app/templates/result.html      | 30 +++++++++++++++
+ requirements.txt               |  2 +
+ 5 files changed, 141 insertions(+), 7 deletions(-)
+
+7d9956b | 2026-07-07 | Optimize Plotly chart responsiveness and dashboard layout
+ app/main.py                   |   3 +
+ app/services/chart_service.py |  73 +++-
+ app/services/news_service.py  |  25 ++
+ app/static/css/style.css      | 824 ++++++++++++++++++++++++++++++++++++++++++
+ app/static/js/script.js       |   0
+ app/templates/index.html      | 267 +++-----------
+ app/templates/result.html     | 141 +++++---
+ 7 files changed, 1048 insertions(+), 285 deletions(-)
+
+73c6cf1 | 2026-07-05 | Built Professional homepage UI
+ app/api/stocks.py              |   7 +-
+ app/main.py                    |  35 +++-
+ app/services/chart_service.py  |  55 +++++-
+ app/services/signal_service.py | 108 ++++++++++++
+ app/templates/index.html       | 373 +++++++++++++++++++++++++++++++++++++++++
+ app/templates/result.html      | 103 ++++++++++++
+ 6 files changed, 667 insertions(+), 14 deletions(-)
+
+daeca05 | 2026-07-04 | Added RSI and MACD calculations with technical dashboard improvements
+ app/api/stocks.py             |   4 +-
+ app/services/chart_service.py | 135 ++++++++++++++++++++++++++++++++++++++----
+ app/services/stock_service.py |   2 +-
+ 3 files changed, 128 insertions(+), 13 deletions(-)
+
+ca9b89d | 2026-07-04 | Added interactive stock chart with Plotly
+ app/api/stocks.py             | 22 ++++++++++++++++++++--
+ app/services/chart_service.py | 29 +++++++++++++++++++++++++++++
+ app/services/stock_service.py | 22 +++++++++++++++++++++-
+ 3 files changed, 70 insertions(+), 3 deletions(-)
+
+3cd6dc1 | 2026-07-04 | Remove Python cache files
+ .gitignore                                          |  20 ++++++++++++++++++++
+ app/__pycache__/__init__.cpython-313.pyc            | Bin 151 -> 0 bytes
+ app/__pycache__/main.cpython-313.pyc                | Bin 908 -> 0 bytes
+ app/api/__pycache__/__init__.cpython-313.pyc        | Bin 155 -> 0 bytes
+ app/api/__pycache__/stocks.cpython-313.pyc          | Bin 537 -> 0 bytes
+ app/services/__pycache__/__init__.cpython-313.pyc   | Bin 160 -> 0 bytes
+ .../__pycache__/stock_service.cpython-313.pyc       | Bin 779 -> 0 bytes
+ 7 files changed, 20 insertions(+)
+
+30105ce | 2026-07-04 | Initial FastAPI project setup
+ .env                                               |   0
+ .gitignore                                         |   0
+ README.md                                          |   0
+ app/__init__.py                                    |   0
+ app/__pycache__/__init__.cpython-313.pyc           | Bin 0 -> 151 bytes
+ app/__pycache__/main.cpython-313.pyc               | Bin 0 -> 908 bytes
+ app/api/__init__.py                                |   0
+ app/api/__pycache__/__init__.cpython-313.pyc       | Bin 0 -> 155 bytes
+ app/api/__pycache__/stocks.cpython-313.pyc         | Bin 0 -> 537 bytes
+ app/api/stocks.py                                  |   8 +++
+ app/database/__init__.py                           |   0
+ app/main.py                                        |  21 ++++++
+ app/models/__init__.py                             |   0
+ app/services/__init__.py                           |   0
+ app/services/__pycache__/__init__.cpython-313.pyc  | Bin 0 -> 160 bytes
+ .../__pycache__/stock_service.cpython-313.pyc      | Bin 0 -> 779 bytes
+ app/services/stock_service.py                      |  13 ++++
+ requirements.txt                                   |  78 +++++++++++++++++++++
+ 18 files changed, 120 insertions(+)
+
+32f5254 | 2026-07-04 | Initial commit
+ .gitignore | 218 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ LICENSE    |  21 ++++++
+ README.md  |   2 +
+ 3 files changed, 241 insertions(+)

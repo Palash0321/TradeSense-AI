@@ -1,0 +1,41 @@
+{
+  "audit": "VOLUME_DATA_LINEAGE",
+  "status": "PASS",
+  "expected_frozen_trades": 106,
+  "audited_trades": 106,
+  "passed_trades": 106,
+  "failed_trades": 0,
+  "frozen_trade_sha256": "810c9d9dd080c2c899219d6114112db2f55d35a271944836f3eb4e6f75b0e3c9",
+  "frozen_start": "2021-09-07",
+  "frozen_end": "2026-09-08",
+  "volume_lookback": 20,
+  "warmup_days": 60,
+  "production_equivalent_definition": "Signal-day Volume / 20-period rolling mean of Volume through Signal_Date",
+  "signal_entry_relationship": "Signal_Date must immediately precede Entry_Date in the symbol's trading-day sequence",
+  "threshold_optimization": "NONE",
+  "profitability_analysis": "NOT_PERFORMED",
+  "early_adverse_analysis": "NOT_PERFORMED",
+  "strategy_modification": "NONE",
+  "oos_modification": "NONE",
+  "categories": {
+    "LOW": 38,
+    "NORMAL": 34,
+    "HIGH": 21,
+    "VERY_HIGH": 13
+  },
+  "symbols_loaded": [
+    "HDFCBANK.NS",
+    "ICICIBANK.NS",
+    "INFY.NS",
+    "RELIANCE.NS",
+    "SBIN.NS",
+    "TCS.NS"
+  ],
+  "failure_reasons": {},
+  "volume_ratio_descriptive": {
+    "min": 0.46009389361560227,
+    "max": 4.299481597028439,
+    "mean": 1.3548562365188588,
+    "median": 1.192481227336049
+  }
+}

@@ -1,0 +1,2 @@
+scope,stream,status,reason,locked_window_bars,locked_threshold_r,stage5_status,genuine_oos,complete_7b,timestamp_utc
+GLOBAL,ALL,EVALUATION_BLOCKED,Stage 5 has not opened OOS evaluation.,7,0.25,NO_GENUINE_OOS_EVIDENCE,0,0,2026-09-17T05:50:20.053192+00:00

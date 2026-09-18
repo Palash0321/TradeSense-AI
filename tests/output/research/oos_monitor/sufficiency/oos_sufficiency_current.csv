@@ -1,0 +1,6 @@
+stream,genuine_oos,event_count,no_event_full_7b,complete_7b,partial_7b_window,missing_path,7b_completeness,pre_start,duplicate_keys,invalid_dates,monitor_status,sufficiency_status,reason
+STOCK_HOLDOUT,0,0,0,0,0,0,,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,WAITING_FOR_GENUINE_OOS_TRADES,No genuine post-freeze OOS trades.
+NIFTY_50_FORWARD,0,0,0,0,0,0,,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,WAITING_FOR_GENUINE_OOS_TRADES,No genuine post-freeze OOS trades.
+SENSEX_FORWARD,0,0,0,0,0,0,,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,WAITING_FOR_GENUINE_OOS_TRADES,No genuine post-freeze OOS trades.
+BANK_NIFTY_FORWARD,0,0,0,0,0,0,,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,WAITING_FOR_GENUINE_OOS_TRADES,No genuine post-freeze OOS trades.
+MIDSELECT_FORWARD,0,0,0,0,0,0,,0,0,0,WAITING_FOR_GENUINE_OOS_TRADES,WAITING_FOR_GENUINE_OOS_TRADES,No genuine post-freeze OOS trades.

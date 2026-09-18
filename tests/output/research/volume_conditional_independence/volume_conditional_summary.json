@@ -1,0 +1,171 @@
+{
+  "hypothesis": {
+    "threshold_r": 0.25,
+    "max_bars": 5,
+    "definition": "5B_0.25R"
+  },
+  "population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "volume": {
+    "global_median": 1.1924812273360488,
+    "global_fisher_odds_ratio": 0.45918367346938777,
+    "global_fisher_p_value": 0.07725536944432154,
+    "global_risk_difference_high_minus_low_pp": -18.867924528301884
+  },
+  "conditional_tests": [
+    {
+      "context": "SETUP",
+      "context_column": "setup",
+      "total_strata": 4,
+      "usable_strata": 4,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 4,
+      "cmh_odds_ratio": 0.47878944645628563,
+      "cmh_p_value_approx": 0.4436949383296587
+    },
+    {
+      "context": "DIRECTION",
+      "context_column": "direction",
+      "total_strata": 2,
+      "usable_strata": 2,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 2,
+      "cmh_odds_ratio": 0.4602113094060386,
+      "cmh_p_value_approx": 0.17556791973704747
+    },
+    {
+      "context": "STRUCTURE",
+      "context_column": "structure",
+      "total_strata": 2,
+      "usable_strata": 2,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 2,
+      "cmh_odds_ratio": 0.47607361963190187,
+      "cmh_p_value_approx": 0.2602081185940181
+    },
+    {
+      "context": "LIQUIDITY",
+      "context_column": "liquidity",
+      "total_strata": 2,
+      "usable_strata": 2,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 2,
+      "cmh_odds_ratio": 0.45622739018087854,
+      "cmh_p_value_approx": 0.4554212534297936
+    },
+    {
+      "context": "TREND",
+      "context_column": "trend",
+      "total_strata": 3,
+      "usable_strata": 3,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 3,
+      "cmh_odds_ratio": 0.46347830290529984,
+      "cmh_p_value_approx": 0.2804700248288769
+    },
+    {
+      "context": "TREND_STRENGTH",
+      "context_column": "trend_strength",
+      "total_strata": 85,
+      "usable_strata": 2,
+      "small_strata": 83,
+      "zero_variation_strata": 83,
+      "cmh_usable_strata": 2,
+      "cmh_odds_ratio": 0.37068965517241387,
+      "cmh_p_value_approx": 0.480092940573353
+    },
+    {
+      "context": "BOS",
+      "context_column": "bos",
+      "total_strata": 3,
+      "usable_strata": 3,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 3,
+      "cmh_odds_ratio": 0.46997262362684966,
+      "cmh_p_value_approx": 0.34248835106478803
+    },
+    {
+      "context": "CHOCH",
+      "context_column": "choch",
+      "total_strata": 3,
+      "usable_strata": 3,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 3,
+      "cmh_odds_ratio": 0.4703924140018159,
+      "cmh_p_value_approx": 0.4077592466688895
+    },
+    {
+      "context": "SETUP_X_DIRECTION",
+      "context_column": "setup_x_direction",
+      "total_strata": 4,
+      "usable_strata": 4,
+      "small_strata": 0,
+      "zero_variation_strata": 0,
+      "cmh_usable_strata": 4,
+      "cmh_odds_ratio": 0.47878944645628563,
+      "cmh_p_value_approx": 0.4436949383296587
+    }
+  ],
+  "integrity": [
+    {
+      "check": "FROZEN_TRADE_COUNT",
+      "actual": 106,
+      "expected": 106,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_EVENT_COUNT",
+      "actual": 60,
+      "expected": 60,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_RETAINED_COUNT",
+      "actual": 46,
+      "expected": 46,
+      "status": "PASS"
+    },
+    {
+      "check": "VOLUME_DUPLICATE_KEYS",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "FROZEN_DUPLICATE_KEYS",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "MISSING_VOLUME_RATIO",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    },
+    {
+      "check": "MISSING_MERGE_VOLUME",
+      "actual": 0,
+      "expected": 0,
+      "status": "PASS"
+    }
+  ],
+  "safety": {
+    "production_modified": false,
+    "frozen_dataset_modified": false,
+    "oos_modified": false,
+    "threshold_optimized": false,
+    "volume_threshold_optimized": false,
+    "deployment_rule_created": false
+  }
+}

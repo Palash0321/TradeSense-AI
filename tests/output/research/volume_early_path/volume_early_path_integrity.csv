@@ -1,0 +1,14 @@
+check,expected,actual,status
+frozen_trade_count,106,106,PASS
+frozen_event_count,60,60,PASS
+frozen_retained_count,46,46,PASS
+frozen_duplicate_keys,0,0,PASS
+volume_duplicate_keys,0,0,PASS
+path_duplicate_rows,0,0,PASS
+path_duplicate_trade_keys_allowed,multiple bars per trade,424,PASS
+path_missing_bar_number,0,0,PASS
+missing_volume_ratio,0,0,PASS
+missing_bar1_path,0,0,PASS
+invalid_volume_categories,0,0,PASS
+invalid_frozen_event_values,0,0,PASS
+merged_trade_count,106,106,PASS

@@ -1,0 +1,86 @@
+{
+  "hypothesis": {
+    "threshold_r": 0.25,
+    "max_bars": 5,
+    "definition": "5B_0.25R"
+  },
+  "population": {
+    "trades": 106,
+    "events": 60,
+    "retained": 46
+  },
+  "volume": {
+    "global_median": 1.1924812273360488,
+    "raw_odds_ratio": 0.45918367346938777,
+    "raw_fisher_p": 0.07725536944432154,
+    "raw_risk_difference_pp": -18.867924528301884
+  },
+  "baseline": {
+    "controls": [
+      "TREND_STRENGTH",
+      "TREND_SLOPE",
+      "ENTRY_ATR",
+      "SETUP_CONFIDENCE"
+    ],
+    "medians": {
+      "TREND_STRENGTH": 41.035,
+      "TREND_SLOPE": 1.14105,
+      "ENTRY_ATR": 24.92,
+      "SETUP_CONFIDENCE": 70.0
+    },
+    "odds_ratio": 1.2222222222222223,
+    "fisher_p": 0.6956967333814865,
+    "risk_difference_pp": 4.928571428571431
+  },
+  "models": [
+    {
+      "model": "VOLUME_ONLY",
+      "group_column": "volume_high",
+      "n": 106,
+      "events": 60,
+      "retained": 46,
+      "groups_used": 2,
+      "log_likelihood": -70.61344713565371,
+      "null_log_likelihood": -72.5463660040547,
+      "aic": 145.22689427130743,
+      "null_aic": 147.0927320081094,
+      "delta_aic_vs_null": -1.8658377368019785
+    },
+    {
+      "model": "BASELINE_ONLY",
+      "group_column": "baseline_high",
+      "n": 106,
+      "events": 60,
+      "retained": 46,
+      "groups_used": 2,
+      "log_likelihood": -72.41576610932404,
+      "null_log_likelihood": -72.5463660040547,
+      "aic": 148.83153221864808,
+      "null_aic": 147.0927320081094,
+      "delta_aic_vs_null": 1.7388002105386704
+    },
+    {
+      "model": "BASELINE_PLUS_VOLUME",
+      "group_column": "baseline_volume_group",
+      "n": 106,
+      "events": 60,
+      "retained": 46,
+      "groups_used": 4,
+      "log_likelihood": -70.08284344874895,
+      "null_log_likelihood": -72.5463660040547,
+      "aic": 148.1656868974979,
+      "null_aic": 147.0927320081094,
+      "delta_aic_vs_null": 1.072954889388484
+    }
+  ],
+  "volume_incremental_delta_aic": -0.6658453211501865,
+  "safety": {
+    "production_modified": false,
+    "frozen_dataset_modified": false,
+    "oos_modified": false,
+    "threshold_optimized": false,
+    "feature_selection": false,
+    "ml_model": false,
+    "deployment_rule_created": false
+  }
+}
