@@ -1,4 +1,5 @@
 import uuid
+from unittest.mock import patch
 
 from app.core.database import SessionLocal
 from app.models.execution_record import ExecutionRecord
@@ -136,6 +137,69 @@ def test_state_transition_is_persisted():
 
         assert record is not None
         assert record.current_state == "VALIDATED"
+
+    finally:
+        db.query(ExecutionRecord).filter(
+            ExecutionRecord.execution_id == execution_id
+        ).delete(
+            synchronize_session=False
+        )
+        db.commit()
+        db.close()
+
+def test_transition_restores_memory_when_db_commit_fails():
+    db = SessionLocal()
+
+    execution_id = str(uuid.uuid4())
+
+    try:
+        ledger = _create_ledger(
+            db=db,
+            execution_id=execution_id,
+        )
+
+        assert ledger.create()["status"] == "PASS"
+
+        assert ledger.state_service.state == "CREATED"
+        assert len(ledger.state_service.history) == 1
+
+        with patch.object(
+            db,
+            "commit",
+            side_effect=RuntimeError(
+                "Simulated database commit failure."
+            ),
+        ):
+            try:
+                ledger.transition(
+                    new_state="VALIDATED",
+                    reason="Testing persistence failure.",
+                )
+                assert False, (
+                    "Expected database commit failure "
+                    "to raise RuntimeError."
+                )
+            except RuntimeError as exc:
+                assert (
+                    str(exc)
+                    == "Simulated database commit failure."
+                )
+
+        assert ledger.state_service.state == "CREATED"
+        assert len(ledger.state_service.history) == 1
+
+        db.expire_all()
+
+        record = (
+            db.query(ExecutionRecord)
+            .filter(
+                ExecutionRecord.execution_id == execution_id
+            )
+            .first()
+        )
+
+        assert record is not None
+        assert record.current_state == "CREATED"
 
     finally:
         db.query(ExecutionRecord).filter(
@@ -423,7 +487,7 @@ def test_get_record_returns_persisted_execution():
         db.close()
 
 
-def test_missing_record_rejects_transition():
+def test_missing_record_rejects_transition_without_advancing_memory():
     db = SessionLocal()
 
     execution_id = str(uuid.uuid4())
@@ -433,6 +497,9 @@ def test_missing_record_rejects_transition():
             db=db,
             execution_id=execution_id,
         )
+
+        assert ledger.state_service.state == "CREATED"
+        assert len(ledger.state_service.history) == 1
 
         result = ledger.transition(
             new_state="VALIDATED",
@@ -444,6 +511,9 @@ def test_missing_record_rejects_transition():
             "does not exist"
             in result["reason"]
         )
+
+        assert ledger.state_service.state == "CREATED"
+        assert len(ledger.state_service.history) == 1
 
     finally:
         db.close()

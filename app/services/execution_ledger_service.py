@@ -111,8 +111,15 @@ class ExecutionLedgerService:
         metadata: dict[str, Any] | None = None,
     ):
         """
-        Transition the in-memory execution state and persist the new state.
+        Transition the execution state and persist the new state.
+
+        The in-memory state is restored if persistence cannot be completed,
+        ensuring that the in-memory lifecycle and persistent ledger do not
+        diverge.
         """
+
+        previous_state = self.state_service.state
+        previous_history = list(self.state_service.history)
 
         transition_result = self.state_service.transition(
             new_state=new_state,
@@ -132,6 +139,9 @@ class ExecutionLedgerService:
         )
 
         if record is None:
+            self.state_service.state = previous_state
+            self.state_service.history = previous_history
+
             return {
                 "status": "REJECT",
                 "execution_id": self.execution_id,
@@ -146,9 +156,12 @@ class ExecutionLedgerService:
 
         try:
             self.db.commit()
-            self.db.refresh(record)
         except Exception:
             self.db.rollback()
+
+            self.state_service.state = previous_state
+            self.state_service.history = previous_history
+
             raise
 
         return {
