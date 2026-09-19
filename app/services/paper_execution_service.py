@@ -54,12 +54,12 @@ class PaperExecutionService:
                 "Invalid order intent",
             )
 
-        if order_intent.get("status") not in (None, "PASS"):
+        if order_intent.get("intent_decision") != "PASS":
             return self._reject(
                 "Order intent is not approved",
             )
 
-        if order_intent.get("ready") is False:
+        if order_intent.get("ready_for_execution") is not True:
             return self._reject(
                 "Order intent is not execution-ready",
             )

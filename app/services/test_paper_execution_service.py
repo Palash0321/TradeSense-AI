@@ -70,8 +70,8 @@ def test_market_long_buy_executes():
         db.commit()
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",
@@ -146,8 +146,8 @@ def test_insufficient_balance_rejects():
         db.commit()
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",
@@ -195,8 +195,8 @@ def test_stop_order_rejects():
         create_test_user(db)
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "STOP",
@@ -227,8 +227,8 @@ def test_short_order_rejects():
         create_test_user(db)
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "SHORT",
             "order_type": "MARKET",
@@ -259,8 +259,8 @@ def test_zero_quantity_rejects():
         create_test_user(db)
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",
@@ -305,8 +305,8 @@ def test_second_buy_updates_average_price():
         db.commit()
 
         order_intent = {
-            "status": "PASS",
-            "ready": True,
+            "intent_decision": "PASS",
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",
@@ -565,6 +565,94 @@ def test_manual_buy_rejects_zero_quantity():
         assert result["status"] == "REJECT"
         assert result["executed"] is False
         assert result["reason"] == "Quantity must be greater than zero"
+
+    finally:
+        db.close()
+        teardown_database()
+def test_missing_intent_decision_rejects():
+    db = create_test_session()
+
+    try:
+        create_test_user(db)
+
+        order_intent = {
+            "ready_for_execution": True,
+            "symbol": "RELIANCE.NS",
+            "direction": "LONG",
+            "order_type": "MARKET",
+            "quantity": 10,
+        }
+
+        result = PaperExecutionService(
+            db=db,
+            user_id=1,
+        ).execute(order_intent)
+
+        assert result["status"] == "REJECT"
+        assert result["executed"] is False
+        assert result["reason"] == (
+            "Order intent is not approved"
+        )
+
+    finally:
+        db.close()
+        teardown_database()
+
+def test_not_ready_for_execution_rejects():
+    db = create_test_session()
+
+    try:
+        create_test_user(db)
+
+        order_intent = {
+            "intent_decision": "PASS",
+            "ready_for_execution": False,
+            "symbol": "RELIANCE.NS",
+            "direction": "LONG",
+            "order_type": "MARKET",
+            "quantity": 10,
+        }
+
+        result = PaperExecutionService(
+            db=db,
+            user_id=1,
+        ).execute(order_intent)
+
+        assert result["status"] == "REJECT"
+        assert result["executed"] is False
+        assert result["reason"] == (
+            "Order intent is not execution-ready"
+        )
+
+    finally:
+        db.close()
+        teardown_database()
+
+def test_legacy_ready_field_does_not_authorize_execution():
+    db = create_test_session()
+
+    try:
+        create_test_user(db)
+
+        order_intent = {
+            "intent_decision": "PASS",
+            "ready": True,
+            "symbol": "RELIANCE.NS",
+            "direction": "LONG",
+            "order_type": "MARKET",
+            "quantity": 10,
+        }
+
+        result = PaperExecutionService(
+            db=db,
+            user_id=1,
+        ).execute(order_intent)
+
+        assert result["status"] == "REJECT"
+        assert result["executed"] is False
+        assert result["reason"] == (
+            "Order intent is not execution-ready"
+        )
 
     finally:
         db.close()

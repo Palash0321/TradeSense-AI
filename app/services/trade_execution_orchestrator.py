@@ -138,7 +138,15 @@ class TradeExecutionOrchestrator:
 
         order_intent = intent_service.build()
 
-        if order_intent.get("intent_decision") != "PASS":
+        order_intent_passed = (
+            order_intent.get("intent_decision") == "PASS"
+        )
+
+        order_intent_ready = (
+            order_intent.get("ready_for_execution") is True
+        )
+
+        if not order_intent_passed or not order_intent_ready:
             return self._reject(
                 failed_stage="order_intent",
                 risk=risk_result,

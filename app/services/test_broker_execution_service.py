@@ -3,7 +3,7 @@ from app.services.broker_execution_service import BrokerExecutionService
 
 def valid_order_intent():
     return {
-        "status": "PASS",
+        "intent_decision": "PASS",
         "ready_for_execution": True,
         "symbol": "RELIANCE.NS",
         "direction": "LONG",
@@ -40,7 +40,19 @@ def test_rejects_failed_order_intent():
     service = BrokerExecutionService()
 
     order_intent = valid_order_intent()
-    order_intent["status"] = "REJECT"
+    order_intent["intent_decision"] = "REJECT"
+
+    result = service.execute(order_intent)
+
+    assert result["status"] == "REJECT"
+    assert result["executed"] is False
+    assert result["broker_status"] == "NOT_EXECUTED"
+
+def test_rejects_missing_intent_decision():
+    service = BrokerExecutionService()
+
+    order_intent = valid_order_intent()
+    del order_intent["intent_decision"]
 
     result = service.execute(order_intent)
 

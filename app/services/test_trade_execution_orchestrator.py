@@ -129,7 +129,7 @@ def rejected_sizing():
 def passed_intent():
     return {
         "intent_decision": "PASS",
-        "ready": True,
+        "ready_for_execution": True,
         "symbol": "TEST",
         "direction": "LONG",
         "order_type": "STOP",
@@ -143,7 +143,7 @@ def passed_intent():
 def rejected_intent():
     return {
         "intent_decision": "REJECT",
-        "ready": False,
+        "ready_for_execution": False,
         "symbol": "TEST",
         "direction": "LONG",
         "order_type": None,
@@ -355,6 +355,37 @@ def test_order_intent_rejection_is_terminal():
     )
     intent_service = FakeOrderIntentService(
         rejected_intent()
+    )
+
+    orchestrator = TradeExecutionOrchestrator(
+        trade_candidate=VALID_CANDIDATE,
+        risk_budget=1000,
+        risk_engine=risk_engine,
+        position_sizing_engine=sizing_engine,
+        order_intent_service=intent_service,
+    )
+
+    result = orchestrator.prepare()
+
+    assert result["execution_decision"] == "REJECT"
+    assert result["ready_for_execution"] is False
+    assert result["failed_stage"] == "order_intent"
+
+    assert intent_service.called is True
+
+def test_order_intent_pass_but_not_ready_fails_closed():
+    risk_engine = FakeRiskEngine(
+        passed_risk()
+    )
+    sizing_engine = FakeSizingEngine(
+        passed_sizing()
+    )
+
+    not_ready_intent = passed_intent()
+    not_ready_intent["ready_for_execution"] = False
+
+    intent_service = FakeOrderIntentService(
+        not_ready_intent
     )
 
     orchestrator = TradeExecutionOrchestrator(

@@ -120,7 +120,7 @@ class BrokerExecutionService:
             }
         )
 
-        if order_intent.get("status") != "PASS":
+        if order_intent.get("intent_decision") != "PASS":
             return {
                 "status": "REJECT",
                 "reason": "Order intent status is not PASS.",
