@@ -73,6 +73,14 @@ class FakeExecutionLedgerService:
                 "metadata": metadata,
             }
         )
+
+        if new_state == "REJECTED":
+            return {
+                "status": "PASS",
+                "execution_id": "execution-123",
+                "state": "REJECTED",
+            }
+
         return self.transition_result
 
     def update_broker_state(
@@ -698,6 +706,31 @@ def test_runtime_rejects_when_broker_rejects_order():
     assert result["broker"] == broker_result
 
     assert (
+        result["broker_state"]["status"]
+        == "PASS"
+    )
+
+    assert (
+        result["ledger_rejection"]["status"]
+        == "PASS"
+    )
+
+    assert (
+        result["ledger_rejection"]["state"]
+        == "REJECTED"
+    )
+
+    transition_states = [
+        call["new_state"]
+        for call in ledger_service.transition_calls
+    ]
+
+    assert transition_states == [
+        "VALIDATED",
+        "REJECTED",
+    ]
+
+    assert (
         ledger_service.broker_state_calls[0][
             "broker_status"
         ]
@@ -799,6 +832,18 @@ def test_runtime_does_not_infer_filled_or_completed_from_broker_execution():
 
     assert result["broker"]["executed"] is True
 
+    assert (
+        result["broker_state"]["status"]
+        == "PASS"
+    )
+
+    assert (
+        result["ledger_validation"]["state"]
+        == "VALIDATED"
+    )
+
+    assert "ledger_rejection" not in result
+
     transition_states = [
         call["new_state"]
         for call in ledger_service.transition_calls
@@ -807,3 +852,109 @@ def test_runtime_does_not_infer_filled_or_completed_from_broker_execution():
     assert transition_states == ["VALIDATED"]
     assert "FILLED" not in transition_states
     assert "COMPLETED" not in transition_states
+
+def test_runtime_fails_closed_when_broker_state_persistence_fails():
+    portfolio_state = {
+        "status": "PASS",
+        "passed": True,
+        "user_id": 1,
+        "equity": 100000.0,
+        "cash_balance": 100000.0,
+        "gross_exposure": 0.0,
+        "open_risk_known": False,
+        "open_risk": None,
+        "risk_budget_policy_defined": False,
+        "risk_budget": None,
+    }
+
+    execution_result = {
+        "execution_decision": "PASS",
+        "ready_for_execution": True,
+        "failed_stage": None,
+        "order_intent": {
+            "status": "PASS",
+            "ready_for_execution": True,
+            "symbol": "RELIANCE.NS",
+            "direction": "LONG",
+            "order_type": "MARKET",
+            "quantity": 10,
+            "entry": 2500.0,
+        },
+    }
+
+    ledger_service = FakeExecutionLedgerService(
+        create_result={
+            "status": "PASS",
+            "execution_id": "execution-123",
+            "record_id": 1,
+            "state": "CREATED",
+        },
+        transition_result={
+            "status": "PASS",
+            "execution_id": "execution-123",
+            "state": "VALIDATED",
+        },
+        broker_state_result={
+            "status": "REJECT",
+            "execution_id": "execution-123",
+            "state": "VALIDATED",
+            "reason": (
+                "Broker state persistence failed."
+            ),
+        },
+    )
+
+    broker_service = FakeBrokerExecutionService(
+        {
+            "status": "PASS",
+            "executed": True,
+            "broker_status": "EXECUTED",
+            "broker_result": {
+                "broker_order_id": "TEST-ORDER-001",
+            },
+        }
+    )
+
+    runtime = TradeExecutionRuntimeService(
+        db=None,
+        user_id=1,
+        trade_candidate={
+            "symbol": "RELIANCE.NS",
+            "direction": "LONG",
+        },
+        risk_budget=1000.0,
+        portfolio_risk_state_service=(
+            FakePortfolioRiskStateService(
+                portfolio_state
+            )
+        ),
+        trade_execution_orchestrator=(
+            FakeTradeExecutionOrchestrator(
+                execution_result
+            )
+        ),
+        execution_ledger_service=ledger_service,
+        broker_execution_service=broker_service,
+    )
+
+    result = runtime.execute()
+
+    assert result["runtime_decision"] == "REJECT"
+    assert result["ready_for_execution"] is False
+    assert (
+        result["failed_stage"]
+        == "execution_ledger_broker_state"
+    )
+
+    assert result["broker"]["status"] == "PASS"
+    assert (
+        result["broker_state"]["status"]
+        == "REJECT"
+    )
+
+    transition_states = [
+        call["new_state"]
+        for call in ledger_service.transition_calls
+    ]
+
+    assert transition_states == ["VALIDATED"]

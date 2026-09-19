@@ -267,12 +267,59 @@ class TradeExecutionRuntimeService:
 
         runtime_result["broker"] = broker_result
 
-        self._persist_broker_result(
-            ledger_service=ledger_service,
-            broker_result=broker_result,
+        broker_state_result = (
+            self._persist_broker_result(
+                ledger_service=ledger_service,
+                broker_result=broker_result,
+            )
         )
 
+        runtime_result["broker_state"] = (
+            broker_state_result
+        )
+
+        if broker_state_result.get("status") != "PASS":
+            runtime_result["runtime_decision"] = "REJECT"
+            runtime_result["ready_for_execution"] = False
+            runtime_result["failed_stage"] = (
+                "execution_ledger_broker_state"
+            )
+            return runtime_result
+
         if broker_result.get("status") != "PASS":
+            rejection_reason = broker_result.get(
+                "reason"
+            ) or "Broker rejected the execution."
+
+            ledger_rejection = ledger_service.transition(
+                new_state="REJECTED",
+                reason=rejection_reason,
+                metadata={
+                    "source": (
+                        "TradeExecutionRuntimeService"
+                    ),
+                    "broker_status": broker_result.get(
+                        "broker_status"
+                    ),
+                },
+            )
+
+            runtime_result["ledger_rejection"] = (
+                ledger_rejection
+            )
+
+            if ledger_rejection.get("status") != "PASS":
+                runtime_result["runtime_decision"] = (
+                    "REJECT"
+                )
+                runtime_result["ready_for_execution"] = (
+                    False
+                )
+                runtime_result["failed_stage"] = (
+                    "execution_ledger_rejection"
+                )
+                return runtime_result
+
             return self._broker_rejection(
                 runtime_result
             )
@@ -363,7 +410,7 @@ class TradeExecutionRuntimeService:
         if broker_result.get("status") == "PASS":
             failure_reason = None
 
-        ledger_service.update_broker_state(
+        return ledger_service.update_broker_state(
             broker_status=broker_status,
             broker_order_id=broker_order_id,
             failure_reason=failure_reason,
