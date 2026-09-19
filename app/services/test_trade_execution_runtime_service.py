@@ -146,43 +146,12 @@ def test_runtime_composes_portfolio_state_into_execution_pipeline():
         },
     }
 
-    ledger_result = {
-        "status": "PASS",
-        "execution_id": "execution-123",
-        "record_id": 1,
-        "state": "CREATED",
-    }
-
-    validation_result = {
-        "status": "PASS",
-        "execution_id": "execution-123",
-        "state": "VALIDATED",
-    }
-
-    broker_result = {
-        "status": "PASS",
-        "executed": True,
-        "broker_status": "EXECUTED",
-        "broker_result": {
-            "broker_order_id": "TEST-ORDER-001",
-        },
-    }
-
     portfolio_service = FakePortfolioRiskStateService(
         portfolio_state
     )
 
     orchestrator = FakeTradeExecutionOrchestrator(
         execution_result
-    )
-
-    ledger_service = FakeExecutionLedgerService(
-        create_result=ledger_result,
-        transition_result=validation_result,
-    )
-
-    broker_service = FakeBrokerExecutionService(
-        broker_result
     )
 
     runtime = TradeExecutionRuntimeService(
@@ -195,8 +164,6 @@ def test_runtime_composes_portfolio_state_into_execution_pipeline():
         risk_budget=1000.0,
         portfolio_risk_state_service=portfolio_service,
         trade_execution_orchestrator=orchestrator,
-        execution_ledger_service=ledger_service,
-        broker_execution_service=broker_service,
     )
 
     result = runtime.prepare()
@@ -207,36 +174,11 @@ def test_runtime_composes_portfolio_state_into_execution_pipeline():
 
     assert result["portfolio_risk_state"] == portfolio_state
     assert result["execution"] == execution_result
-
-    assert result["ledger"] == ledger_result
-    assert result["ledger_validation"] == validation_result
-    assert result["broker"] == broker_result
+    assert result["ledger"] is None
+    assert result["broker"] is None
 
     assert portfolio_service.calls == 1
     assert orchestrator.calls == 1
-
-    assert ledger_service.create_calls == 1
-
-    assert len(ledger_service.transition_calls) == 1
-    assert (
-        ledger_service.transition_calls[0]["new_state"]
-        == "VALIDATED"
-    )
-
-    assert ledger_service.broker_state_calls == [
-        {
-            "broker_status": "EXECUTED",
-            "broker_order_id": "TEST-ORDER-001",
-            "failure_reason": None,
-        }
-    ]
-
-    assert broker_service.calls == 1
-    assert (
-        broker_service.received_order_intent
-        == execution_result["order_intent"]
-    )
-
 
 def test_runtime_rejects_when_portfolio_state_is_invalid():
     portfolio_state = {
@@ -444,7 +386,7 @@ def test_runtime_uses_injected_ledger_when_execution_is_ready():
         broker_execution_service=broker_service,
     )
 
-    result = runtime.prepare()
+    result = runtime.execute()
 
     assert result["runtime_decision"] == "PASS"
     assert result["ready_for_execution"] is True
@@ -633,7 +575,7 @@ def test_runtime_persists_real_execution_record():
             lambda: execution_id
         )
 
-        result = runtime.prepare()
+        result = runtime.execute()
 
         assert result["runtime_decision"] == "PASS"
         assert result["ready_for_execution"] is True
@@ -747,7 +689,7 @@ def test_runtime_rejects_when_broker_rejects_order():
         broker_execution_service=broker_service,
     )
 
-    result = runtime.prepare()
+    result = runtime.execute()
 
     assert result["runtime_decision"] == "REJECT"
     assert result["ready_for_execution"] is False
@@ -845,7 +787,7 @@ def test_runtime_does_not_infer_filled_or_completed_from_broker_execution():
         broker_execution_service=broker_service,
     )
 
-    result = runtime.prepare()
+    result = runtime.execute()
 
     assert result["runtime_decision"] == "PASS"
     assert result["ready_for_execution"] is True

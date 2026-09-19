@@ -142,6 +142,102 @@ def test_prepare_invalid_risk_budget(mock_runtime_service):
 
 
 @patch("app.api.trade_execution.TradeExecutionRuntimeService")
+def test_prepare_success(mock_runtime_service):
+    _authenticated_client()
+
+    try:
+        mock_runtime = mock_runtime_service.return_value
+
+        mock_runtime.prepare.return_value = {
+            "runtime_decision": "PASS",
+            "ready_for_execution": True,
+            "failed_stage": None,
+            "portfolio_risk_state": {
+                "status": "PASS",
+                "user_id": 1,
+            },
+            "execution": {
+                "execution_decision": "PASS",
+                "ready_for_execution": True,
+                "order_intent": {
+                    "status": "PASS",
+                    "ready_for_execution": True,
+                },
+            },
+            "ledger": None,
+            "broker": None,
+            "source": "TradeExecutionRuntimeService",
+        }
+
+        response = client.post(
+            "/api/trade-execution/prepare",
+            json={
+                "trade_candidate": _valid_trade_candidate(),
+                "risk_budget": 1000.0,
+            },
+        )
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert data["user_id"] == 1
+        assert data["runtime_decision"] == "PASS"
+        assert data["ready_for_execution"] is True
+        assert data["ledger"] is None
+        assert data["broker"] is None
+
+        mock_runtime.prepare.assert_called_once()
+
+    finally:
+        _clear_auth_override()
+
+
+@patch("app.api.trade_execution.TradeExecutionRuntimeService")
+def test_prepare_rejected_runtime(mock_runtime_service):
+    _authenticated_client()
+
+    try:
+        mock_runtime = mock_runtime_service.return_value
+
+        mock_runtime.prepare.return_value = {
+            "runtime_decision": "REJECT",
+            "ready_for_execution": False,
+            "failed_stage": "risk_budget",
+            "portfolio_risk_state": {
+                "status": "PASS",
+                "user_id": 1,
+            },
+            "execution": None,
+            "ledger": None,
+            "broker": None,
+            "source": "TradeExecutionRuntimeService",
+        }
+
+        response = client.post(
+            "/api/trade-execution/prepare",
+            json={
+                "trade_candidate": _valid_trade_candidate(),
+                "risk_budget": 1000.0,
+            },
+        )
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert data["user_id"] == 1
+        assert data["runtime_decision"] == "REJECT"
+        assert data["ready_for_execution"] is False
+        assert data["failed_stage"] == "risk_budget"
+
+        mock_runtime.prepare.assert_called_once()
+
+    finally:
+        _clear_auth_override()
+
+
+@patch("app.api.trade_execution.TradeExecutionRuntimeService")
 def test_prepare_missing_risk_budget(mock_runtime_service):
     _authenticated_client()
 
@@ -157,6 +253,8 @@ def test_prepare_missing_risk_budget(mock_runtime_service):
                 "user_id": 1,
             },
             "execution": None,
+            "ledger": None,
+            "broker": None,
             "source": "TradeExecutionRuntimeService",
         }
 
@@ -198,6 +296,8 @@ def test_prepare_invalid_risk_budget(mock_runtime_service):
                 "user_id": 1,
             },
             "execution": None,
+            "ledger": None,
+            "broker": None,
             "source": "TradeExecutionRuntimeService",
         }
 
@@ -282,7 +382,7 @@ def test_paper_execute_success(
     try:
         order_intent = {
             "status": "PASS",
-            "ready": True,
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",
@@ -359,7 +459,7 @@ def test_paper_execute_propagates_paper_rejection(
     try:
         order_intent = {
             "status": "PASS",
-            "ready": True,
+            "ready_for_execution": True,
             "symbol": "RELIANCE.NS",
             "direction": "LONG",
             "order_type": "MARKET",

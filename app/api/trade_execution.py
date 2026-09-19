@@ -24,14 +24,18 @@ router = APIRouter(
 class TradeExecutionRequest(BaseModel):
     trade_candidate: dict[str, Any] = Field(
         ...,
-        description="Canonical Trade Candidate produced by the signal pipeline.",
+        description=(
+            "Canonical Trade Candidate produced by "
+            "the signal pipeline."
+        ),
     )
 
     risk_budget: float | None = Field(
         default=None,
         description=(
-            "Explicit monetary risk budget for this execution attempt. "
-            "No risk percentage is inferred by the system."
+            "Explicit monetary risk budget for this "
+            "execution attempt. No risk percentage is "
+            "inferred by the system."
         ),
     )
 
@@ -44,7 +48,7 @@ def prepare_trade_execution(
     """
     Prepare an authenticated trade for execution.
 
-    This endpoint does NOT execute the trade.
+    This endpoint does NOT submit a broker order.
 
     Pipeline:
 
@@ -54,6 +58,7 @@ def prepare_trade_execution(
         -> RiskBudgetService
         -> PositionSizingEngine
         -> OrderIntentService
+        -> prepared result
     """
 
     db = SessionLocal()
@@ -84,8 +89,11 @@ def paper_execute_trade(
     current_user=Depends(get_current_user),
 ):
     """
-    Prepare and execute an approved trade through the existing
+    Prepare and execute a trade through the existing
     paper-execution infrastructure.
+
+    This endpoint does NOT call the live broker
+    execution boundary.
 
     Pipeline:
 
@@ -110,7 +118,9 @@ def paper_execute_trade(
 
         runtime_result = runtime.prepare()
 
-        if not runtime_result.get("ready_for_execution"):
+        if not runtime_result.get(
+            "ready_for_execution"
+        ):
             return {
                 "user_id": current_user.id,
                 "execution_status": "REJECTED",
@@ -119,9 +129,14 @@ def paper_execute_trade(
                 "source": "TradeExecutionAPI",
             }
 
-        execution = runtime_result.get("execution") or {}
+        execution = (
+            runtime_result.get("execution")
+            or {}
+        )
 
-        order_intent = execution.get("order_intent")
+        order_intent = execution.get(
+            "order_intent"
+        )
 
         if not order_intent:
             return {
@@ -130,7 +145,8 @@ def paper_execute_trade(
                 "runtime": runtime_result,
                 "paper_execution": None,
                 "reason": (
-                    "Execution pipeline did not produce an order intent."
+                    "Execution pipeline did not produce "
+                    "an order intent."
                 ),
                 "source": "TradeExecutionAPI",
             }
@@ -148,8 +164,11 @@ def paper_execute_trade(
             "user_id": current_user.id,
             "execution_status": (
                 "EXECUTED"
-                if paper_result.get("status") == "PASS"
-                and paper_result.get("executed") is True
+                if (
+                    paper_result.get("status") == "PASS"
+                    and paper_result.get("executed")
+                    is True
+                )
                 else "REJECTED"
             ),
             "runtime": runtime_result,

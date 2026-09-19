@@ -14,10 +14,9 @@ from app.services.broker_execution_service import (
 
 class TradeExecutionRuntimeService:
     """
-    Composes portfolio state, execution preparation, persistent execution
-    lifecycle tracking, and the broker execution boundary.
+    Composes portfolio state with execution preparation.
 
-    Runtime flow:
+    Preparation flow:
 
         Portfolio Risk State
                 ↓
@@ -30,6 +29,12 @@ class TradeExecutionRuntimeService:
         Position Sizing
                 ↓
         Order Intent
+                ↓
+        RETURN PREPARED RESULT
+
+    Live execution flow:
+
+        prepare()
                 ↓
         Execution Ledger CREATED
                 ↓
@@ -47,8 +52,9 @@ class TradeExecutionRuntimeService:
     - choose a risk-per-trade percentage
     - invent a risk budget
     - calculate position size
-    - infer FILLED/COMPLETED state
+    - execute paper trades
     - modify portfolio holdings
+    - infer FILLED/COMPLETED state
     """
 
     def __init__(
@@ -88,6 +94,11 @@ class TradeExecutionRuntimeService:
         )
 
     def prepare(self):
+        """
+        Prepare an execution attempt without submitting it
+        to a broker and without creating an execution ledger.
+        """
+
         portfolio_state = (
             self.portfolio_risk_state_service.get_state()
         )
@@ -136,18 +147,36 @@ class TradeExecutionRuntimeService:
         )
 
         if not isinstance(order_intent, dict):
-            runtime_result["ledger"] = {
-                "status": "REJECT",
-                "reason": (
-                    "Execution pipeline did not produce "
-                    "an order intent."
-                ),
-                "source": "TradeExecutionRuntimeService",
-            }
-            runtime_result["runtime_decision"] = "REJECT"
-            runtime_result["ready_for_execution"] = False
-            runtime_result["failed_stage"] = "order_intent"
+            return self._order_intent_rejection(
+                runtime_result
+            )
+
+        return runtime_result
+
+    def execute(self):
+        """
+        Execute a prepared trade through the persistent
+        execution ledger and broker execution boundary.
+        """
+
+        runtime_result = self.prepare()
+
+        if not runtime_result.get("ready_for_execution"):
             return runtime_result
+
+        execution_result = (
+            runtime_result.get("execution")
+            or {}
+        )
+
+        order_intent = execution_result.get(
+            "order_intent"
+        )
+
+        if not isinstance(order_intent, dict):
+            return self._order_intent_rejection(
+                runtime_result
+            )
 
         ledger_service = self._get_ledger_service(
             order_intent
@@ -163,7 +192,9 @@ class TradeExecutionRuntimeService:
             }
             runtime_result["runtime_decision"] = "REJECT"
             runtime_result["ready_for_execution"] = False
-            runtime_result["failed_stage"] = "execution_ledger"
+            runtime_result["failed_stage"] = (
+                "execution_ledger"
+            )
             return runtime_result
 
         ledger_result = self._create_ledger(
@@ -175,14 +206,17 @@ class TradeExecutionRuntimeService:
         if ledger_result.get("status") != "PASS":
             runtime_result["runtime_decision"] = "REJECT"
             runtime_result["ready_for_execution"] = False
-            runtime_result["failed_stage"] = "execution_ledger"
+            runtime_result["failed_stage"] = (
+                "execution_ledger"
+            )
             return runtime_result
 
         validation_result = ledger_service.transition(
             new_state="VALIDATED",
             reason=(
                 "Execution preparation passed and the "
-                "order intent was validated for broker submission."
+                "order intent was validated for broker "
+                "submission."
             ),
             metadata={
                 "source": "TradeExecutionRuntimeService",
@@ -196,7 +230,9 @@ class TradeExecutionRuntimeService:
         if validation_result.get("status") != "PASS":
             runtime_result["runtime_decision"] = "REJECT"
             runtime_result["ready_for_execution"] = False
-            runtime_result["failed_stage"] = "execution_ledger_validation"
+            runtime_result["failed_stage"] = (
+                "execution_ledger_validation"
+            )
             return runtime_result
 
         broker_service = self._get_broker_service()
@@ -207,7 +243,8 @@ class TradeExecutionRuntimeService:
                 "executed": False,
                 "broker_status": "NOT_CONFIGURED",
                 "reason": (
-                    "Broker execution service is not configured."
+                    "Broker execution service is not "
+                    "configured."
                 ),
                 "source": "TradeExecutionRuntimeService",
             }
@@ -215,7 +252,8 @@ class TradeExecutionRuntimeService:
             ledger_service.update_broker_state(
                 broker_status="NOT_CONFIGURED",
                 failure_reason=(
-                    "Broker execution service is not configured."
+                    "Broker execution service is not "
+                    "configured."
                 ),
             )
 
@@ -330,6 +368,25 @@ class TradeExecutionRuntimeService:
             broker_order_id=broker_order_id,
             failure_reason=failure_reason,
         )
+
+    @staticmethod
+    def _order_intent_rejection(
+        runtime_result
+    ):
+        runtime_result["ledger"] = {
+            "status": "REJECT",
+            "reason": (
+                "Execution pipeline did not produce "
+                "an order intent."
+            ),
+            "source": "TradeExecutionRuntimeService",
+        }
+
+        runtime_result["runtime_decision"] = "REJECT"
+        runtime_result["ready_for_execution"] = False
+        runtime_result["failed_stage"] = "order_intent"
+
+        return runtime_result
 
     @staticmethod
     def _broker_rejection(runtime_result):
