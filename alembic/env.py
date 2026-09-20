@@ -26,6 +26,7 @@ from app.core.database import Base
 from app.models.user import User
 from app.models.execution_record import ExecutionRecord
 from app.models.position import Position
+from app.models.execution_fill import ExecutionFill
 
 target_metadata = Base.metadata
 
