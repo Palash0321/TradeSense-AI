@@ -25,6 +25,7 @@ if config.config_file_name is not None:
 from app.core.database import Base
 from app.models.user import User
 from app.models.execution_record import ExecutionRecord
+from app.models.position import Position
 
 target_metadata = Base.metadata
 
