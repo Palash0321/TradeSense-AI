@@ -45,8 +45,12 @@ import sys
 # CONFIGURATION
 # ============================================================================
 
+# Master OOS evaluation contract remains frozen at 7B / 0.25R.
+# Stream-specific contracts below preserve separately frozen 5B / 0.25R
+# research tracks without allowing them to masquerade as master 7B evidence.
 LOCKED_WINDOW = 7
 LOCKED_THRESHOLD_R = 0.25
+LOCKED_RULE_VERSION = "7B_0.25R"
 
 STOCK_HOLDOUT_START = "2026-09-09"
 INDEX_FORWARD_START = "2026-09-14"
@@ -70,6 +74,10 @@ STREAMS = [
         "stream": "STOCK_HOLDOUT",
         "description": "Frozen stock holdout",
         "start_date": STOCK_HOLDOUT_START,
+        "rule_version": "5B_0.25R",
+        "threshold_r": 0.25,
+        "window_bars": 5,
+        "master_7b_eligible": False,
         "file": Path(
             "tests/output/tradesense_holdout_trades.csv"
         ),
@@ -88,6 +96,10 @@ STREAMS = [
         "stream": "NIFTY_50_FORWARD",
         "description": "NIFTY 50 genuine forward holdout",
         "start_date": INDEX_FORWARD_START,
+        "rule_version": "7B_0.25R",
+        "threshold_r": 0.25,
+        "window_bars": 7,
+        "master_7b_eligible": True,
         "file": Path(
             "tests/output/index_backtests/nifty50_forward_holdout.csv"
         ),
@@ -108,6 +120,10 @@ STREAMS = [
         "stream": "SENSEX_FORWARD",
         "description": "SENSEX genuine forward holdout",
         "start_date": INDEX_FORWARD_START,
+        "rule_version": "7B_0.25R",
+        "threshold_r": 0.25,
+        "window_bars": 7,
+        "master_7b_eligible": True,
         "file": Path(
             "tests/output/index_backtests/sensex_forward_holdout.csv"
         ),
@@ -131,6 +147,10 @@ STREAMS = [
             "SHORT_CONTINUATION holdout"
         ),
         "start_date": INDEX_FORWARD_START,
+        "rule_version": "5B_0.25R",
+        "threshold_r": 0.25,
+        "window_bars": 5,
+        "master_7b_eligible": False,
         "file": Path(
             "tests/output/index_backtests/"
             "banknifty_short_continuation_forward_holdout.csv"
@@ -153,6 +173,10 @@ STREAMS = [
             "forward holdout"
         ),
         "start_date": INDEX_FORWARD_START,
+        "rule_version": "7B_0.25R",
+        "threshold_r": 0.25,
+        "window_bars": 7,
+        "master_7b_eligible": True,
         "file": Path(
             "tests/output/index_backtests/"
             "midselect_forward_holdout.csv"
@@ -282,6 +306,128 @@ def field_has_value(
         value
     ).strip() != ""
 
+def validate_stream_contract(stream):
+    """
+    Validate the explicitly frozen contract attached to one stream.
+
+    The master evaluation contract remains 7B / 0.25R.
+    Separate frozen 5B / 0.25R research tracks are permitted,
+    but they are never master-7B eligible.
+    """
+
+    errors = []
+
+    rule_version = stream.get(
+        "rule_version"
+    )
+
+    threshold_r = stream.get(
+        "threshold_r"
+    )
+
+    window_bars = stream.get(
+        "window_bars"
+    )
+
+    master_7b_eligible = stream.get(
+        "master_7b_eligible"
+    )
+
+    hypothesis_fields = stream.get(
+        "hypothesis_fields",
+        [],
+    )
+
+    if (
+        not isinstance(
+            window_bars,
+            int,
+        )
+        or isinstance(
+            window_bars,
+            bool,
+        )
+        or window_bars < 1
+    ):
+        errors.append(
+            "INVALID_WINDOW_BARS"
+        )
+
+    threshold_is_numeric = (
+        isinstance(
+            threshold_r,
+            (int, float),
+        )
+        and not isinstance(
+            threshold_r,
+            bool,
+        )
+    )
+
+    if not threshold_is_numeric:
+
+        errors.append(
+            "INVALID_THRESHOLD_R"
+        )
+
+    elif threshold_r != LOCKED_THRESHOLD_R:
+
+        errors.append(
+            "UNLOCKED_THRESHOLD_R"
+        )
+
+    if (
+        isinstance(
+            window_bars,
+            int,
+        )
+        and not isinstance(
+            window_bars,
+            bool,
+        )
+        and window_bars >= 1
+        and threshold_is_numeric
+    ):
+
+        expected_rule_version = (
+            f"{window_bars}B_{threshold_r:.2f}R"
+        )
+
+        if rule_version != expected_rule_version:
+
+            errors.append(
+                "RULE_VERSION_MISMATCH"
+            )
+
+        expected_fields = [
+            f"early_adverse_r_bar_{bar}"
+            for bar in range(
+                1,
+                window_bars + 1,
+            )
+        ]
+
+        if hypothesis_fields != expected_fields:
+
+            errors.append(
+                "HYPOTHESIS_FIELDS_DO_NOT_MATCH_WINDOW"
+            )
+
+        expected_master_eligibility = (
+            window_bars == LOCKED_WINDOW
+            and rule_version == LOCKED_RULE_VERSION
+        )
+
+        if (
+            master_7b_eligible
+            != expected_master_eligibility
+        ):
+
+            errors.append(
+                "MASTER_7B_ELIGIBILITY_MISMATCH"
+            )
+
+    return errors
 
 # ============================================================================
 # STREAM AUDIT
@@ -316,11 +462,33 @@ def audit_stream(stream):
         "hypothesis_fields"
     ]
 
+    rule_version = stream.get(
+        "rule_version"
+    )
+
+    threshold_r = stream.get(
+        "threshold_r"
+    )
+
+    window_bars = stream.get(
+        "window_bars"
+    )
+
+    master_7b_eligible = stream.get(
+        "master_7b_eligible"
+    )
+
+
     result = {
         "stream": name,
         "description": description,
         "oos_start_date": start_date,
         "file": str(path),
+        "rule_version": rule_version,
+        "threshold_r": threshold_r,
+        "window_bars": window_bars,
+        "master_7b_eligible": master_7b_eligible,
+        "contract_status": None,
         "file_exists": False,
         "ledger_state": None,
         "trade_rows": 0,
@@ -332,6 +500,37 @@ def audit_stream(stream):
         "status": None,
         "failure_reasons": "",
     }
+
+    # ------------------------------------------------------------------------
+    # Contract validation must happen before file-state handling.
+    # ------------------------------------------------------------------------
+
+    contract_errors = validate_stream_contract(
+        stream
+    )
+
+    if contract_errors:
+
+        result[
+            "contract_status"
+        ] = "INVALID"
+
+        result[
+            "status"
+        ] = "INVALID_LEDGER"
+
+        result[
+            "failure_reasons"
+        ] = (
+            "INVALID_STREAM_CONTRACT:"
+            + ";".join(contract_errors)
+        )
+
+        return result
+
+    result[
+        "contract_status"
+    ] = "VALID"
 
     # ------------------------------------------------------------------------
     # Missing file is a legitimate zero-trade state.
@@ -688,6 +887,26 @@ def main():
         )
 
         print(
+            f"Rule version: "
+            f"{stream['rule_version']}"
+        )
+
+        print(
+            f"Threshold R : "
+            f"{stream['threshold_r']}"
+        )
+
+        print(
+            f"Window bars : "
+            f"{stream['window_bars']}"
+        )
+
+        print(
+            f"Master 7B   : "
+            f"{stream['master_7b_eligible']}"
+        )
+
+        print(
             f"File        : "
             f"{stream['file']}"
         )
@@ -748,6 +967,19 @@ def main():
         for result in results
     )
 
+    master_7b_stream_count = sum(
+        result["master_7b_eligible"] is True
+        for result in results
+    )
+
+    separate_5b_stream_count = sum(
+        (
+            result["window_bars"] == 5
+            and result["master_7b_eligible"] is False
+        )
+        for result in results
+    )
+
     waiting_count = sum(
         result["status"]
         == "WAITING_FOR_GENUINE_OOS_TRADES"
@@ -778,6 +1010,11 @@ def main():
         "stream",
         "description",
         "oos_start_date",
+        "rule_version",
+        "threshold_r",
+        "window_bars",
+        "master_7b_eligible",
+        "contract_status",
         "file",
         "file_exists",
         "ledger_state",
@@ -822,6 +1059,16 @@ def main():
     print(
         f"OOS streams inspected : "
         f"{len(results)}"
+    )
+
+    print(
+        f"Master 7B streams     : "
+        f"{master_7b_stream_count}"
+    )
+
+    print(
+        f"Separate 5B tracks    : "
+        f"{separate_5b_stream_count}"
     )
 
     print(
@@ -941,7 +1188,15 @@ def main():
     )
 
     print(
-        "PASS: 7B / 0.25R hypothesis remains locked."
+        "PASS: Master 7B / 0.25R hypothesis remains locked."
+    )
+
+    print(
+        "PASS: Stream-specific 5B / 0.25R research tracks are explicit."
+    )
+
+    print(
+        "PASS: 5B streams are not marked as master-7B eligible."
     )
 
     print(
