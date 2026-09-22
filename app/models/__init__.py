@@ -7,3 +7,6 @@ from app.models.paper_portfolio import PaperPortfolio
 from app.models.paper_transaction import PaperTransaction
 from app.models.position import Position
 from app.models.execution_fill import ExecutionFill
+from app.models.position_fill_allocation import (
+    PositionFillAllocation,
+)

@@ -51,6 +51,7 @@ class PositionService:
         target2: float | None = None,
         target3: float | None = None,
         position_id: str | None = None,
+        commit: bool = True,
     ) -> dict:
         validation = self._validate_creation(
             symbol=symbol,
@@ -131,7 +132,11 @@ class PositionService:
         self.db.add(position)
 
         try:
-            self.db.commit()
+            if commit:
+                self.db.commit()
+            else:
+                self.db.flush()
+
             self.db.refresh(position)
         except Exception:
             self.db.rollback()
@@ -151,6 +156,101 @@ class PositionService:
             "state": position.state,
             "opened_at": position.opened_at,
             "closed_at": position.closed_at,
+            "source": "PositionService",
+        }
+
+    def increase_position(
+        self,
+        position_id: str,
+        fill_quantity: int,
+        fill_price: float,
+        commit: bool = True,
+    ) -> dict:
+        """
+        Increase an existing OPEN position using a reconciled execution fill.
+
+        Responsibilities:
+        - validate the fill quantity and price
+        - validate the target position exists and is OPEN
+        - increase the position quantity
+        - recalculate weighted average entry price
+        - persist the updated position
+
+        This method does NOT:
+        - reconcile execution fills
+        - create execution records
+        - communicate with brokers
+        - determine whether a fill is genuine
+        - create allocation/link records
+        - calculate risk or position sizing
+        """
+
+        position = self._get(position_id)
+
+        if position is None:
+            return self._reject(
+                "Position not found."
+            )
+
+        if position.state == "CLOSED":
+            return self._reject(
+                "Closed positions cannot be increased."
+            )
+
+        if position.state != "OPEN":
+            return self._reject(
+                "Only OPEN positions can be increased."
+            )
+
+        if (
+            isinstance(fill_quantity, bool)
+            or not isinstance(fill_quantity, int)
+            or fill_quantity <= 0
+        ):
+            return self._reject(
+                "fill_quantity must be a positive integer."
+            )
+
+        if not self._is_positive_number(fill_price):
+            return self._reject(
+                "fill_price must be a positive numeric value."
+            )
+
+        old_quantity = position.quantity
+        old_average_entry_price = position.average_entry_price
+
+        new_quantity = old_quantity + fill_quantity
+
+        new_average_entry_price = (
+            (
+                old_quantity * old_average_entry_price
+            )
+            + (
+                fill_quantity * float(fill_price)
+            )
+        ) / new_quantity
+
+        position.quantity = new_quantity
+        position.average_entry_price = float(
+            new_average_entry_price
+        )
+        position.current_price = float(fill_price)
+
+        try:
+            if commit:
+                self.db.commit()
+            else:
+                self.db.flush()
+
+            self.db.refresh(position)
+        except Exception:
+            self.db.rollback()
+            raise
+
+        return {
+            **self.get(position_id),
+            "fill_quantity": fill_quantity,
+            "fill_price": float(fill_price),
             "source": "PositionService",
         }
 
