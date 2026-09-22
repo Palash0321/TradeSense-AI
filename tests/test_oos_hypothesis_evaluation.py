@@ -133,7 +133,7 @@ def build_stage5_summary(
             "no_duplicates": True,
             "no_pre_start": True,
             "no_invalid_dates": True,
-            "complete_7b_consistent": True,
+            "master_7b_complete_consistent": True,
         },
         "status": status,
     }

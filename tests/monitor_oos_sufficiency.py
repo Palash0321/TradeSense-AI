@@ -107,9 +107,12 @@ REQUIRED_COLUMNS = [
     "pre_start",
     "duplicate_keys",
     "invalid_dates",
+    "window_bars",
+    "threshold_r",
+    "master_7b_eligible",
     "event_count",
-    "no_event_full_7b",
-    "partial_7b_window",
+    "no_event_full_contract",
+    "partial_contract_window",
     "missing_path",
     "status",
 ]
@@ -318,9 +321,12 @@ for column in [
     "pre_start",
     "duplicate_keys",
     "invalid_dates",
+    "window_bars",
+    "threshold_r",
+    "master_7b_eligible",
     "event_count",
-    "no_event_full_7b",
-    "partial_7b_window",
+    "no_event_full_contract",
+    "partial_contract_window",
     "missing_path",
 ]:
 
@@ -329,6 +335,10 @@ for column in [
         column,
     )
 
+    monitor["master_7b_eligible"] = (
+    monitor["master_7b_eligible"]
+    .astype(bool)
+    )
 
 monitor["stream"] = (
     monitor["stream"]
@@ -338,10 +348,10 @@ monitor["stream"] = (
 
 
 # ============================================================
-# AUTHORITATIVE GLOBAL COUNTS
+# AUTHORITATIVE OPERATIONAL COUNTS
 # ============================================================
 
-total_genuine_oos = safe_int(
+total_genuine_oos_all_streams = safe_int(
     monitor["genuine_oos"].sum()
 )
 
@@ -357,20 +367,60 @@ total_invalid_dates = safe_int(
     monitor["invalid_dates"].sum()
 )
 
-total_events = safe_int(
+total_contract_events = safe_int(
     monitor["event_count"].sum()
 )
 
-total_full_7b_no_event = safe_int(
-    monitor["no_event_full_7b"].sum()
+total_contract_no_event = safe_int(
+    monitor["no_event_full_contract"].sum()
 )
 
-total_partial_7b = safe_int(
-    monitor["partial_7b_window"].sum()
+total_partial_contract = safe_int(
+    monitor["partial_contract_window"].sum()
 )
 
-total_missing_path = safe_int(
+total_missing_path_all_streams = safe_int(
     monitor["missing_path"].sum()
+)
+
+
+# ============================================================
+# MASTER 7B ELIGIBLE POPULATION
+# ============================================================
+
+master_7b_mask = (
+    monitor["master_7b_eligible"].eq(True)
+    & monitor["window_bars"].eq(LOCKED_WINDOW_BARS)
+    & monitor["threshold_r"].eq(LOCKED_THRESHOLD_R)
+)
+
+master_monitor = monitor.loc[
+    master_7b_mask
+].copy()
+
+
+# ============================================================
+# MASTER 7B COUNTS
+# ============================================================
+
+master_7b_genuine_oos = safe_int(
+    master_monitor["genuine_oos"].sum()
+)
+
+master_7b_events = safe_int(
+    master_monitor["event_count"].sum()
+)
+
+master_7b_no_event_full = safe_int(
+    master_monitor["no_event_full_contract"].sum()
+)
+
+master_7b_partial = safe_int(
+    master_monitor["partial_contract_window"].sum()
+)
+
+master_7b_missing_path = safe_int(
+    master_monitor["missing_path"].sum()
 )
 
 
@@ -395,9 +445,13 @@ total_missing_path = safe_int(
 # classification.
 # ============================================================
 
-total_complete_7b = (
-    total_events
-    + total_full_7b_no_event
+# ============================================================
+# MASTER 7B COMPLETE COUNT
+# ============================================================
+
+master_7b_complete = (
+    master_7b_events
+    + master_7b_no_event_full
 )
 
 
@@ -405,16 +459,16 @@ total_complete_7b = (
 # 7B COMPLETENESS
 # ============================================================
 
-if total_genuine_oos > 0:
+if master_7b_genuine_oos > 0:
 
-    completeness = (
-        total_complete_7b
-        / total_genuine_oos
+    master_7b_completeness = (
+        master_7b_complete
+        / master_7b_genuine_oos
     )
 
 else:
 
-    completeness = np.nan
+    master_7b_completeness = np.nan
 
 
 # ============================================================
@@ -433,11 +487,11 @@ no_invalid_dates = (
     total_invalid_dates == 0
 )
 
-complete_7b_consistent = (
-    total_complete_7b
-    + total_partial_7b
-    + total_missing_path
-    <= total_genuine_oos
+master_7b_complete_consistent = (
+    master_7b_complete
+    + master_7b_partial
+    + master_7b_missing_path
+    <= master_7b_genuine_oos
 )
 
 
@@ -449,7 +503,7 @@ if not (
     no_duplicates
     and no_pre_start_rows
     and no_invalid_dates
-    and complete_7b_consistent
+    and master_7b_complete_consistent
 ):
 
     global_status = (
@@ -460,7 +514,7 @@ if not (
         "One or more OOS evidence integrity checks failed."
     )
 
-elif total_genuine_oos == 0:
+elif master_7b_genuine_oos == 0:
 
     global_status = (
         "NO_GENUINE_OOS_EVIDENCE"
@@ -471,9 +525,9 @@ elif total_genuine_oos == 0:
     )
 
 elif (
-    total_genuine_oos >= MIN_GENUINE_OOS_TRADES
-    and total_complete_7b >= MIN_COMPLETE_7B
-    and completeness >= MIN_7B_COMPLETENESS
+    master_7b_genuine_oos >= MIN_GENUINE_OOS_TRADES
+    and master_7b_complete >= MIN_COMPLETE_7B
+    and master_7b_completeness >= MIN_7B_COMPLETENESS
 ):
 
     global_status = (
@@ -481,8 +535,8 @@ elif (
     )
 
     global_reason = (
-        "Operational OOS evidence thresholds have been met. "
-        "Future evaluation may now be opened."
+        "Master-eligible 7B OOS evidence exists and the "
+        "operational sufficiency thresholds have been met."
     )
 
 else:
@@ -513,12 +567,24 @@ for _, row in monitor.iterrows():
         row["event_count"]
     )
 
+    window_bars = safe_int(
+        row["window_bars"]
+    )
+
+    threshold_r = float(
+        row["threshold_r"]
+    )
+
+    master_eligible = bool(
+        row["master_7b_eligible"]
+    )
+
     full_no_event = safe_int(
-        row["no_event_full_7b"]
+        row["no_event_full_contract"]
     )
 
     partial = safe_int(
-        row["partial_7b_window"]
+        row["partial_contract_window"]
     )
 
     missing_path = safe_int(
@@ -585,8 +651,23 @@ for _, row in monitor.iterrows():
             "No genuine post-freeze OOS trades."
         )
 
+    elif not master_eligible:
+
+        stream_status = (
+            "OPERATIONAL_CONTRACT_ONLY"
+        )
+
+        stream_reason = (
+            "This stream is monitored under its frozen "
+            f"{window_bars}B contract but is excluded from "
+            "master 7B sufficiency."
+        )
+
     elif (
-        genuine >= MIN_GENUINE_OOS_TRADES
+        master_eligible
+        and window_bars == LOCKED_WINDOW_BARS
+        and threshold_r == LOCKED_THRESHOLD_R
+        and genuine >= MIN_GENUINE_OOS_TRADES
         and complete >= MIN_COMPLETE_7B
         and stream_completeness >= MIN_7B_COMPLETENESS
     ):
@@ -596,8 +677,8 @@ for _, row in monitor.iterrows():
         )
 
         stream_reason = (
-            "This stream independently meets the operational "
-            "sufficiency thresholds."
+            "This master-eligible 7B stream independently meets "
+            "the operational sufficiency thresholds."
         )
 
     else:
@@ -615,17 +696,25 @@ for _, row in monitor.iterrows():
         {
             "stream": row["stream"],
             "genuine_oos": genuine,
+
+            "window_bars": window_bars,
+            "threshold_r": threshold_r,
+            "master_7b_eligible": master_eligible,
+
             "event_count": events,
-            "no_event_full_7b": full_no_event,
-            "complete_7b": complete,
-            "partial_7b_window": partial,
+            "no_event_full_contract": full_no_event,
+            "complete_contract": complete,
+            "partial_contract_window": partial,
             "missing_path": missing_path,
-            "7b_completeness": safe_float(
+
+            "contract_completeness": safe_float(
                 stream_completeness
             ),
+
             "pre_start": stream_pre_start,
             "duplicate_keys": stream_duplicate,
             "invalid_dates": stream_invalid_dates,
+
             "monitor_status": row["status"],
             "sufficiency_status": stream_status,
             "reason": stream_reason,
@@ -647,35 +736,35 @@ stream_df.to_csv(
     index=False,
 )
 
-
 # ============================================================
-# REMAINING REQUIREMENTS
+# REMAINING MASTER 7B REQUIREMENTS
 # ============================================================
 
-additional_oos_needed = max(
+additional_master_7b_genuine_oos_needed = max(
     0,
     MIN_GENUINE_OOS_TRADES
-    - total_genuine_oos,
+    - master_7b_genuine_oos,
 )
 
-additional_complete_7b_needed = max(
+additional_master_7b_complete_needed = max(
     0,
     MIN_COMPLETE_7B
-    - total_complete_7b,
+    - master_7b_complete,
 )
 
+if np.isfinite(
+    master_7b_completeness
+):
 
-if np.isfinite(completeness):
-
-    additional_completeness_needed = max(
+    additional_master_7b_completeness_needed = max(
         0.0,
         MIN_7B_COMPLETENESS
-        - completeness,
+        - master_7b_completeness,
     )
 
 else:
 
-    additional_completeness_needed = None
+    additional_master_7b_completeness_needed = None
 
 
 # ============================================================
@@ -708,23 +797,38 @@ summary = {
         "streams_monitored":
             int(len(monitor)),
 
-        "genuine_oos":
-            total_genuine_oos,
+        "genuine_oos_all_streams":
+            total_genuine_oos_all_streams,
 
-        "7b_events":
-            total_events,
+        "master_7b_genuine_oos":
+            master_7b_genuine_oos,
 
-        "no_event_full_7b":
-            total_full_7b_no_event,
+        "master_7b_events":
+            master_7b_events,
 
-        "complete_7b":
-            total_complete_7b,
+        "master_7b_no_event_full":
+            master_7b_no_event_full,
 
-        "partial_7b":
-            total_partial_7b,
+        "master_7b_complete":
+            master_7b_complete,
 
-        "missing_path":
-            total_missing_path,
+        "master_7b_partial":
+            master_7b_partial,
+
+        "master_7b_missing_path":
+            master_7b_missing_path,
+
+        "contract_events_all_streams":
+            total_contract_events,
+
+        "contract_no_event_all_streams":
+            total_contract_no_event,
+
+        "partial_contract_all_streams":
+            total_partial_contract,
+
+        "missing_path_all_streams":
+            total_missing_path_all_streams,
 
         "pre_start":
             total_pre_start,
@@ -736,18 +840,18 @@ summary = {
             total_invalid_dates,
     },
 
-    "7b_completeness":
-        safe_float(completeness),
+    "master_7b_completeness":
+        safe_float(master_7b_completeness),
 
     "remaining_requirements": {
-        "additional_genuine_oos_trades":
-            additional_oos_needed,
+        "additional_master_7b_genuine_oos_trades":
+            additional_master_7b_genuine_oos_needed,
 
-        "additional_complete_7b":
-            additional_complete_7b_needed,
+        "additional_master_7b_complete":
+            additional_master_7b_complete_needed,
 
-        "additional_completeness":
-            additional_completeness_needed,
+        "additional_master_7b_completeness":
+            additional_master_7b_completeness_needed,
     },
 
     "integrity": {
@@ -760,8 +864,8 @@ summary = {
         "no_invalid_dates":
             no_invalid_dates,
 
-        "complete_7b_consistent":
-            complete_7b_consistent,
+        "master_7b_complete_consistent":
+            master_7b_complete_consistent,
     },
 
     "status":
@@ -819,7 +923,7 @@ append_history(
 
 print()
 print("=" * 100)
-print("STREAM SUFFICIENCY")
+print("STREAM OPERATIONAL CONTRACTS")
 print("=" * 100)
 
 for _, row in stream_df.iterrows():
@@ -830,37 +934,52 @@ for _, row in stream_df.iterrows():
     )
 
     print(
-        f"  Genuine OOS       : "
+        f"  Genuine OOS          : "
         f"{row['genuine_oos']}"
     )
 
     print(
-        f"  7B events         : "
+        f"  Contract window     : "
+        f"{row['window_bars']}B"
+    )
+
+    print(
+        f"  Threshold           : "
+        f"{row['threshold_r']:.2f}R"
+    )
+
+    print(
+        f"  Master 7B eligible  : "
+        f"{row['master_7b_eligible']}"
+    )
+
+    print(
+        f"  Contract events     : "
         f"{row['event_count']}"
     )
 
     print(
-        f"  Full 7B no-event  : "
-        f"{row['no_event_full_7b']}"
+        f"  Contract no-event   : "
+        f"{row['no_event_full_contract']}"
     )
 
     print(
-        f"  Complete 7B       : "
-        f"{row['complete_7b']}"
+        f"  Complete contract   : "
+        f"{row['complete_contract']}"
     )
 
     print(
-        f"  Partial 7B        : "
-        f"{row['partial_7b_window']}"
+        f"  Partial contract   : "
+        f"{row['partial_contract_window']}"
     )
 
     print(
-        f"  Missing path      : "
+        f"  Missing path       : "
         f"{row['missing_path']}"
     )
 
     if pd.isna(
-        row["7b_completeness"]
+        row["contract_completeness"]
     ):
 
         completeness_text = "None"
@@ -868,16 +987,16 @@ for _, row in stream_df.iterrows():
     else:
 
         completeness_text = (
-            f"{row['7b_completeness']:.2%}"
+            f"{row['contract_completeness']:.2%}"
         )
 
     print(
-        f"  7B completeness   : "
+        f"  Contract completeness: "
         f"{completeness_text}"
     )
 
     print(
-        f"  Sufficiency       : "
+        f"  Sufficiency status  : "
         f"{row['sufficiency_status']}"
     )
 
@@ -892,89 +1011,173 @@ print("GLOBAL OOS EVIDENCE SUFFICIENCY")
 print("=" * 100)
 
 print(
-    f"Streams monitored       : "
+    f"Streams monitored             : "
     f"{len(monitor)}"
 )
 
 print(
-    f"Genuine OOS             : "
-    f"{total_genuine_oos}"
+    f"All-stream genuine OOS        : "
+    f"{total_genuine_oos_all_streams}"
+)
+
+print()
+print("MASTER 7B SUFFICIENCY")
+print("-" * 100)
+
+print(
+    f"Master 7B genuine OOS         : "
+    f"{master_7b_genuine_oos}"
 )
 
 print(
-    f"Complete 7B             : "
-    f"{total_complete_7b}"
+    f"Master 7B events              : "
+    f"{master_7b_events}"
 )
 
 print(
-    f"7B events               : "
-    f"{total_events}"
+    f"Master 7B no-event            : "
+    f"{master_7b_no_event_full}"
 )
 
 print(
-    f"Partial 7B              : "
-    f"{total_partial_7b}"
+    f"Master 7B complete            : "
+    f"{master_7b_complete}"
 )
 
 print(
-    f"Missing path            : "
-    f"{total_missing_path}"
+    f"Master 7B partial             : "
+    f"{master_7b_partial}"
 )
 
-if np.isfinite(completeness):
+print(
+    f"Master 7B missing path        : "
+    f"{master_7b_missing_path}"
+)
 
-    print(
-        f"7B completeness         : "
-        f"{completeness:.2%}"
-    )
+if pd.isna(
+    master_7b_completeness
+):
+
+    master_completeness_text = "None"
 
 else:
 
-    print(
-        "7B completeness         : None"
+    master_completeness_text = (
+        f"{master_7b_completeness:.2%}"
     )
 
+print(
+    f"Master 7B completeness        : "
+    f"{master_completeness_text}"
+)
 
 print()
+print("MASTER 7B REQUIREMENTS")
+print("-" * 100)
+
 print(
-    f"Additional OOS needed   : "
-    f"{additional_oos_needed}"
+    f"Minimum genuine OOS          : "
+    f"{MIN_GENUINE_OOS_TRADES}"
 )
 
 print(
-    f"Additional complete 7B  : "
-    f"{additional_complete_7b_needed}"
+    f"Minimum complete 7B          : "
+    f"{MIN_COMPLETE_7B}"
 )
 
+print(
+    f"Minimum 7B completeness      : "
+    f"{MIN_7B_COMPLETENESS:.0%}"
+)
 
-# ============================================================
-# INTEGRITY
-# ============================================================
+print(
+    f"Additional genuine OOS       : "
+    f"{additional_master_7b_genuine_oos_needed}"
+)
+
+print(
+    f"Additional complete 7B       : "
+    f"{additional_master_7b_complete_needed}"
+)
+
+if (
+    additional_master_7b_completeness_needed
+    is None
+):
+
+    additional_completeness_text = "None"
+
+else:
+
+    additional_completeness_text = (
+        f"{additional_master_7b_completeness_needed:.2%}"
+    )
+
+print(
+    f"Additional completeness      : "
+    f"{additional_completeness_text}"
+)
 
 print()
-print("=" * 100)
+print("OPERATIONAL CONTRACT TOTALS")
+print("-" * 100)
+
+print(
+    f"Contract events (all streams): "
+    f"{total_contract_events}"
+)
+
+print(
+    f"Contract no-event (all)      : "
+    f"{total_contract_no_event}"
+)
+
+print(
+    f"Partial contract (all)       : "
+    f"{total_partial_contract}"
+)
+
+print(
+    f"Missing path (all)           : "
+    f"{total_missing_path_all_streams}"
+)
+
+print()
 print("INTEGRITY")
+print("-" * 100)
+
+print(
+    f"No duplicates                : "
+    f"{no_duplicates}"
+)
+
+print(
+    f"No pre-start rows            : "
+    f"{no_pre_start_rows}"
+)
+
+print(
+    f"No invalid dates             : "
+    f"{no_invalid_dates}"
+)
+
+print(
+    f"Master 7B consistency        : "
+    f"{master_7b_complete_consistent}"
+)
+
+print()
+print(
+    f"GLOBAL STATUS                : "
+    f"{global_status}"
+)
+
+print(
+    f"REASON                       : "
+    f"{global_reason}"
+)
+
 print("=" * 100)
-
-print(
-    "No duplicate keys        : "
-    f"{'PASS' if no_duplicates else 'FAIL'}"
-)
-
-print(
-    "No pre-start rows        : "
-    f"{'PASS' if no_pre_start_rows else 'FAIL'}"
-)
-
-print(
-    "No invalid dates        : "
-    f"{'PASS' if no_invalid_dates else 'FAIL'}"
-)
-
-print(
-    "7B accounting consistent: "
-    f"{'PASS' if complete_7b_consistent else 'FAIL'}"
-)
 
 
 # ============================================================

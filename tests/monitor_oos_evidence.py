@@ -55,22 +55,38 @@ EVIDENCE_HISTORY_FILE = EVIDENCE_DIR / "oos_evidence_history.jsonl"
 EXPECTED_STREAMS = {
     "STOCK_HOLDOUT": {
         "forward_start": "2026-09-09",
-        "ledger": Path("tests/output/tradesense_holdout_trades.csv"),
+        "window_bars": 5,
+        "threshold_r": 0.25,
+        "master_7b_eligible": False,
+        "ledger": Path(
+            "tests/output/tradesense_holdout_trades.csv"
+        ),
     },
     "NIFTY_50_FORWARD": {
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "ledger": Path(
-            "tests/output/index_backtests/nifty50_forward_holdout.csv"
+            "tests/output/index_backtests/"
+            "nifty50_forward_holdout.csv"
         ),
     },
     "SENSEX_FORWARD": {
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "ledger": Path(
-            "tests/output/index_backtests/sensex_forward_holdout.csv"
+            "tests/output/index_backtests/"
+            "sensex_forward_holdout.csv"
         ),
     },
     "BANK_NIFTY_FORWARD": {
         "forward_start": "2026-09-14",
+        "window_bars": 5,
+        "threshold_r": 0.25,
+        "master_7b_eligible": False,
         "ledger": Path(
             "tests/output/index_backtests/"
             "banknifty_short_continuation_forward_holdout.csv"
@@ -78,8 +94,12 @@ EXPECTED_STREAMS = {
     },
     "MIDSELECT_FORWARD": {
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "ledger": Path(
-            "tests/output/index_backtests/midselect_forward_holdout.csv"
+            "tests/output/index_backtests/"
+            "midselect_forward_holdout.csv"
         ),
     },
 }
@@ -260,12 +280,11 @@ def trade_key(
 def extract_bar_adverse_values(
     row: pd.Series,
     df: pd.DataFrame,
+    max_entry_bars: int,
 ) -> list[float | None]:
-
     values: list[float | None] = []
 
-    for bar_number in range(1, MAX_ENTRY_BARS + 1):
-
+    for bar_number in range(1, max_entry_bars + 1):
         aliases = [
             f"early_adverse_r_bar_{bar_number}",
             f"early_adverse_bar_{bar_number}_r",
@@ -277,10 +296,16 @@ def extract_bar_adverse_values(
             f"early_adverse_{bar_number}",
         ]
 
-        column = first_existing(df, aliases)
+        column = first_existing(
+            df,
+            aliases,
+        )
 
         values.append(
-            numeric_value(row, column)
+            numeric_value(
+                row,
+                column,
+            )
         )
 
     return values
@@ -289,8 +314,8 @@ def extract_bar_adverse_values(
 def extract_path_from_generic_columns(
     row: pd.Series,
     df: pd.DataFrame,
+    max_entry_bars: int,
 ) -> list[float | None]:
-
     """
     Secondary path extraction.
 
@@ -302,8 +327,7 @@ def extract_path_from_generic_columns(
 
     values: list[float | None] = []
 
-    for bar_number in range(1, MAX_ENTRY_BARS + 1):
-
+    for bar_number in range(1, max_entry_bars + 1):
         aliases = [
             f"bar{bar_number}_bar_adverse_r",
             f"bar_{bar_number}_bar_adverse_r",
@@ -311,17 +335,25 @@ def extract_path_from_generic_columns(
             f"bar_{bar_number}_adverse_r",
         ]
 
-        column = first_existing(df, aliases)
+        column = first_existing(
+            df,
+            aliases,
+        )
 
         values.append(
-            numeric_value(row, column)
+            numeric_value(
+                row,
+                column,
+            )
         )
 
     return values
 
 
-def classify_7b_event(
+def classify_contract_event(
     bar_values: list[float | None],
+    threshold_r: float,
+    window_bars: int,
 ) -> tuple[
     str,
     int | None,
@@ -329,18 +361,29 @@ def classify_7b_event(
     int,
 ]:
     """
-    Returns:
+    Classify a trade against its frozen stream contract.
 
-    classification
-    earliest_crossing_bar
-    max_observed_adverse_r
-    full_7b_window
+    Only the stream's contractual observation window is used
+    for event classification.
+
+    Raw bar 1..7 values may still be retained separately for
+    auditability, but bars beyond window_bars must never affect
+    the contractual classification.
+
+    Returns:
+        classification
+        earliest_crossing_bar
+        max_observed_adverse_r
+        full_contract_window
     """
+
+    contract_values = bar_values[:window_bars]
 
     observed = [
         value
-        for value in bar_values
-        if value is not None and np.isfinite(value)
+        for value in contract_values
+        if value is not None
+        and np.isfinite(value)
     ]
 
     if not observed:
@@ -355,34 +398,43 @@ def classify_7b_event(
 
     crossing_bar: int | None = None
 
-    for index, value in enumerate(bar_values, start=1):
-
+    for index, value in enumerate(
+        contract_values,
+        start=1,
+    ):
         if value is None:
             continue
 
         if not np.isfinite(value):
             continue
 
-        if value >= EARLY_ADVERSE_THRESHOLD_R:
+        if value >= threshold_r:
             crossing_bar = index
             break
 
     full_window = int(
-        all(
+        len(contract_values) == window_bars
+        and all(
             value is not None
             and np.isfinite(value)
-            for value in bar_values
+            for value in contract_values
         )
     )
 
     if crossing_bar is not None:
-        classification = "EARLY_ADVERSE_7B"
+        classification = (
+            "EARLY_ADVERSE_EVENT"
+        )
 
     elif full_window:
-        classification = "NO_EARLY_ADVERSE_7B"
+        classification = (
+            "NO_EARLY_ADVERSE_CONTRACT"
+        )
 
     else:
-        classification = "PARTIAL_7B_WINDOW"
+        classification = (
+            "PARTIAL_CONTRACT_WINDOW"
+        )
 
     return (
         classification,
@@ -394,6 +446,7 @@ def classify_7b_event(
 
 def build_evidence_record(
     stream: str,
+    config: dict[str, Any],
     forward_start: str,
     row: pd.Series,
     df: pd.DataFrame,
@@ -518,7 +571,11 @@ def build_evidence_record(
         ],
     )
 
-    bar_values = extract_bar_adverse_values(row, df)
+    bar_values = extract_bar_adverse_values(
+        row,
+        df,
+        MAX_ENTRY_BARS,
+    )
 
     if not any(
         value is not None
@@ -527,18 +584,26 @@ def build_evidence_record(
         bar_values = extract_path_from_generic_columns(
             row,
             df,
+            MAX_ENTRY_BARS,
         )
 
     (
         classification,
         earliest_crossing_bar,
         max_observed_adverse_r,
-        full_7b_window,
-    ) = classify_7b_event(bar_values)
+        full_contract_window,
+    ) = classify_contract_event(
+        bar_values,
+        config["threshold_r"],
+        config["window_bars"],
+    )
 
     record: dict[str, Any] = {
         "stream": stream,
         "forward_start": forward_start,
+        "window_bars": config["window_bars"],
+        "threshold_r": config["threshold_r"],
+        "master_7b_eligible": config["master_7b_eligible"],
         "symbol": text_value(row, symbol_col),
         "direction": text_value(row, direction_col),
         "setup": text_value(row, setup_col),
@@ -576,7 +641,7 @@ def build_evidence_record(
         "bar7_adverse_r": bar_values[6],
         "earliest_crossing_bar": earliest_crossing_bar,
         "max_observed_adverse_r": max_observed_adverse_r,
-        "full_7b_window": full_7b_window,
+        "full_contract_window": full_contract_window,
         "classification": classification,
         "observation_status": text_value(
             row,
@@ -718,6 +783,7 @@ def read_stream(
 
         record = build_evidence_record(
             stream,
+            config,
             forward_start,
             row,
             df,
@@ -1103,17 +1169,17 @@ def main() -> int:
 
     event_mask = (
         evidence_df["classification"]
-        == "EARLY_ADVERSE_7B"
+        == "EARLY_ADVERSE_EVENT"
     )
 
     no_event_mask = (
         evidence_df["classification"]
-        == "NO_EARLY_ADVERSE_7B"
+        == "NO_EARLY_ADVERSE_CONTRACT"
     )
 
     partial_mask = (
         evidence_df["classification"]
-        == "PARTIAL_7B_WINDOW"
+        == "PARTIAL_CONTRACT_WINDOW"
     )
 
     missing_mask = (
@@ -1136,6 +1202,60 @@ def main() -> int:
     missing_count = int(
         missing_mask.sum()
     )
+
+    full_evaluated = (
+        event_count
+        + no_event_count
+    )
+    master_mask = (
+    evidence_df["master_7b_eligible"]
+    == True
+    )
+
+    master_evidence_df = evidence_df.loc[
+        master_mask
+    ].copy()
+
+    master_event_count = int(
+        (
+            master_evidence_df["classification"]
+            == "EARLY_ADVERSE_EVENT"
+        ).sum()
+    )
+
+    master_no_event_count = int(
+        (
+            master_evidence_df["classification"]
+            == "NO_EARLY_ADVERSE_CONTRACT"
+        ).sum()
+    )
+
+    master_partial_count = int(
+        (
+            master_evidence_df["classification"]
+            == "PARTIAL_CONTRACT_WINDOW"
+        ).sum()
+    )
+
+    master_missing_count = int(
+        (
+            master_evidence_df["classification"]
+            == "MISSING_PATH"
+        ).sum()
+    )
+
+    master_full_evaluated = (
+        master_event_count
+        + master_no_event_count
+    )
+
+    master_event_rate = None
+
+    if master_full_evaluated > 0:
+        master_event_rate = (
+            master_event_count
+            / master_full_evaluated
+        )
 
     full_evaluated = (
         event_count
@@ -1171,12 +1291,21 @@ def main() -> int:
         "new_genuine_oos_records": int(
             len(new_keys)
         ),
-        "early_adverse_7b_events": event_count,
-        "full_7b_no_event": no_event_count,
-        "partial_7b_window": partial_count,
+        "contract_events": event_count,
+        "contract_no_event": no_event_count,
+        "partial_contract_window": partial_count,
         "missing_path": missing_count,
-        "full_7b_evaluated": full_evaluated,
-        "event_rate": event_rate,
+        "full_contract_evaluated": full_evaluated,
+        "contract_event_rate": event_rate,
+        "master_7b_genuine_oos": int(
+            len(master_evidence_df)
+        ),
+        "master_7b_events": master_event_count,
+        "master_7b_no_event": master_no_event_count,
+        "master_7b_partial": master_partial_count,
+        "master_7b_missing_path": master_missing_count,
+        "master_7b_full_evaluated": master_full_evaluated,
+        "master_7b_event_rate": master_event_rate,
         "current_evidence_file": str(
             CURRENT_EVIDENCE_FILE
         ),
@@ -1214,38 +1343,80 @@ def main() -> int:
     )
 
     print(
-        f"7B early-adverse    : "
+        f"Contract early-adverse: "
         f"{event_count}"
     )
 
     print(
-        f"7B no-event         : "
+        f"Contract no-event     : "
         f"{no_event_count}"
     )
 
     print(
-        f"Partial 7B          : "
+        f"Partial contract      : "
         f"{partial_count}"
     )
 
     print(
-        f"Missing path        : "
+        f"Missing path          : "
         f"{missing_count}"
     )
 
     print(
-        f"Full 7B evaluated   : "
+        f"Full contract eval.   : "
         f"{full_evaluated}"
     )
 
     if event_rate is None:
         print(
-            "7B event rate       : None"
+            "Contract event rate  : None"
         )
     else:
         print(
-            f"7B event rate       : "
+            f"Contract event rate  : "
             f"{event_rate:.6f}"
+        )
+
+    print()
+
+    print(
+        f"Master 7B genuine OOS : "
+        f"{len(master_evidence_df)}"
+    )
+
+    print(
+        f"Master 7B events      : "
+        f"{master_event_count}"
+    )
+
+    print(
+        f"Master 7B no-event    : "
+        f"{master_no_event_count}"
+    )
+
+    print(
+        f"Master 7B partial     : "
+        f"{master_partial_count}"
+    )
+
+    print(
+        f"Master 7B missing     : "
+        f"{master_missing_count}"
+    )
+
+    print(
+        f"Master 7B evaluated   : "
+        f"{master_full_evaluated}"
+    )
+
+    if master_event_rate is None:
+        print(
+            "Master 7B event rate : None"
+        )
+    else:
+        print(
+            f"Master 7B event rate : "
+            f"{master_event_rate:.6f}"
         )
 
     print()

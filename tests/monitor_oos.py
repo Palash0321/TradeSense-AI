@@ -54,6 +54,9 @@ STREAMS = {
     "STOCK_HOLDOUT": {
         "description": "Frozen stock holdout",
         "forward_start": "2026-09-09",
+        "window_bars": 5,
+        "threshold_r": 0.25,
+        "master_7b_eligible": False,
         "file": (
             PROJECT_ROOT
             / "tests"
@@ -64,6 +67,9 @@ STREAMS = {
     "NIFTY_50_FORWARD": {
         "description": "NIFTY 50 genuine forward holdout",
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "file": (
             PROJECT_ROOT
             / "tests"
@@ -75,6 +81,9 @@ STREAMS = {
     "SENSEX_FORWARD": {
         "description": "SENSEX genuine forward holdout",
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "file": (
             PROJECT_ROOT
             / "tests"
@@ -88,6 +97,9 @@ STREAMS = {
             "BANK NIFTY genuine forward SHORT_CONTINUATION holdout"
         ),
         "forward_start": "2026-09-14",
+        "window_bars": 5,
+        "threshold_r": 0.25,
+        "master_7b_eligible": False,
         "file": (
             PROJECT_ROOT
             / "tests"
@@ -101,6 +113,9 @@ STREAMS = {
             "NIFTY MIDCAP SELECT genuine forward holdout"
         ),
         "forward_start": "2026-09-14",
+        "window_bars": 7,
+        "threshold_r": 0.25,
+        "master_7b_eligible": True,
         "file": (
             PROJECT_ROOT
             / "tests"
@@ -241,12 +256,12 @@ def dataframe_fingerprint(df):
     ).hexdigest()
 
 
-def get_bar_adverse_columns(df):
+def get_bar_adverse_columns(df, window_bars):
     columns = []
 
     for bar in range(
         1,
-        LOCKED_WINDOW_BARS + 1,
+        window_bars + 1,
     ):
         candidates = [
             f"early_adverse_r_bar_{bar}",
@@ -260,9 +275,7 @@ def get_bar_adverse_columns(df):
             candidates,
         )
 
-        columns.append(
-            column
-        )
+        columns.append(column)
 
     return columns
 
@@ -274,6 +287,8 @@ def get_bar_adverse_columns(df):
 def classify_locked_hypothesis(
     row,
     bar_columns,
+    window_bars,
+    threshold_r,
 ):
     observed_values = []
 
@@ -282,15 +297,11 @@ def classify_locked_hypothesis(
             continue
 
         value = safe_float(
-            row.get(
-                column
-            )
+            row.get(column)
         )
 
         if value is not None:
-            observed_values.append(
-                value
-            )
+            observed_values.append(value)
 
     if not observed_values:
         return (
@@ -307,22 +318,22 @@ def classify_locked_hypothesis(
         observed_values
     )
 
-    if maximum_adverse >= LOCKED_THRESHOLD_R:
+    if maximum_adverse >= threshold_r:
         return (
             "EARLY_ADVERSE_EVENT",
             maximum_adverse,
             observed_bars,
         )
 
-    if observed_bars >= LOCKED_WINDOW_BARS:
+    if observed_bars >= window_bars:
         return (
-            "NO_EVENT_FULL_7B",
+            "NO_EVENT_FULL_CONTRACT",
             maximum_adverse,
             observed_bars,
         )
 
     return (
-        "PARTIAL_7B_WINDOW",
+        "PARTIAL_CONTRACT_WINDOW",
         maximum_adverse,
         observed_bars,
     )
@@ -351,12 +362,15 @@ def monitor_stream(
         "duplicate_keys": 0,
         "invalid_dates": 0,
         "invalid_rows": 0,
+        "window_bars": config["window_bars"],
+        "threshold_r": config["threshold_r"],
+        "master_7b_eligible": config["master_7b_eligible"],
         "event_count": 0,
-        "no_event_full_7b": 0,
-        "partial_7b_window": 0,
+        "no_event_full_contract": 0,
+        "partial_contract_window": 0,
         "missing_path": 0,
-        "evaluated_full_7b": 0,
-        "event_rate_full_7b_pct": None,
+        "evaluated_full_contract": 0,
+        "event_rate_full_contract_pct": None,
         "total_r": None,
         "mean_r": None,
         "median_r": None,
@@ -501,11 +515,12 @@ def monitor_stream(
         return result, genuine_df
 
     # ------------------------------------------------------------------------
-    # Locked 7B / 0.25R hypothesis
+    # Frozen stream contract / 0.25R early-adverse classification
     # ------------------------------------------------------------------------
 
     bar_columns = get_bar_adverse_columns(
-        genuine_df
+        genuine_df,
+        config["window_bars"],
     )
 
     if not any(
@@ -526,6 +541,8 @@ def monitor_stream(
             classify_locked_hypothesis(
                 row,
                 bar_columns,
+                config["window_bars"],
+                config["threshold_r"],
             )
         )
 
@@ -563,21 +580,21 @@ def monitor_stream(
         ).sum()
     )
 
-    result["no_event_full_7b"] = int(
+    result["no_event_full_contract"] = int(
         (
             genuine_df[
                 "_monitor_hypothesis_status"
             ]
-            == "NO_EVENT_FULL_7B"
+            == "NO_EVENT_FULL_CONTRACT"
         ).sum()
     )
 
-    result["partial_7b_window"] = int(
+    result["partial_contract_window"] = int(
         (
             genuine_df[
                 "_monitor_hypothesis_status"
             ]
-            == "PARTIAL_7B_WINDOW"
+            == "PARTIAL_CONTRACT_WINDOW"
         ).sum()
     )
 
@@ -590,18 +607,18 @@ def monitor_stream(
         ).sum()
     )
 
-    result["evaluated_full_7b"] = (
+    result["evaluated_full_contract"] = (
         result["event_count"]
-        + result["no_event_full_7b"]
+        + result["no_event_full_contract"]
     )
 
-    if result["evaluated_full_7b"] > 0:
+    if result["evaluated_full_contract"] > 0:
         result[
-            "event_rate_full_7b_pct"
+            "event_rate_full_contract_pct"
         ] = round(
             100.0
             * result["event_count"]
-            / result["evaluated_full_7b"],
+            / result["evaluated_full_contract"],
             4,
         )
 
@@ -711,7 +728,15 @@ def build_snapshot(results):
             "first 7 entry bars"
         ),
         "threshold_r": LOCKED_THRESHOLD_R,
-        "window_bars": LOCKED_WINDOW_BARS,
+        "window_bars": "STREAM_SPECIFIC",
+        "stream_contracts": {
+            stream_name: {
+                "window_bars": config["window_bars"],
+                "threshold_r": config["threshold_r"],
+                "master_7b_eligible": config["master_7b_eligible"],
+            }
+            for stream_name, config in STREAMS.items()
+        },
         "production_strategy": "UNCHANGED",
         "historical_data": "READ_ONLY",
         "oos_data": "READ_ONLY",
@@ -862,28 +887,33 @@ def main():
         )
 
         print(
-            f"7B event count      : "
+            f"Contract window     : "
+            f"{result['window_bars']}B"
+        )
+
+        print(
+            f"Master 7B eligible  : "
+            f"{result['master_7b_eligible']}"
+        )
+
+        print(
+            f"Contract events     : "
             f"{result['event_count']}"
         )
 
         print(
-            f"Full 7B no-event    : "
-            f"{result['no_event_full_7b']}"
+            f"Full contract no-event: "
+            f"{result['no_event_full_contract']}"
         )
 
         print(
-            f"Partial 7B window   : "
-            f"{result['partial_7b_window']}"
+            f"Partial contract    : "
+            f"{result['partial_contract_window']}"
         )
 
         print(
-            f"Missing path        : "
-            f"{result['missing_path']}"
-        )
-
-        print(
-            f"Full 7B event rate  : "
-            f"{result['event_rate_full_7b_pct']}"
+            f"Full contract rate  : "
+            f"{result['event_rate_full_contract_pct']}"
         )
 
         print(
@@ -898,7 +928,7 @@ def main():
             )
 
     # ------------------------------------------------------------------------
-    # Global status
+    # Global operational status
     # ------------------------------------------------------------------------
 
     total_genuine = sum(
@@ -912,8 +942,31 @@ def main():
     )
 
     total_full_window = sum(
-        result["evaluated_full_7b"]
+        result["evaluated_full_contract"]
         for result in results
+    )
+
+    # Master-hypothesis population is restricted to streams whose
+    # frozen contract is explicitly eligible for the 7B master hypothesis.
+    master_results = [
+        result
+        for result in results
+        if result["master_7b_eligible"]
+    ]
+
+    master_genuine = sum(
+        result["genuine_oos"]
+        for result in master_results
+    )
+
+    master_events = sum(
+        result["event_count"]
+        for result in master_results
+    )
+
+    master_full_window = sum(
+        result["evaluated_full_contract"]
+        for result in master_results
     )
 
     invalid_streams = sum(
@@ -977,25 +1030,52 @@ def main():
     )
 
     print(
-        f"Total 7B events      : "
+        f"Total contract events: "
         f"{total_events}"
     )
 
     print(
-        f"Full 7B evaluated    : "
+        f"Full contract eval.  : "
         f"{total_full_window}"
     )
 
+    print(
+        f"Master 7B eligible OOS: "
+        f"{master_genuine}"
+    )
+
+    print(
+        f"Master 7B events     : "
+        f"{master_events}"
+    )
+
+    print(
+        f"Master 7B full eval. : "
+        f"{master_full_window}"
+    )
+
     if total_full_window > 0:
-        global_event_rate = (
+        global_contract_event_rate = (
             100.0
             * total_events
             / total_full_window
         )
 
         print(
-            f"7B event rate        : "
-            f"{global_event_rate:.4f}%"
+            f"Contract event rate  : "
+            f"{global_contract_event_rate:.4f}%"
+        )
+
+    if master_full_window > 0:
+        master_7b_event_rate = (
+            100.0
+            * master_events
+            / master_full_window
+        )
+
+        print(
+            f"Master 7B event rate : "
+            f"{master_7b_event_rate:.4f}%"
         )
 
     print(

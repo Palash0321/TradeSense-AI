@@ -441,7 +441,7 @@ def validate_stage5_contract(
         "no_duplicates",
         "no_pre_start",
         "no_invalid_dates",
-        "complete_7b_consistent",
+        "master_7b_complete_consistent",
     ]
 
     integrity_failures = [

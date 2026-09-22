@@ -169,12 +169,28 @@ def calculate_threshold_paths(
     price_df,
     trade,
 ):
-
     """
-    Analyze favorable development during the ACTUAL
-    production lifetime of the trade.
+    Calculate both:
 
-    No lifetime extension is performed.
+    1. Existing favorable excursion measurements:
+       - 1.25R
+       - 1.50R
+       - 1.75R
+
+       These remain observational and are measured over the
+       actual production lifetime of the completed trade.
+
+    2. Locked early-adverse OOS evidence:
+       - maximum adverse R for each of the first 7 entry bars
+       - whether >= 0.25R adverse movement occurred
+       - first bar/date where >= 0.25R was reached
+
+    IMPORTANT:
+    - No trade-generation logic is changed.
+    - No exit logic is changed.
+    - No lifetime extension is performed.
+    - Early-adverse classification uses ONLY the first 7
+      entry bars.
     """
 
     direction = str(
@@ -205,6 +221,18 @@ def calculate_threshold_paths(
         * entry_atr
     )
 
+    if risk_per_share <= 0:
+        raise ValueError(
+            "Invalid risk_per_share: "
+            f"{risk_per_share}"
+        )
+
+    # -----------------------------------------------------------------------
+    # ACTUAL COMPLETED TRADE LIFETIME
+    #
+    # This preserves the existing favorable-path measurement.
+    # -----------------------------------------------------------------------
+
     lifetime = price_df.loc[
         (
             price_df.index
@@ -215,6 +243,33 @@ def calculate_threshold_paths(
             <= exit_date
         )
     ].copy()
+
+    # -----------------------------------------------------------------------
+    # FIRST 7 ENTRY BARS
+    #
+    # The locked OOS contract is:
+    #
+    #     early adverse >= 0.25R
+    #     within first 7 entry bars
+    #
+    # We intentionally do NOT extend beyond the available
+    # post-entry path.
+    # -----------------------------------------------------------------------
+
+    first_7_bars = (
+        price_df.loc[
+            price_df.index >= entry_date
+        ]
+        .copy()
+        .head(7)
+    )
+
+    # -----------------------------------------------------------------------
+    # FAVORABLE THRESHOLD RESULTS
+    #
+    # Preserve the existing observational 1.25R / 1.50R / 1.75R
+    # lifetime measurements.
+    # -----------------------------------------------------------------------
 
     results = {}
 
@@ -227,7 +282,6 @@ def calculate_threshold_paths(
             "bar": "",
             "date": "",
         }
-
 
     for bar_number, (
         bar_date,
@@ -245,7 +299,6 @@ def calculate_threshold_paths(
             bar["Low"]
         )
 
-
         for threshold in THRESHOLDS:
 
             result = results[
@@ -253,9 +306,7 @@ def calculate_threshold_paths(
             ]
 
             if result["reached"]:
-
                 continue
-
 
             trigger_price = (
                 get_threshold_price(
@@ -267,7 +318,6 @@ def calculate_threshold_paths(
                     threshold_r=threshold,
                 )
             )
-
 
             if direction == "LONG":
 
@@ -282,7 +332,6 @@ def calculate_threshold_paths(
                     low
                     <= trigger_price
                 )
-
 
             if reached:
 
@@ -302,6 +351,9 @@ def calculate_threshold_paths(
                     )
                 )
 
+    # -----------------------------------------------------------------------
+    # BUILD EXISTING FAVORABLE-PATH OUTPUT
+    # -----------------------------------------------------------------------
 
     output = {}
 
@@ -341,6 +393,156 @@ def calculate_threshold_paths(
             "date"
         ]
 
+    # -----------------------------------------------------------------------
+    # LOCKED EARLY-ADVERSE MEASUREMENT
+    #
+    # LONG:
+    #     adverse_R = (entry_price - Low) / risk_per_share
+    #
+    # SHORT:
+    #     adverse_R = (High - entry_price) / risk_per_share
+    #
+    # We record the MAXIMUM adverse excursion reached by each
+    # of the first 7 entry bars.
+    # -----------------------------------------------------------------------
+
+    adverse_values = []
+
+    for bar_number in range(
+        1,
+        8,
+    ):
+
+        column_name = (
+            f"early_adverse_r_bar_{bar_number}"
+        )
+
+        if bar_number > len(first_7_bars):
+
+            output[
+                column_name
+            ] = ""
+
+            continue
+
+        bar_date = first_7_bars.index[
+            bar_number - 1
+        ]
+
+        bar = first_7_bars.iloc[
+            bar_number - 1
+        ]
+
+        high = float(
+            bar["High"]
+        )
+
+        low = float(
+            bar["Low"]
+        )
+
+        if direction == "LONG":
+
+            adverse_r = (
+                entry_price
+                - low
+            ) / risk_per_share
+
+        elif direction == "SHORT":
+
+            adverse_r = (
+                high
+                - entry_price
+            ) / risk_per_share
+
+        else:
+
+            raise ValueError(
+                "Unsupported trade direction: "
+                f"{direction}"
+            )
+
+        # Do not report negative adverse excursion.
+        adverse_r = max(
+            0.0,
+            float(adverse_r),
+        )
+
+        adverse_values.append(
+            adverse_r
+        )
+
+        output[
+            column_name
+        ] = round(
+            adverse_r,
+            6,
+        )
+
+    # -----------------------------------------------------------------------
+    # LOCKED 0.25R EARLY-ADVERSE CLASSIFICATION
+    # -----------------------------------------------------------------------
+
+    EARLY_ADVERSE_THRESHOLD_R = 0.25
+
+    early_adverse_0_25r = False
+    early_adverse_0_25r_bar = ""
+    early_adverse_0_25r_date = ""
+
+    for bar_number, adverse_r in enumerate(
+        adverse_values,
+        start=1,
+    ):
+
+        if adverse_r >= EARLY_ADVERSE_THRESHOLD_R:
+
+            early_adverse_0_25r = True
+
+            early_adverse_0_25r_bar = (
+                bar_number
+            )
+
+            bar_date = first_7_bars.index[
+                bar_number - 1
+            ]
+
+            early_adverse_0_25r_date = (
+                bar_date.strftime(
+                    "%Y-%m-%d"
+                )
+            )
+
+            break
+
+    output[
+        "early_adverse_0_25r"
+    ] = early_adverse_0_25r
+
+    output[
+        "early_adverse_0_25r_bar"
+    ] = early_adverse_0_25r_bar
+
+    output[
+        "early_adverse_0_25r_date"
+    ] = early_adverse_0_25r_date
+
+    # -----------------------------------------------------------------------
+    # CONTRACT METADATA
+    #
+    # These fields make the stream contract explicit inside the ledger.
+    # -----------------------------------------------------------------------
+
+    output[
+        "early_adverse_window_bars"
+    ] = 7
+
+    output[
+        "early_adverse_threshold_r"
+    ] = EARLY_ADVERSE_THRESHOLD_R
+
+    output[
+        "early_adverse_contract"
+    ] = "7B/0.25R"
 
     return output
 
